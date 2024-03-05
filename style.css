@@ -1,0 +1,39 @@
+:root {
+	--background: hsl(0, 0%, 7%);
+	--black-hole-core-fg-diameter: 500px;
+	--black-hole-core-bg-diameter: 510px;
+}
+
+body {
+    background-color: var(--background);
+}
+
+.orbits {
+	position: absolute;
+	margin: -150px -150px;
+}
+
+/*.orbits circle {
+	filter: url(#glow);
+}*/
+
+.black-hole-container {
+	margin: 150px auto;
+	width: var(--black-hole-core-fg-diameter);
+	height: var(--black-hole-core-fg-diameter);
+}
+
+#black-hole-core-bg {
+	position: absolute;
+	margin: -5px -5px;
+	width: var(--black-hole-core-bg-diameter);
+	height: var(--black-hole-core-bg-diameter);
+	background: radial-gradient(circle closest-side, white 80%, transparent)
+}
+
+#black-hole-core-fg {
+	position: absolute;
+	width: var(--black-hole-core-fg-diameter);
+	height: var(--black-hole-core-fg-diameter);
+/*	background: radial-gradient(circle closest-side, black 30%, transparent)*/
+}

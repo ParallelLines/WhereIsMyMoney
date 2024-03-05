@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="./style.css" rel="stylesheet">
+	<link rel="icon" href="./favicon.png">
+	<title>WsMM</title>
+</head>
+
+<body>
+
+	<div class="black-hole-container">
+		<div id="black-hole-core-bg"></div>
+		<svg class="orbits" height="800" width="800">
+			<defs>
+				<filter id="glow">
+					<fegaussianblur class="blur" result="coloredBlur" stddeviation="4"></fegaussianblur>
+					<femerge>
+						<femergenode in="coloredBlur"></femergenode>
+						<femergenode in="coloredBlur"></femergenode>
+						<femergenode in="coloredBlur"></femergenode>
+						<femergenode in="SourceGraphic"></femergenode>
+					</femerge>
+				</filter>
+			</defs>
+			<circle class="core" cx="400" cy="400" r="200" stroke="black" stroke-width="1" stroke-dashoffset=""
+				fill="black" />
+
+			<circle class="orbit-first" cx="400" cy="400" r="200" stroke="white" stroke-width="3" fill="none" />
+			<circle class="orbit-first" cx="400" cy="400" r="205" stroke="white" stroke-width="4"
+				stroke-dasharray="1000 287.4" fill="none" />
+			<circle class="orbit-first" cx="400" cy="400" r="207" stroke="white" stroke-width="4" stroke-dasharray=""
+				fill="none" />
+			<circle class="orbit-first" cx="400" cy="400" r="212" stroke="white" stroke-width="2" stroke-dasharray=""
+				fill="none" />
+			<circle class="orbit-first" cx="400" cy="400" r="215" stroke="white" stroke-width="2" stroke-dasharray=""
+				fill="none" />
+			<circle class="orbit-first" cx="400" cy="400" r="218" stroke="white" stroke-width="2"
+				stroke-dasharray="1000 394" stroke-dashoffset="600" fill="none" />
+
+			<circle class="orbit-second" cx="400" cy="400" r="219" stroke="white" stroke-width="2"
+				stroke-dasharray="400" stroke-dashoffset="" fill="none" />
+			<circle class="orbit-second" cx="400" cy="400" r="222" stroke="white" stroke-width="2"
+				stroke-dasharray="130" stroke-dashoffset="" fill="none" />
+			<circle class="orbit-second" cx="400" cy="400" r="224" stroke="white" stroke-width="1"
+				stroke-dasharray="150" stroke-dashoffset="" fill="none" />
+			<!-- <circle class="orbit-second" cx="400" cy="400" r="275" stroke="white" stroke-width="2" stroke-dasharray="130 500" stroke-dashoffset="" fill="none"/> -->
+			<!-- <circle class="orbit-second" cx="400" cy="400" r="290" stroke="white" stroke-width="2" stroke-dasharray="100 400" stroke-dashoffset="" fill="none"/> -->
+			<!-- <circle class="orbit-second" cx="400" cy="400" r="300" stroke="white" stroke-width="1" stroke-dasharray="150 200" stroke-dashoffset="" fill="none"/> -->
+
+			<circle class="orbit-third" cx="400" cy="400" r="225" stroke="white" stroke-width="1"
+				stroke-dasharray="20 800" stroke-dashoffset="" fill="none" />
+			<circle class="orbit-third" cx="400" cy="400" r="226" stroke="white" stroke-width="1"
+				stroke-dasharray="7 150" stroke-dashoffset="300" fill="none" />
+			<circle class="orbit-third" cx="400" cy="400" r="227" stroke="white" stroke-width="1"
+				stroke-dasharray="6 140" stroke-dashoffset="300" fill="none" />
+			<circle class="orbit-third" cx="400" cy="400" r="228" stroke="white" stroke-width="1"
+				stroke-dasharray="15 700" stroke-dashoffset="" fill="none" />
+			<circle class="orbit-third" cx="400" cy="400" r="228" stroke="white" stroke-width="1"
+				stroke-dasharray="5 600" stroke-dashoffset="" fill="none" />
+			<circle class="orbit-third" cx="400" cy="400" r="228" stroke="white" stroke-width="1"
+				stroke-dasharray="5 600" stroke-dashoffset="300" fill="none" />
+
+			<!-- <circle class="orbit-third" cx="400" cy="400" r="315" stroke="white" stroke-width="1" stroke-dasharray="20 800" stroke-dashoffset="" fill="none"/>
+				<circle class="orbit-third" cx="400" cy="400" r="317" stroke="white" stroke-width="1" stroke-dasharray="7 150" stroke-dashoffset="300" fill="none"/>
+				<circle class="orbit-third" cx="400" cy="400" r="321" stroke="white" stroke-width="1" stroke-dasharray="6 140" stroke-dashoffset="300" fill="none"/>
+				<circle class="orbit-third" cx="400" cy="400" r="335" stroke="white" stroke-width="1" stroke-dasharray="15 700" stroke-dashoffset="" fill="none"/>
+				<circle class="orbit-third" cx="400" cy="400" r="360" stroke="white" stroke-width="1" stroke-dasharray="5 600" stroke-dashoffset="" fill="none"/>
+				<circle class="orbit-third" cx="400" cy="400" r="362" stroke="white" stroke-width="1" stroke-dasharray="5 600" stroke-dashoffset="300" fill="none"/> -->
+		</svg>
+		<div id="black-hole-core-fg"></div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+	<script src="script.js"></script>
+</body>
+
+</html>
