@@ -18,7 +18,7 @@ CREATE TABLE categories (
 CREATE TABLE inusd (
     date DATE,
     currency VARCHAR(3),
-    inUSD NUMERIC(2),
+    inUSD NUMERIC(10, 2),
     PRIMARY KEY (date, currency)
 );
 
@@ -32,21 +32,8 @@ CREATE TABLE expenses (
     user_id BIGINT REFERENCES users(id),
     category_id BIGINT REFERENCES categories(id),
     name VARCHAR(100),
-    sum NUMERIC(2),
-    inUSD NUMERIC(2),
-    currency VARCHAR(3) REFERENCES currencies(name),
-    date TIMESTAMP WITH TIME ZONE,
-    regular_id BIGINT,
-    regular_name VARCHAR(100)
-);
-
-CREATE TABLE income (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id),
-    category_id BIGINT REFERENCES categories(id),
-    name VARCHAR(100),
-    sum NUMERIC(2),
-    inUSD NUMERIC(2),
+    sum NUMERIC(10, 2),
+    inUSD NUMERIC(10, 2),
     currency VARCHAR(3) REFERENCES currencies(name),
     date TIMESTAMP WITH TIME ZONE,
     regular_id BIGINT,
@@ -58,7 +45,7 @@ CREATE TABLE income (
 --     user_id BIGINT,
 --     category_id BIGINT,
 --     name VARCHAR(100),
---     sum NUMERIC(2),
+--     sum NUMERIC(10, 2),
 --     currency VARCHAR(3) REFERENCES currencies(name),
 --     last_time_completed 
 --     pattern 
