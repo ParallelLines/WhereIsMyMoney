@@ -12,19 +12,19 @@ module.exports.getOne = async (req, res) => {
 }
 
 module.exports.create = async (req, res) => {
-    const newExpense = req.body
-    newExpense.inUSD = 0
-    newExpense.regular_name = null
-    newExpense.reqular_id = null
+    const newData = req.body
+    newData.inUSD = 0
+    newData.regular_name = null
+    newData.reqular_id = null
     const result = await db.query(db.expenses.createOne, [
-        newExpense.user_id,
-        newExpense.category_id,
-        newExpense.name,
-        newExpense.sum,
-        newExpense.inUSD,
-        newExpense.currency,
-        newExpense.reqular_id,
-        newExpense.regular_name
+        newData.user_id,
+        newData.category_id,
+        newData.name,
+        newData.sum,
+        newData.inUSD,
+        newData.currency,
+        newData.reqular_id,
+        newData.regular_name
     ])
     res.send('done')
 }

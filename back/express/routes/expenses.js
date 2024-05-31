@@ -1,14 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const expenses = require('../controllers/expenses')
+const catchAsync = require('../utils/catchAsync')
 
 router.route('/')
-    .get(expenses.getAll)
-    .post(expenses.create)
+    .get(catchAsync(expenses.getAll))
+    .post(catchAsync(expenses.create))
 
 router.route('/:id')
-    .get(expenses.getOne)
-    .put(expenses.editOne)
-    .delete(expenses.deleteOne)
+    .get(catchAsync(expenses.getOne))
+    .put(catchAsync(expenses.editOne))
+    .delete(catchAsync(expenses.deleteOne))
 
 module.exports = router
