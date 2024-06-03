@@ -39,7 +39,8 @@ const categories = {
     getOne: 'SELECT * FROM categories WHERE id = $1',
     createOne: 'INSERT INTO categories (user_id, name, color) VALUES ($1, $2, $3)',
     updateOne: 'UPDATE categories SET name = $2, color = $3 WHERE id = $1',
-    deleteOne: 'DELETE FROM categories WHERE id = $1'
+    deleteOne: 'DELETE FROM categories WHERE id = $1',
+    getOneByUser: 'SELECT * FROM categories WHERE id = $1 AND user_id = $2'
 }
 
 module.exports = {

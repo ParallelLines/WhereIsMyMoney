@@ -26,6 +26,13 @@ module.exports.create = async (req, res) => {
     newData.inUSD = 0
     newData.regular_name = null
     newData.reqular_id = null
+
+    const isCatValid = await isCategoryValid(newData.category_id, newData.user_id)
+    if (!isCatValid) {
+        res.sendStatus(400)
+        return
+    }
+
     try {
         await db.query(db.expenses.createOne, [
             newData.user_id,
@@ -86,5 +93,15 @@ module.exports.deleteOne = async (req, res) => {
     } catch (e) {
         console.log('error while deleteOne expenses: ', e.code)
         res.sendStatus(500)
+    }
+}
+
+async function isCategoryValid(category_id, user_id) {
+    try {
+        const category = await db.query(db.categories.getOneByUser, [category_id, user_id])
+        return category.rows.length === 1
+    } catch (e) {
+        console.log('error while isCategoryValid expenses: ', e.code)
+        return null
     }
 }
