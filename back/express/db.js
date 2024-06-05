@@ -27,7 +27,7 @@ const currencies = {
 }
 
 const expenses = {
-    getAll: 'SELECT * FROM expenses',
+    getAll: 'SELECT * FROM expenses WHERE user_id = $1',
     getOne: 'SELECT * FROM expenses WHERE id = $1',
     createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
     updateOne: 'UPDATE expenses SET category_id = $2, name = $3, sum = $4, inUSD = $5, currency = $6, date = $7 WHERE id = $1',
@@ -35,7 +35,7 @@ const expenses = {
 }
 
 const categories = {
-    getAll: 'SELECT * FROM categories',
+    getAll: 'SELECT * FROM categories WHERE user_id = $1',
     getOne: 'SELECT * FROM categories WHERE id = $1',
     createOne: 'INSERT INTO categories (user_id, name, color) VALUES ($1, $2, $3)',
     updateOne: 'UPDATE categories SET name = $2, color = $3 WHERE id = $1',

@@ -1,8 +1,9 @@
 const db = require('../db')
 
 module.exports.getAll = async (req, res) => {
+    const userId = '1'
     try {
-        const categories = await db.query(db.categories.getAll)
+        const categories = await db.query(db.categories.getAll, [userId])
         res.json(categories.rows)
     } catch (e) {
         console.log('error while getAll categories: ', e.code)

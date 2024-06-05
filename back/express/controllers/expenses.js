@@ -1,8 +1,9 @@
 const db = require('../db')
 
 module.exports.getAll = async (req, res) => {
+    const userId = '2'
     try {
-        const expenses = await db.query(db.expenses.getAll)
+        const expenses = await db.query(db.expenses.getAll, [userId])
         res.json(expenses.rows)
     } catch (e) {
         console.log('error while getAll expenses: ', e.code)
@@ -60,6 +61,13 @@ module.exports.editOne = async (req, res) => {
             if (req.body.sum !== expense.sum) {
                 //add logic for inUSD
                 expense.inUSD = 1
+            }
+            if (req.body.category_id) {
+                const isCatValid = await isCategoryValid(req.body.category_id, expense.user_id)
+                if (!isCatValid) {
+                    res.sendStatus(400)
+                    return
+                }
             }
             expense.category_id = req.body.category_id ? req.body.category_id : expense.category_id
             expense.name = req.body.name ? req.body.name : expense.name
