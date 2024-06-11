@@ -25,6 +25,7 @@ export async function action({ request, params }) {
 export default function ExpenseEditForm() {
     const { expense, categories } = useLoaderData()
     const navigate = useNavigate()
+    const date = formatDateForInput(new Date(expense.date))
     return (
         <Form className="EditForm" id="expense-edit-form" method="PUT">
             <label>
@@ -70,15 +71,24 @@ export default function ExpenseEditForm() {
             <label>
                 <span>Date</span>
                 <input
-                    placeholder=""
                     aria-label="expense date"
                     type="datetime-local"
                     name="date"
-                    defaultValue={expense.date}
+                    defaultValue={date}
                 />
             </label><br />
             <button type="submit">Save</button>
             <button type="button" onClick={() => navigate('/')}>Cancel</button>
         </Form>
     )
+}
+
+function formatDateForInput(date) {
+    //returns YYYY-MM-DDTHH:mm format
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
 }
