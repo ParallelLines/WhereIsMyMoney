@@ -27,7 +27,6 @@ module.exports.create = async (req, res) => {
     newData.inUSD = 0
     newData.regular_name = null
     newData.reqular_id = null
-
     const isCatValid = await isCategoryValid(newData.category_id, newData.user_id)
     if (!isCatValid) {
         res.sendStatus(400)
@@ -59,7 +58,7 @@ module.exports.editOne = async (req, res) => {
         const expense = expenseRes.rows[0]
         if (expense) {
             if (req.body.sum !== expense.sum) {
-                //add logic for inUSD
+                //add logic for recalculating inUSD
                 expense.inUSD = 1
             }
             if (req.body.category_id) {
