@@ -1,6 +1,7 @@
 import { useLoaderData, useNavigate, redirect, Form } from "react-router-dom"
-import { getOneExpense } from "../rest/expenses"
+import { getOneExpense, editOneExpense } from "../rest/expenses"
 import { getCategories } from "../rest/categories"
+import { formatDateForInput } from "../utils/date"
 
 export async function loader({ params }) {
     const expenseId = params.id
@@ -15,11 +16,15 @@ export async function loader({ params }) {
 }
 
 export async function action({ request, params }) {
+    const id = params.id
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
-    console.log(request.method)
-    console.log(updates)
-    return redirect(`/`)
+    const status = await editOneExpense(id, updates)
+    if (status === 200) {
+        return redirect(`/`)
+    } else {
+        console.log('error')
+    }
 }
 
 export default function ExpenseEditForm() {
@@ -27,7 +32,7 @@ export default function ExpenseEditForm() {
     const navigate = useNavigate()
     const date = formatDateForInput(new Date(expense.date))
     return (
-        <Form className="EditForm" id="expense-edit-form" method="PUT">
+        <Form className="basic-form" id="expense-edit-form" method="PUT">
             <label>
                 <span>Name</span>
                 <input
@@ -43,7 +48,7 @@ export default function ExpenseEditForm() {
                 <select
                     name="category_id"
                     aria-label="category name"
-                    defaultValue={{ label: expense.category_name, value: expense.category_id }}
+                    defaultValue={expense.category_id}
                 >
                     {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                 </select>
@@ -81,14 +86,4 @@ export default function ExpenseEditForm() {
             <button type="button" onClick={() => navigate('/')}>Cancel</button>
         </Form>
     )
-}
-
-function formatDateForInput(date) {
-    //returns YYYY-MM-DDTHH:mm format
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    return `${year}-${month}-${day}T${hours}:${minutes}`
 }

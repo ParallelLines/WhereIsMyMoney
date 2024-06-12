@@ -8,10 +8,11 @@ import Root, {
 import ErrorPage from './components/ErrorPage.jsx'
 import Dialog from './components/Dialog.jsx'
 import ExpenseEditForm, {
-  loader as expenseLoader,
+  loader as expenseEditLoader,
   action as expenseEditAction
 } from './components/ExpenseEditForm.jsx'
 import ExpenseCreateForm, {
+  loader as expenseCreateLoader,
   action as expenseCreateAction
 } from './components/ExpensesCreateForm.jsx'
 
@@ -27,12 +28,13 @@ const router = createBrowserRouter([
         {
           path: 'expenses/:id',
           element: <Dialog open><ExpenseEditForm /></Dialog>,
-          loader: expenseLoader,
+          loader: expenseEditLoader,
           action: expenseEditAction
         },
         {
           path: 'expenses/new',
           element: <Dialog open><ExpenseCreateForm /></Dialog>,
+          loader: expenseCreateLoader,
           action: expenseCreateAction
         }
       ]

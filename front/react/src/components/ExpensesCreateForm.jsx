@@ -1,18 +1,35 @@
 import { useLoaderData, useNavigate, redirect, Form } from "react-router-dom"
+import { getCategories } from "../rest/categories"
+import { createOneExpense } from "../rest/expenses"
+import { formatDateForInput } from "../utils/date"
+
+export async function loader() {
+    const userId = 2
+    const categories = await getCategories(userId)
+    return categories
+}
 
 export async function action({ request, params }) {
+    const userId = 2
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
-    console.log(request.method)
-    console.log(updates)
-    return redirect(`/`)
+    updates['user_id'] = userId
+    const status = await createOneExpense(userId, updates)
+    if (status === 200) {
+        return redirect(`/`)
+    } else {
+        console.log('error')
+    }
 }
 
 export default function ExpenseEditForm() {
-    const expense = useLoaderData()
+    const categories = useLoaderData()
     const navigate = useNavigate()
+
+    const date = formatDateForInput(new Date())
+
     return (
-        <Form className="EditForm" id="expense-create-form" method="POST">
+        <Form className="basic-form" id="expense-create-form" method="POST">
             <label>
                 <span>Name</span>
                 <input
@@ -24,12 +41,12 @@ export default function ExpenseEditForm() {
             </label><br />
             <label>
                 <span>Category</span>
-                <input
-                    placeholder="category name"
-                    aria-label="category name"
-                    type="text"
+                <select
                     name="category_id"
-                />
+                    aria-label="category name"
+                >
+                    {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                </select>
             </label><br />
             <label>
                 <span>Sum</span>
@@ -52,10 +69,10 @@ export default function ExpenseEditForm() {
             <label>
                 <span>Date</span>
                 <input
-                    placeholder=""
                     aria-label="expense date"
                     type="datetime-local"
                     name="date"
+                    defaultValue={date}
                 />
             </label><br />
             <button type="submit">Save</button>

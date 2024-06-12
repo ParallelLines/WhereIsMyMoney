@@ -6,9 +6,13 @@ export default function Expense({ data }) {
     const handleClick = () => {
         navigate(`/expenses/${data.id}`)
     }
+
+    const date = new Date(data.date)
+
+
     return (
         <div className="Expense" onClick={handleClick}>
-            {data.name} {data.symbol + data.sum}
+            {data.name} {data.symbol + data.sum} {date.toDateString()}
             <CategoryMarker name={data.category_name} color={data.color} />
         </div>
     )
