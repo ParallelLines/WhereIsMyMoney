@@ -13,9 +13,9 @@ export default function Root() {
     const navigate = useNavigate()
     return (
         <div className="Root">
-            <div className="AnalyticsData">here should be graphics and diagrams</div>
-            <div className="ExpensesHeader">Spent some? <button onClick={() => navigate('/expenses/new')}>+</button>
-                <div className="ExpensesList">
+            <div className="analytics-data">here should be graphics and diagrams</div>
+            <div className="expenses-header">Spent some? <button onClick={() => navigate('/expenses/new')}>+</button>
+                <div className="expenses-list">
                     {expenses.map(e => <Expense key={e.id} data={e} />)}
                 </div>
             </div>

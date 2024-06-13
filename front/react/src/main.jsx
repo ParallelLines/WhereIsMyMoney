@@ -7,14 +7,14 @@ import Root, {
 } from './routes/Root.jsx'
 import ErrorPage from './components/ErrorPage.jsx'
 import Dialog from './components/Dialog.jsx'
-import ExpenseEditForm, {
+import ExpenseEdit, {
   loader as expenseEditLoader,
   action as expenseEditAction
-} from './components/ExpenseEditForm.jsx'
-import ExpenseCreateForm, {
+} from './routes/ExpenseEdit.jsx'
+import ExpenseCreate, {
   loader as expenseCreateLoader,
   action as expenseCreateAction
-} from './components/ExpensesCreateForm.jsx'
+} from './routes/ExpensesCreate.jsx'
 
 const router = createBrowserRouter([
   {
@@ -27,13 +27,13 @@ const router = createBrowserRouter([
       children: [
         {
           path: 'expenses/:id',
-          element: <Dialog open><ExpenseEditForm /></Dialog>,
+          element: <Dialog open><ExpenseEdit /></Dialog>,
           loader: expenseEditLoader,
           action: expenseEditAction
         },
         {
           path: 'expenses/new',
-          element: <Dialog open><ExpenseCreateForm /></Dialog>,
+          element: <Dialog open><ExpenseCreate /></Dialog>,
           loader: expenseCreateLoader,
           action: expenseCreateAction
         }
