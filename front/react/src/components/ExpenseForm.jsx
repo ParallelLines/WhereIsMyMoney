@@ -5,6 +5,7 @@ export default function ExpenseForm({ expense, categories, currencies }) {
     const navigate = useNavigate()
 
     const date = formatDateForInput(expense ? new Date(expense.date) : new Date())
+    const mostPopularCategory = categories.reduce((acc, curr) => (acc && acc.count > curr.count) ? acc : curr)
 
     return (
         <Form className="basic-form" id="expense-form" method="POST">
@@ -45,7 +46,7 @@ export default function ExpenseForm({ expense, categories, currencies }) {
                 <select
                     name="category_id"
                     aria-label="category name"
-                    defaultValue={expense ? expense.category_id : ''}
+                    defaultValue={expense ? expense.category_id : mostPopularCategory.id}
                 >
                     {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                 </select>
