@@ -35,7 +35,7 @@ const expenses = {
 }
 
 const categories = {
-    getAll: 'SELECT * FROM categories WHERE user_id = $1',
+    getAll: 'WITH popcat AS (SELECT category_id, count(*) FROM expenses WHERE user_id = $1 GROUP BY category_id) SELECT cat.id, cat.user_id, cat.name, cat.color, popcat.count FROM categories cat JOIN popcat ON popcat.category_id = cat.id',
     getOne: 'SELECT * FROM categories WHERE id = $1',
     createOne: 'INSERT INTO categories (user_id, name, color) VALUES ($1, $2, $3)',
     updateOne: 'UPDATE categories SET name = $2, color = $3 WHERE id = $1',
