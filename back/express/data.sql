@@ -1,6 +1,6 @@
 CREATE DATABASE budget;
 
-DROP TABLE IF EXISTS users, categories, inusd, currencies, expenses, income, regulars;
+DROP TABLE IF EXISTS users, categories, inusd, currencies, expenses, regulars;
 
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
@@ -11,6 +11,7 @@ CREATE TABLE users (
 CREATE TABLE categories (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    parent_id BIGINT REFERENCES categories(id) ON DELETE CASCADE,
     name VARCHAR(100) NOT NULL,
     color VARCHAR(6) DEFAULT 'c7c7c7'
 );
