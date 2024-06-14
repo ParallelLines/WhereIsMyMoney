@@ -5,7 +5,7 @@ export default function ExpenseForm({ expense, categories, currencies }) {
     const navigate = useNavigate()
 
     const date = formatDateForInput(expense ? new Date(expense.date) : new Date())
-    const mostPopularCategory = categories.reduce((acc, curr) => (acc && acc.count > curr.count) ? acc : curr)
+    const mostPopularCategory = findMostPopularCategory(categories)
 
     return (
         <Form className="basic-form" id="expense-form" method="POST">
@@ -46,7 +46,7 @@ export default function ExpenseForm({ expense, categories, currencies }) {
                 <select
                     name="category_id"
                     aria-label="category name"
-                    defaultValue={expense ? expense.category_id : mostPopularCategory.id}
+                    defaultValue={expense ? expense.category_id : mostPopularCategory}
                 >
                     {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                 </select>
@@ -64,4 +64,13 @@ export default function ExpenseForm({ expense, categories, currencies }) {
             <button type="button" onClick={() => navigate('/')}>Cancel</button>
         </Form>
     )
+}
+
+function findMostPopularCategory(categories) {
+    if (categories.length > 0) {
+        const popularCategory = categories.reduce(
+            (acc, curr) => (acc && acc.count > curr.count) ? acc : curr
+        )
+        return popularCategory.id
+    } else return ''
 }
