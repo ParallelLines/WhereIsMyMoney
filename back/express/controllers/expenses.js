@@ -1,7 +1,7 @@
 const db = require('../db')
 
 module.exports.getAll = async (req, res) => {
-    const userId = '2'
+    const { userId } = req.params
     try {
         const expenses = await db.query(db.expenses.getAll, [userId])
         res.json(expenses.rows)
@@ -12,9 +12,9 @@ module.exports.getAll = async (req, res) => {
 }
 
 module.exports.getOne = async (req, res) => {
-    const { id } = req.params
+    const { userId, id } = req.params
     try {
-        const expense = await db.query(db.expenses.getOne, [id])
+        const expense = await db.query(db.expenses.getOne, [userId, id])
         res.json(expense.rows)
     } catch (e) {
         console.log('error while getOne expenses: ', e.code)
@@ -23,11 +23,12 @@ module.exports.getOne = async (req, res) => {
 }
 
 module.exports.create = async (req, res) => {
+    const { userId } = req.params
     const newData = req.body
     newData.inUSD = 0
     newData.regular_name = null
     newData.reqular_id = null
-    const isCatValid = await isCategoryValid(newData.category_id, newData.user_id)
+    const isCatValid = await isCategoryValid(newData.category_id, userId)
     if (!isCatValid) {
         res.sendStatus(400)
         return
@@ -35,7 +36,7 @@ module.exports.create = async (req, res) => {
 
     try {
         await db.query(db.expenses.createOne, [
-            newData.user_id,
+            userId,
             newData.category_id,
             newData.name,
             newData.sum,
@@ -52,9 +53,9 @@ module.exports.create = async (req, res) => {
 }
 
 module.exports.editOne = async (req, res) => {
-    const { id } = req.params
+    const { userId, id } = req.params
     try {
-        const expenseRes = await db.query(db.expenses.getOne, [id])
+        const expenseRes = await db.query(db.expenses.getOne, [userId, id])
         const expense = expenseRes.rows[0]
         if (expense) {
             if (req.body.sum !== expense.sum) {
@@ -62,7 +63,7 @@ module.exports.editOne = async (req, res) => {
                 expense.inUSD = 1
             }
             if (req.body.category_id) {
-                const isCatValid = await isCategoryValid(req.body.category_id, expense.user_id)
+                const isCatValid = await isCategoryValid(req.body.category_id, userId)
                 if (!isCatValid) {
                     res.sendStatus(400)
                     return
@@ -74,6 +75,7 @@ module.exports.editOne = async (req, res) => {
             expense.currency = req.body.currency ? req.body.currency : expense.currency
             expense.date = req.body.date ? req.body.date : expense.date
             await db.query(db.expenses.updateOne, [
+                userId,
                 id,
                 expense.category_id,
                 expense.name,
@@ -93,9 +95,9 @@ module.exports.editOne = async (req, res) => {
 }
 
 module.exports.deleteOne = async (req, res) => {
-    const { id } = req.params
+    const { userId, id } = req.params
     try {
-        await db.query(db.expenses.deleteOne, [id])
+        await db.query(db.expenses.deleteOne, [userId, id])
         res.sendStatus(200)
     } catch (e) {
         console.log('error while deleteOne expenses: ', e.code)
@@ -103,9 +105,9 @@ module.exports.deleteOne = async (req, res) => {
     }
 }
 
-async function isCategoryValid(category_id, user_id) {
+async function isCategoryValid(categoryId, userId) {
     try {
-        const category = await db.query(db.categories.getOneByUser, [category_id, user_id])
+        const category = await db.query(db.categories.getOne, [userId, categoryId])
         return category.rows.length === 1
     } catch (e) {
         console.log('error while isCategoryValid expenses: ', e.code)

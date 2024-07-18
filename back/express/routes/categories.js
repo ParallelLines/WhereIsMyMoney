@@ -3,11 +3,11 @@ const router = express.Router()
 const categories = require('../controllers/categories')
 const catchAsync = require('../utils/catchAsync')
 
-router.route('/')
+router.route('/:userId')
     .get(catchAsync(categories.getAll))
     .post(catchAsync(categories.create))
 
-router.route('/:id')
+router.route('/:userId/:id')
     .get(catchAsync(categories.getOne))
     .put(catchAsync(categories.editOne))
     .delete(catchAsync(categories.deleteOne))
