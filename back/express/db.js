@@ -1,6 +1,11 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
+const { readSql } = require('./utils/sqlReader')
+const getCategoriesRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
+const getPopularCategories = readSql('./sql/categoriesGetPopular.sql')
+const getExpenses = readSql('./sql/expensesGetAll.sql')
+const getOneExpense = readSql('./sql/expensesGetOne.sql')
 
 const { Pool } = require('pg')
 const pool = new Pool({
@@ -27,8 +32,8 @@ const currencies = {
 }
 
 const expenses = {
-    getAll: 'SELECT e.id, e.user_id, e.category_id, e.name, ca.name AS category_name, ca.color, e.sum, e.currency, cu.symbol, e.date, e.regular_id, e.regular_name FROM expenses e JOIN categories ca ON e.category_id = ca.id JOIN currencies cu ON e.currency = cu.name WHERE e.user_id = $1 ORDER BY e.date DESC',
-    getOne: 'SELECT e.id, e.user_id, e.category_id, e.name, ca.name AS category_name, ca.color, e.sum, e.currency, cu.symbol, e.date, e.regular_id, e.regular_name FROM expenses e JOIN categories ca ON e.category_id = ca.id JOIN currencies cu ON e.currency = cu.name WHERE e.user_id = $1 AND e.id = $2',
+    getAll: getExpenses,
+    getOne: getOneExpense,
     createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
     updateOne: 'UPDATE expenses SET category_id = $3, name = $4, sum = $5, inUSD = $6, currency = $7, date = $8 WHERE user_id = $1 AND id = $2',
     deleteOne: 'DELETE FROM expenses WHERE user_id = $1 AND id = $2'
@@ -36,7 +41,8 @@ const expenses = {
 
 const categories = {
     getAll: 'SELECT * FROM categories WHERE user_id = $1',
-    getPopular: 'WITH popcat AS (SELECT category_id, count(*) FROM expenses WHERE user_id = $1 GROUP BY category_id) SELECT cat.id, cat.user_id, cat.name, cat.color, popcat.count FROM categories cat JOIN popcat ON popcat.category_id = cat.id',
+    getAllRecursive: getCategoriesRecursive,
+    getPopular: getPopularCategories,
     getOne: 'SELECT * FROM categories WHERE user_id = $1 AND id = $2',
     createOne: 'INSERT INTO categories (user_id, name, parent_id, color) VALUES ($1, $2, $3, $4)',
     updateOne: 'UPDATE categories SET name = $2, color = $3 WHERE id = $1',

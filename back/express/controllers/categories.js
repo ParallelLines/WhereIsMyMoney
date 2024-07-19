@@ -3,7 +3,7 @@ const db = require('../db')
 module.exports.getAll = async (req, res) => {
     const { userId } = req.params
     try {
-        const categories = await db.query(db.categories.getAll, [userId])
+        const categories = await db.query(db.categories.getAllRecursive, [userId])
         res.json(categories.rows)
     } catch (e) {
         console.log('error while getAll categories: ', e.code)
