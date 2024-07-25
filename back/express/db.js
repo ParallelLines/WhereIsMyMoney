@@ -18,6 +18,8 @@ const pool = new Pool({
 
 const users = {
     getOne: 'SELECT * FROM users WHERE id = $1',
+    getOneByName: 'SELECT * FROM users WHERE name = $1',
+    getIdByName: 'SELECT id FROM users WHERE name = $1',
     createOne: 'INSERT INTO users (name, password) VALUES ($1, $2)',
     updateOne: 'UPDATE users SET name = $2, password = $3 WHERE id = $1',
     deleteOne: 'DELETE FROM users WHERE id = $1'

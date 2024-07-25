@@ -6,7 +6,7 @@ module.exports.getAll = async (req, res) => {
         res.json(currencies.rows)
     } catch (e) {
         console.log('error while getAll currencies: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -17,7 +17,7 @@ module.exports.getOne = async (req, res) => {
         res.json(currencies.rows)
     } catch (e) {
         console.log('error while getOne currencies: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -31,7 +31,7 @@ module.exports.create = async (req, res) => {
         res.sendStatus(200)
     } catch (e) {
         console.log('error while create currencies: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -50,11 +50,11 @@ module.exports.editOne = async (req, res) => {
             ])
             res.sendStatus(200)
         } else {
-            res.sendStatus(400)
+            res.status(400).send('no such currency :(')
         }
     } catch (e) {
         console.log('error while editOne currencies: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -65,6 +65,6 @@ module.exports.deleteOne = async (req, res) => {
         res.sendStatus(200)
     } catch (e) {
         console.log('error while deleteOne currencies: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }

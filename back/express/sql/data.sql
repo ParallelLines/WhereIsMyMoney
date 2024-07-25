@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS users, categories, inusd, currencies, expenses, regulars;
 
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255)
 );
 

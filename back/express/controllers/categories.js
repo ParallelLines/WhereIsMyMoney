@@ -7,8 +7,7 @@ module.exports.getAll = async (req, res) => {
         res.json(categories.rows)
     } catch (e) {
         console.log('error while getAll categories: ', e.code)
-        console.log('look for the error here: https://www.postgresql.org/docs/current/errcodes-appendix.html')
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -19,8 +18,7 @@ module.exports.getOne = async (req, res) => {
         res.json(category.rows)
     } catch (e) {
         console.log('error while getOne categories: ', e.code)
-        console.log('look for the error here: https://www.postgresql.org/docs/current/errcodes-appendix.html')
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -37,8 +35,7 @@ module.exports.create = async (req, res) => {
         res.sendStatus(200)
     } catch (e) {
         console.log('error while create categories: ', e.code)
-        console.log('look for the error here: https://www.postgresql.org/docs/current/errcodes-appendix.html')
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -57,12 +54,11 @@ module.exports.editOne = async (req, res) => {
             ])
             res.sendStatus(200)
         } else {
-            res.sendStatus(400)
+            res.status(500).send('no such category :(')
         }
     } catch (e) {
         console.log('error while editOne categories: ', e.code)
-        console.log('look for the error here: https://www.postgresql.org/docs/current/errcodes-appendix.html')
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -73,7 +69,6 @@ module.exports.deleteOne = async (req, res) => {
         res.sendStatus(200)
     } catch (e) {
         console.log('error while deleteOne categories: ', e.code)
-        console.log('look for the error here: https://www.postgresql.org/docs/current/errcodes-appendix.html')
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }

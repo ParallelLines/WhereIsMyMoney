@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 const currencies = require('../controllers/currencies')
 const catchAsync = require('../utils/catchAsync')
+const { verifyJWT } = require('../middleware')
+
+router.use(verifyJWT)
 
 router.route('/')
     .get(catchAsync(currencies.getAll))

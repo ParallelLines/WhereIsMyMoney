@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 const users = require('../controllers/users')
 const catchAsync = require('../utils/catchAsync')
+const { verifyJWT } = require('../middleware')
+
+router.use(verifyJWT)
 
 router.route('/')
     .post(catchAsync(users.create))

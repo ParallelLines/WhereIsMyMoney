@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 const expenses = require('../controllers/expenses')
 const catchAsync = require('../utils/catchAsync')
+const { verifyJWT } = require('../middleware')
+
+router.use(verifyJWT)
 
 router.route('/:userId')
     .get(catchAsync(expenses.getAll))

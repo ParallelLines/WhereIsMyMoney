@@ -7,7 +7,7 @@ module.exports.getAll = async (req, res) => {
         res.json(expenses.rows)
     } catch (e) {
         console.log('error while getAll expenses: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -18,7 +18,7 @@ module.exports.getOne = async (req, res) => {
         res.json(expense.rows)
     } catch (e) {
         console.log('error while getOne expenses: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -30,7 +30,7 @@ module.exports.create = async (req, res) => {
     newData.reqular_id = null
     const isCatValid = await isCategoryValid(newData.category_id, userId)
     if (!isCatValid) {
-        res.sendStatus(400)
+        res.status(400).send('cannot use this category')
         return
     }
 
@@ -48,7 +48,7 @@ module.exports.create = async (req, res) => {
         res.sendStatus(200)
     } catch (e) {
         console.log('error while create expenses: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -65,7 +65,7 @@ module.exports.editOne = async (req, res) => {
             if (req.body.category_id) {
                 const isCatValid = await isCategoryValid(req.body.category_id, userId)
                 if (!isCatValid) {
-                    res.sendStatus(400)
+                    res.status(400).send('cannot use this category')
                     return
                 }
             }
@@ -86,11 +86,11 @@ module.exports.editOne = async (req, res) => {
             ])
             res.sendStatus(200)
         } else {
-            res.sendStatus(400)
+            res.status(500).send('no such expense :(')
         }
     } catch (e) {
         console.log('error while editOne expenses: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
@@ -101,7 +101,7 @@ module.exports.deleteOne = async (req, res) => {
         res.sendStatus(200)
     } catch (e) {
         console.log('error while deleteOne expenses: ', e.code)
-        res.sendStatus(500)
+        res.status(500).send('something went wrong :(')
     }
 }
 
