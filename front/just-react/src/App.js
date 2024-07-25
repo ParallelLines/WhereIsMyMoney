@@ -1,13 +1,20 @@
-import { useState } from "react"
-import CategoriesTree from "./components/CategoriesTree"
-const URL = process.env.REACT_APP_BACKEND_URL
+import { useState } from 'react'
+import { useCookies } from 'react-cookie'
+import CategoriesTree from './components/CategoriesTree'
+import Auth from './components/Auth'
 
 export default function App() {
+  const [cookies, setCookie, removeCookie] = useCookies()
   const [errors, setErrors] = useState([])
 
+  const authToken = cookies.budgetAuthToken
   return (
-    <div className="App">
-      <CategoriesTree />
+    <div className="app">
+      {!authToken && <Auth />}
+      {authToken &&
+        <>
+          <CategoriesTree />
+        </>}
     </div>
   )
 }
