@@ -1,7 +1,8 @@
 const db = require('../db')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const SECRET_KEY = 'secret' // store it somewhere else
+const SECRET_KEY = process.env.SECRET_KEY
+const COOKIE_EXPIRATION = '100 days'
 
 module.exports.signUp = async (req, res) => {
     const { username, password } = req.body
@@ -15,7 +16,7 @@ module.exports.signUp = async (req, res) => {
 
         const result = await db.query(db.users.getIdByName, [username])
         const newUserId = result.rows[0].id
-        const token = jwt.sign({ userId: newUserId, username: username }, SECRET_KEY, { expiresIn: '360 days' })
+        const token = jwt.sign({ userId: newUserId, username: username }, SECRET_KEY, { expiresIn: COOKIE_EXPIRATION })
         res.json(token)
     } catch (e) {
         if (e.code === '23505') {
@@ -37,7 +38,7 @@ module.exports.logIn = async (req, res) => {
             const id = result.rows[0].id
             const success = await bcrypt.compare(password, result.rows[0].password)
             if (success) {
-                const token = jwt.sign({ userId: id, username: username }, SECRET_KEY, { expiresIn: '360 days' })
+                const token = jwt.sign({ userId: id, username: username }, SECRET_KEY, { expiresIn: COOKIE_EXPIRATION })
                 res.json(token)
             } else {
                 res.status(401).send('name or password are incorrect')
