@@ -6,7 +6,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
 export default function Auth() {
     const [cookie, setCookie, removeCookie] = useCookies(null)
-    const [isLogIn, setIsLogIn] = useState(false)
+    const [isLogIn, setIsLogIn] = useState(true)
     const [error, setError] = useState(null)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -37,7 +37,7 @@ export default function Auth() {
             .post(url, reqBody, params)
             .then(res => {
                 setCookie('budgetAuthToken', res.data)
-                window.location.reload()
+                window.location.reload() // do i need this??
             })
             .catch(e => {
                 if (e.response) {
@@ -83,14 +83,13 @@ export default function Auth() {
             </form>
             <div className="auth-options">
                 <button
-                    onClick={() => viewLogIn(false)}
-                    className={isLogIn ? "auth-option dull" : "auth-option"}
-                >Sign Up</button>
-
-                <button
                     onClick={() => viewLogIn(true)}
                     className={isLogIn ? "auth-option" : "auth-option dull"}
                 >Log In</button>
+                <button
+                    onClick={() => viewLogIn(false)}
+                    className={isLogIn ? "auth-option dull" : "auth-option"}
+                >Sign Up</button>
             </div>
         </div>
     )

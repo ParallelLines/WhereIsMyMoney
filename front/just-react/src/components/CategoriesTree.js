@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import axiosInstance from '../utils/axiosInstance'
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
-const ENDPOINT = BACKEND_URL + '/categories'
+const ENDPOINT = '/categories'
 
 export default function CategoriesTree() {
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
     const [categories, setCategories] = useState([])
 
     const getCategories = async () => {
-        const response = await axios.get(ENDPOINT)
-            .catch(e => console.log('Error trying to request categories: ', e))
+        const response = await axiosInstance
+            .get(ENDPOINT)
+            .catch(e => {
+                console.log('Error trying to request categories: ', e)
+                setError('couldn\'t get the data :(')
+            })
         if (response) setCategories(response.data)
     }
 
