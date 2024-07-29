@@ -6,11 +6,11 @@ const { verifyJWT } = require('../middleware')
 
 router.use(verifyJWT)
 
-router.route('/:userId')
+router.route('/')
     .get(catchAsync(categories.getAll))
     .post(catchAsync(categories.create))
 
-router.route('/:userId/:id')
+router.route('/:id')
     .get(catchAsync(categories.getOne))
     .put(catchAsync(categories.editOne))
     .delete(catchAsync(categories.deleteOne))

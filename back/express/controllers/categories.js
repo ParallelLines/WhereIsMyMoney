@@ -1,9 +1,10 @@
 const db = require('../db')
 
 module.exports.getAll = async (req, res) => {
-    const { userId } = req.params
+    const { userId } = req
     try {
         const categories = await db.query(db.categories.getAllRecursive, [userId])
+        console.log(categories.rows)
         res.json(categories.rows)
     } catch (e) {
         console.log('error while getAll categories: ', e.code)
@@ -12,7 +13,8 @@ module.exports.getAll = async (req, res) => {
 }
 
 module.exports.getOne = async (req, res) => {
-    const { userId, id } = req.params
+    const { userId } = req
+    const { id } = req.params
     try {
         const category = await db.query(db.categories.getOne, [userId, id])
         res.json(category.rows)
@@ -24,7 +26,7 @@ module.exports.getOne = async (req, res) => {
 
 module.exports.create = async (req, res) => {
     const newData = req.body
-    const { userId } = req.params
+    const { userId } = req
     try {
         await db.query(db.categories.createOne, [
             userId,
@@ -40,7 +42,8 @@ module.exports.create = async (req, res) => {
 }
 
 module.exports.editOne = async (req, res) => {
-    const { userId, id } = req.params
+    const { userId } = req
+    const { id } = req.params
     try {
         const categoryRes = await db.query(db.categories.getOne, [userId, id])
         const category = categoryRes.rows[0]
@@ -63,7 +66,8 @@ module.exports.editOne = async (req, res) => {
 }
 
 module.exports.deleteOne = async (req, res) => {
-    const { userId, id } = req.params
+    const { userId } = req
+    const { id } = req.params
     try {
         await db.query(db.categories.deleteOne, [userId, id])
         res.sendStatus(200)
