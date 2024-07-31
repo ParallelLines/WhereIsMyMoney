@@ -12,18 +12,6 @@ export default function CategoriesTree() {
     const [categories, setCategories] = useState([])
     const [createMode, setCreateMode] = useState(false)
 
-    const getCategories = async () => {
-        const response = await axiosInstance
-            .get(ENDPOINT)
-            .catch(e => {
-                console.log('Error trying to request categories: ', e)
-                setError('couldn\'t get the data :(')
-            })
-        if (response) {
-            setCategories(response.data)
-        }
-    }
-
     const insertNewCategory = (categoryData) => {
         if (!categoryData.parent_id) {
             categories.unshift(categoryData)
@@ -57,6 +45,18 @@ export default function CategoriesTree() {
         }
     }
 
+    const getCategories = async () => {
+        const response = await axiosInstance
+            .get(ENDPOINT)
+            .catch(e => {
+                console.log('Error trying to request categories: ', e)
+                setError('couldn\'t get the data :(')
+            })
+        if (response) {
+            setCategories(response.data)
+        }
+    }
+
     const createCategory = async (categoryData) => {
         const response = await axiosInstance
             .post(ENDPOINT, {
@@ -69,6 +69,7 @@ export default function CategoriesTree() {
                 setError('couldn\'t create a category :(')
             })
         if (response) {
+            categoryData.id = response.data[0].id
             insertNewCategory(categoryData)
         }
     }
@@ -125,8 +126,8 @@ export default function CategoriesTree() {
                     onSubmit={handleCreate}
                     onCancel={() => setCreateMode(false)}
                 />}
-            {categories.map((cat, idx) => {
-                return <CategoriesTreeItem key={idx} actions={actions} categoryData={{ ...cat }} />
+            {categories.map(cat => {
+                return <CategoriesTreeItem key={cat.id} actions={actions} categoryData={{ ...cat }} />
             })}
         </div>
     )

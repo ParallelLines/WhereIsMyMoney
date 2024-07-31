@@ -28,13 +28,13 @@ module.exports.create = async (req, res) => {
     const newData = req.body
     const { userId } = req
     try {
-        await db.query(db.categories.createOne, [
+        const result = await db.query(db.categories.createOne, [
             userId,
             newData.name,
             newData.parent_id,
             newData.color
         ])
-        res.sendStatus(200)
+        res.json(result.rows)
     } catch (e) {
         console.log('error while create categories: ', e.code)
         res.status(500).send('something went wrong :(')
