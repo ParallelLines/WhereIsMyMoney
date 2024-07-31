@@ -44,12 +44,13 @@ module.exports.create = async (req, res) => {
 module.exports.editOne = async (req, res) => {
     const { userId } = req
     const { id } = req.params
+    const { name, color } = req.body
     try {
         const categoryRes = await db.query(db.categories.getOne, [userId, id])
         const category = categoryRes.rows[0]
         if (category) {
-            category.name = req.body.name ? req.body.name : category.name
-            category.color = req.body.color ? req.body.color : category.color
+            category.name = name ? name : category.name
+            category.color = color ? color : category.color
             await db.query(db.categories.updateOne, [
                 id,
                 category.name,
