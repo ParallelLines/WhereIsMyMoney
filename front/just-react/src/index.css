@@ -1,0 +1,50 @@
+html,
+body {
+    margin: 0;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+html {
+    font-size: 20px;
+    /* font-size: max(1.4vw, 15px) */
+}
+
+.categories-tree-item {
+    display: flex;
+    flex-direction: row;
+}
+
+.invisible-btn {
+    display: none;
+}
+
+.categories-tree-item:hover .invisible-btn {
+    display: inline;
+}
+
+.categories-tree-item.level-1 {
+    margin-left: 0;
+}
+
+.categories-tree-item.level-2 {
+    margin-left: 0.5rem;
+}
+
+.categories-tree-item.level-3 {
+    margin-left: 1rem;
+}
+
+.categories-tree-item.level-4 {
+    margin-left: 1.5rem;
+}
+
+.categories-tree-item.level-5 {
+    margin-left: 2rem;
+}
+
+.svg-icon {
+    fill: #000000;
+    width: 1rem;
+    height: 1rem;
+}
