@@ -11,7 +11,7 @@ export default function CategoriesTreeItem({ actions, categoryData }) {
 
     const containerClassName = 'categories-tree-item'
     const level = categoryData ? categoryData.level : '1'
-    const levelToCreate = categoryData ? categoryData.level + 1 : '2'
+    const levelToCreate = categoryData ? parseInt(categoryData.level) + 1 : '2'
     const mainContainer = containerClassName + ' level-' + level
     const secondContainer = containerClassName + ' level-' + levelToCreate
 
