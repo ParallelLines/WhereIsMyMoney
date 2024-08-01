@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCancel }) {
     const [category, setCategory] = useState(categoryData ? categoryData : {
@@ -7,6 +7,11 @@ export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCance
         parent_id: null,
         level: '1'
     })
+    // we need this because the initial click on a '+' button in a parent 
+    // CategoryTree or CategoryTreeItem is also counts as an outside click -__-
+    // so now the event listener with the help of this variable ignores the first click
+    const ignoreFirstClick = useRef(false)
+    const vanishingRef = useRef(null)
 
     const handleChange = (e) => {
         setCategory(currCategory => {
@@ -26,8 +31,22 @@ export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCance
         onCancel()
     }
 
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (vanishingRef.current && ignoreFirstClick.current && !vanishingRef.current.contains(e.target)) {
+                handleCancel(e)
+            } else {
+                ignoreFirstClick.current = true
+            }
+        }
+        document.addEventListener('click', handleOutsideClick, false)
+        return () => {
+            document.removeEventListener('click', handleOutsideClick, false)
+        }
+    }, [])
+
     return (
-        <form className="inline-form" onSubmit={handleSubmit}>
+        <form className="inline-form" onSubmit={handleSubmit} ref={vanishingRef}>
             <input name="name"
                 className="category-form-input"
                 value={category.name}
