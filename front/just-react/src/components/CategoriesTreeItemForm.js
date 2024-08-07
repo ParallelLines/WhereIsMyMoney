@@ -52,12 +52,15 @@ export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCance
                 value={category.name}
                 placeholder="name"
                 onChange={handleChange}
+                required
             ></input>
             <input name="color"
                 className="category-form-input"
                 value={category.color}
                 placeholder="ffffff"
                 onChange={handleChange}
+                minLength={6}
+                maxLength={6}
             ></input>
             <button>Save</button>
             <button onClick={handleCancel}>Cancel</button>
