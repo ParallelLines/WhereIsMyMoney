@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useCookies } from 'react-cookie'
 import CategoriesTree from './components/CategoriesTree'
 import Auth from './components/Auth'
+import ExpensesList from './components/ExpensesList'
 
 export default function App() {
   const [cookies, setCookie, removeCookie] = useCookies()
@@ -14,6 +15,7 @@ export default function App() {
       {authToken &&
         <>
           <CategoriesTree />
+          <ExpensesList />
         </>}
     </div>
   )

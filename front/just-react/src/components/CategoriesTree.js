@@ -3,6 +3,7 @@ import axiosInstance from '../utils/axiosInstance'
 import CategoriesTreeItem from './CategoriesTreeItem'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
 import IconAdd from './IconAdd'
+import SkeletonCategorieTree from './SkeletonCategorieTree'
 
 const ENDPOINT = '/categories'
 
@@ -37,69 +38,85 @@ export default function CategoriesTree() {
     }
 
     const removeDeletedCategory = (id) => {
+        let start = 0
+        let qty = 0
         for (let i = 0; i < categories.length; i++) {
             if (categories[i].id === id) {
-                categories.splice(i, 1)
-                setCategories([...categories])
+                start = i
+                qty = 1
+            }
+            if (categories[i].parent_id === id) {
+                qty++
             }
         }
+        categories.splice(start, qty)
+        setCategories([...categories])
     }
 
     const getCategories = async () => {
-        const response = await axiosInstance
+        await axiosInstance
             .get(ENDPOINT)
+            .then(response => {
+                if (response) {
+                    setCategories(response.data)
+                    setLoading(false)
+                }
+            })
             .catch(e => {
                 console.log('Error trying to request categories: ', e)
                 setError('couldn\'t get the data :(')
             })
-        if (response) {
-            setCategories(response.data)
-        }
     }
 
     const createCategory = async (categoryData) => {
-        const response = await axiosInstance
+        await axiosInstance
             .post(ENDPOINT, {
                 name: categoryData.name,
                 parent_id: categoryData.parent_id,
                 color: categoryData.color
             })
+            .then(response => {
+                if (response) {
+                    categoryData.id = response.data[0].id
+                    insertNewCategory(categoryData)
+                }
+            })
             .catch(e => {
                 console.log('Error trying to create a categorie: ', e)
                 setError('couldn\'t create a category :(')
             })
-        if (response) {
-            categoryData.id = response.data[0].id
-            insertNewCategory(categoryData)
-        }
     }
 
     const editCategory = async (categoryData) => {
-        const response = await axiosInstance
+        await axiosInstance
             .put(ENDPOINT + '/' + categoryData.id, {
                 name: categoryData.name,
                 parent_id: categoryData.parent_id,
                 color: categoryData.color
             })
+            .then(response => {
+                if (response) {
+                    updateEditedCategory(categoryData)
+                }
+            })
             .catch(e => {
                 console.log('Error trying to edit a categorie: ', e)
                 setError('couldn\'t edit a category :(')
             })
-        if (response) {
-            updateEditedCategory(categoryData)
-        }
     }
 
     const deleteCategory = async (id) => {
-        const response = axiosInstance
+        await axiosInstance
             .delete(ENDPOINT + '/' + id)
+            .then(response => {
+                if (response) {
+                    removeDeletedCategory(id)
+                }
+            })
             .catch(e => {
                 console.log('Error trying to delete a categorie: ', e)
                 setError('couldn\'t delete a category :(')
             })
-        if (response) {
-            removeDeletedCategory(id)
-        }
     }
 
     const handleCreate = (data) => {
@@ -120,12 +137,13 @@ export default function CategoriesTree() {
     return (
         <div className="categories-tree">
             <h2>Your categories:</h2>
-            <button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
+            <span>All</span><button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
             {createMode &&
                 <CategoriesTreeItemForm
                     onSubmit={handleCreate}
                     onCancel={() => setCreateMode(false)}
                 />}
+            {loading && <SkeletonCategorieTree />}
             {categories.map(cat => {
                 return <CategoriesTreeItem key={cat.id} actions={actions} categoryData={{ ...cat }} />
             })}
