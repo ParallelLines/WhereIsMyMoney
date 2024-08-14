@@ -7,11 +7,17 @@ import SkeletonCategorieTree from './SkeletonCategorieTree'
 
 const ENDPOINT = '/categories'
 
-export default function CategoriesTree() {
+/**
+ * category structure:
+ * { id, user_id, parent_id, name, color }
+ */
+
+export default function CategoriesTree({ onSelect }) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [categories, setCategories] = useState([])
     const [createMode, setCreateMode] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState(null)
 
     const insertNewCategory = (categoryData) => {
         if (!categoryData.parent_id) {
@@ -33,23 +39,34 @@ export default function CategoriesTree() {
                 categories[i].name = categoryData.name
                 categories[i].color = categoryData.color
                 setCategories([...categories])
+                break
             }
         }
     }
 
     const removeDeletedCategory = (id) => {
         let start = 0
-        let qty = 0
+        const countChildren = (start, parentId) => {
+            const parents = {}
+            parents[parentId] = true
+            let qty = 0
+            for (let i = start; i < categories.length; i++) {
+                const potentialParent = categories[i].id
+                if (parents[categories[i].parent_id]) {
+                    parents[potentialParent] = true
+                    qty += 1
+                }
+            }
+            return qty
+        }
+
         for (let i = 0; i < categories.length; i++) {
             if (categories[i].id === id) {
                 start = i
-                qty = 1
-            }
-            if (categories[i].parent_id === id) {
-                qty++
+                break
             }
         }
-        categories.splice(start, qty)
+        categories.splice(start, 1 + countChildren(start + 1, categories[start].id))
         setCategories([...categories])
     }
 
@@ -119,6 +136,11 @@ export default function CategoriesTree() {
             })
     }
 
+    const selectCategory = (id) => {
+        setSelectedCategory(id)
+        onSelect(id)
+    }
+
     const handleCreate = (data) => {
         createCategory(data)
         setCreateMode(false)
@@ -131,13 +153,14 @@ export default function CategoriesTree() {
     const actions = {
         create: createCategory,
         delete: deleteCategory,
-        edit: editCategory
+        edit: editCategory,
+        select: selectCategory
     }
 
     return (
         <div className="categories-tree">
-            <h2>Your categories:</h2>
-            <span>All</span><button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
+            <h2>Categories</h2>
+            <span className="text-standart category-tree-all" onClick={() => { selectCategory(null) }}>All</span><button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
             {createMode &&
                 <CategoriesTreeItemForm
                     onSubmit={handleCreate}
@@ -145,6 +168,9 @@ export default function CategoriesTree() {
                 />}
             {loading && <SkeletonCategorieTree />}
             {categories.map(cat => {
+                if (cat.id === selectedCategory) {
+                    return <CategoriesTreeItem key={cat.id} actions={actions} categoryData={{ ...cat }} selected={true} />
+                }
                 return <CategoriesTreeItem key={cat.id} actions={actions} categoryData={{ ...cat }} />
             })}
         </div>

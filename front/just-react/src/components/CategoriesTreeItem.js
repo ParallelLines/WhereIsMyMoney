@@ -5,11 +5,11 @@ import IconEdit from './IconEdit'
 import IconDelete from './IconDelete'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
 
-export default function CategoriesTreeItem({ actions, categoryData }) {
+export default function CategoriesTreeItem({ actions, categoryData, selected }) {
     const [editMode, setEditMode] = useState(categoryData ? false : true)
     const [createMode, setCreateMode] = useState(false)
 
-    const containerClassName = 'categories-tree-item'
+    const containerClassName = 'categories-tree-item' + (selected ? ' selected' : '')
     const level = categoryData ? categoryData.level : '1'
     const levelToCreate = categoryData ? parseInt(categoryData.level) + 1 : '2'
     const mainContainer = containerClassName + ' level-' + level
@@ -42,7 +42,7 @@ export default function CategoriesTreeItem({ actions, categoryData }) {
                 />}
                 {!editMode && categoryData &&
                     <>
-                        <div className="text-standart">{categoryData.name}</div>
+                        <div className="text-standart" onClick={() => { actions.select(categoryData.id) }}>{categoryData.name}</div>
                         <ColorMarker name={categoryData.name} color={categoryData.color} />
                         <button className="icon-btn invisible-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
                         <button className="icon-btn invisible-btn" onClick={() => setEditMode(true)}><IconEdit /></button>
