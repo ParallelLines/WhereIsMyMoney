@@ -1,4 +1,4 @@
-import SkeletonCard from "./SkeletonCard";
+import SkeletonCard from './SkeletonCard'
 
 export default function SkeletonCategorieTree() {
     const containerClassName = 'categories-tree-item'
