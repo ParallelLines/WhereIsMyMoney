@@ -1,7 +1,7 @@
 const db = require('../db')
 
 module.exports.getAll = async (req, res) => {
-    const { userId } = req.params
+    const { userId } = req
     try {
         const expenses = await db.query(db.expenses.getAll, [userId])
         res.json(expenses.rows)
@@ -12,7 +12,8 @@ module.exports.getAll = async (req, res) => {
 }
 
 module.exports.getOne = async (req, res) => {
-    const { userId, id } = req.params
+    const { id } = req.params
+    const { userId } = req
     try {
         const expense = await db.query(db.expenses.getOne, [userId, id])
         res.json(expense.rows)
@@ -23,8 +24,9 @@ module.exports.getOne = async (req, res) => {
 }
 
 module.exports.create = async (req, res) => {
-    const { userId } = req.params
+    const { userId } = req
     const newData = req.body
+    console.log(newData)
     newData.inUSD = 0
     newData.regular_name = null
     newData.reqular_id = null
@@ -53,7 +55,8 @@ module.exports.create = async (req, res) => {
 }
 
 module.exports.editOne = async (req, res) => {
-    const { userId, id } = req.params
+    const { id } = req.params
+    const { userId } = req
     try {
         const expenseRes = await db.query(db.expenses.getOne, [userId, id])
         const expense = expenseRes.rows[0]
@@ -95,7 +98,8 @@ module.exports.editOne = async (req, res) => {
 }
 
 module.exports.deleteOne = async (req, res) => {
-    const { userId, id } = req.params
+    const { id } = req.params
+    const { userId } = req
     try {
         await db.query(db.expenses.deleteOne, [userId, id])
         res.sendStatus(200)
