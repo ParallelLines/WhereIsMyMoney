@@ -4,7 +4,6 @@ module.exports.getAll = async (req, res) => {
     const { userId } = req
     try {
         const categories = await db.query(db.categories.getAllRecursive, [userId])
-        console.log(categories.rows)
         res.json(categories.rows)
     } catch (e) {
         console.log('error while getAll categories: ', e.code)

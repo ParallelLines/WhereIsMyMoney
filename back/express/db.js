@@ -36,7 +36,7 @@ const currencies = {
 const expenses = {
     getAll: getExpenses,
     getOne: getOneExpense,
-    createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+    createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
     updateOne: 'UPDATE expenses SET category_id = $3, name = $4, sum = $5, inUSD = $6, currency = $7, date = $8 WHERE user_id = $1 AND id = $2',
     deleteOne: 'DELETE FROM expenses WHERE user_id = $1 AND id = $2'
 }

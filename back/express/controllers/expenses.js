@@ -35,9 +35,8 @@ module.exports.create = async (req, res) => {
         res.status(400).send('cannot use this category')
         return
     }
-
     try {
-        await db.query(db.expenses.createOne, [
+        const result = await db.query(db.expenses.createOne, [
             userId,
             newData.category_id,
             newData.name,
@@ -47,7 +46,7 @@ module.exports.create = async (req, res) => {
             newData.reqular_id,
             newData.regular_name
         ])
-        res.sendStatus(200)
+        res.json(result.rows)
     } catch (e) {
         console.log('error while create expenses: ', e.code)
         res.status(500).send('something went wrong :(')
