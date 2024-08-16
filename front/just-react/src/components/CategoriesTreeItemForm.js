@@ -28,17 +28,17 @@ export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCance
     }
 
     return (
-        <VanishingBlock containerClassName="category-inline-form" onClose={handleCancel}>
+        <VanishingBlock containerClassName="category-inline-form-container" onClose={handleCancel}>
             <form className="inline-form" onSubmit={handleSubmit}>
                 <input name="name"
-                    className="category-form-input"
+                    className="form-input"
                     value={category.name}
                     placeholder="name"
                     onChange={handleChange}
                     required
                 ></input>
                 <input name="color"
-                    className="category-form-input"
+                    className="form-input"
                     value={category.color}
                     placeholder="ffffff"
                     onChange={handleChange}

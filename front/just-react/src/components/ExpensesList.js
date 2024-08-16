@@ -3,6 +3,8 @@ import axiosInstance from '../utils/axiosInstance'
 import Expense from './Expense'
 import SkeletonExpensesList from './SkeletonExpensesList'
 import IconAdd from './IconAdd'
+import VanishingBlock from './VanishingBlock'
+import ExpensesListForm from './ExpensesListForm'
 
 const ENDPOINT = '/expenses'
 
@@ -15,6 +17,7 @@ const ENDPOINT = '/expenses'
 export default function ExpensesList() {
     const [loading, setLoading] = useState(true)
     const [expenses, setExpenses] = useState([])
+    const [createMode, setCreateMode] = useState(false)
 
     const insertNewExpense = (expenseData) => {
         expenses.unshift(expenseData)
@@ -50,17 +53,87 @@ export default function ExpensesList() {
                     setLoading(false)
                 }
             })
+            .catch(e => {
+                console.log('Error trying to request expenses: ', e)
+            })
+    }
+
+    const createExpense = async (expenseData) => {
+        await axiosInstance
+            .post(ENDPOINT, {
+                name: expenseData.name,
+                sum: expenseData.sum,
+                currency: expenseData.currency,
+                category_id: expenseData.category_id,
+                date: expenseData.date
+            })
+            .then(response => {
+                if (response) {
+                    expenseData.id = response.data[0].id
+                    console.log(expenseData)
+                    insertNewExpense(expenseData)
+                    setCreateMode(false)
+                }
+            })
+            .catch(e => {
+                console.log('Error trying to create an expense: ', e)
+                // setError('couldn\'t create an expense :(')
+            })
+    }
+
+    const editExpense = async (expenseData) => {
+        await axiosInstance
+            .put(ENDPOINT + '/' + expenseData.id, {
+                name: expenseData.name,
+                sum: expenseData.sum,
+                currency: expenseData.currency,
+                category_id: expenseData.category_id,
+                date: expenseData.date
+            })
+            .then(response => {
+                if (response) {
+                    updateEditedExpense(expenseData)
+                }
+            })
+            .catch(e => {
+                console.log('Error trying to edit an expense: ', e)
+                // setError('couldn\'t edit an expense :(')
+            })
+    }
+
+    const deleteExpense = async (id) => {
+        await axiosInstance
+            .delete(ENDPOINT + '/' + id)
+            .then(response => {
+                if (response) {
+                    removeDeletedExpense(id)
+                }
+            })
+            .catch(e => {
+                console.log('Error trying to delete an expense: ', e)
+                // setError('couldn\'t delete an expense :(')
+            })
     }
 
     useEffect(() => {
         getExpenses()
     }, [])
+
     return (
         <div className="expenses-list">
             <h2>Expenses</h2>
-            <button className="icon-btn"><IconAdd /></button>
+            <button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
             {loading && <SkeletonExpensesList />}
-            {expenses.map(expense => <Expense data={expense} key={expense.id} />)}
+            {createMode && <ExpensesListForm onSubmit={createExpense} onCancel={() => setCreateMode(false)} />}
+            <div className='list-container'>
+                {expenses.map(expense =>
+                    <Expense
+                        expenseData={expense}
+                        key={expense.id}
+                        onEdit={editExpense}
+                        onDelete={deleteExpense}
+                    />)}
+            </div>
         </div>
     )
 }
