@@ -137,8 +137,13 @@ export default function CategoriesTree({ onSelect }) {
     }
 
     const selectCategory = (id) => {
-        setSelectedCategory(id)
-        onSelect(id)
+        if (selectedCategory === id) {
+            setSelectedCategory(null)
+            onSelect(null)
+        } else {
+            setSelectedCategory(id)
+            onSelect(id)
+        }
     }
 
     const handleCreate = (data) => {
@@ -159,8 +164,9 @@ export default function CategoriesTree({ onSelect }) {
 
     return (
         <div className="categories-tree">
-            <h2>Categories</h2>
-            <span className="text-standart category-tree-all" onClick={() => { selectCategory(null) }}>All</span><button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
+            <button className="icon-btn" onClick={() => setCreateMode(true)}>
+                <IconAdd />
+            </button>
             {createMode &&
                 <CategoriesTreeItemForm
                     onSubmit={handleCreate}

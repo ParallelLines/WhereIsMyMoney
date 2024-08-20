@@ -121,7 +121,6 @@ export default function ExpensesList() {
 
     return (
         <div className="expenses-list">
-            <h2>Expenses</h2>
             <button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
             {loading && <SkeletonExpensesList />}
             {createMode && <ExpensesListForm onSubmit={createExpense} onCancel={() => setCreateMode(false)} />}

@@ -24,7 +24,6 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
 
     const date = formatDateForInput(expenseData ? new Date(expenseData.date) : expense.date)
 
-
     const handleChange = (e) => {
         setExpense(currExpense => {
             return {
@@ -40,7 +39,7 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
         const curr = currencies.filter(c => c.name === expense.currency)[0]
         expense.sum = expense.sum.replace(',', '.')
         if (Number.isInteger(parseFloat(expense.sum))) {
-            expense.sum = expense.sum + '.00'
+            expense.sum = parseFloat(expense.sum) + '.00'
         }
         onSubmit({
             ...expense,
@@ -57,6 +56,14 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
                 if (response) {
                     setCurrencies(response.data)
                     setCurrenciesLoading(false)
+                    if (!expenseData) {
+                        setExpense(currExpense => {
+                            return {
+                                ...currExpense,
+                                'currency': response.data[0].name
+                            }
+                        })
+                    }
                 }
             })
             .catch(e => {

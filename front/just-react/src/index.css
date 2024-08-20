@@ -1,3 +1,8 @@
+:root {
+    --background: #f1f1f1;
+    --bg-selected-item: #cdcdcd;
+}
+
 html,
 body {
     margin: 0;
@@ -7,12 +12,13 @@ body {
 
 html {
     font-size: 20px;
-    /* font-size: max(1.4vw, 15px) */
 }
 
 #root {
     width: 100%;
     height: 100%;
+    background-color: var(--background);
+    font-family: monospace;
 }
 
 .app {
@@ -25,6 +31,10 @@ html {
         "left-column graphs"
         "left-column expenses";
     gap: 1rem 1rem;
+}
+
+.text-standart {
+    font-size: 1rem;
 }
 
 @keyframes skeleton-animation {
@@ -81,9 +91,10 @@ html {
 .categories-tree-item {
     display: flex;
     flex-direction: row;
-    width: 10rem;
+    width: 100%;
     height: 1.5rem;
     cursor: pointer;
+    border-radius: 0.3rem;
 }
 
 .invisible-btn {
@@ -94,8 +105,9 @@ html {
     display: inline;
 }
 
-.categories-tree-item.selected {
-    background-color: #aaaaaa;
+.categories-tree-item.selected span {
+    background-color: var(--bg-selected-item);
+    font-weight: bold;
 }
 
 .categories-tree-item.level-1 {
@@ -142,10 +154,8 @@ html {
     display: inline;
 }
 
-.modal {
-    position: absolute;
-    width: 20rem;
-    height: 10rem;
+.vanishing-block {
+    border: 1px solid black;
 }
 
 .piechart-container {
@@ -157,10 +167,23 @@ html {
     height: 1rem;
     border-radius: 50%;
     cursor: pointer;
+    margin: 0 0.2rem;
+}
+
+.inline-form {
+    display: flex;
+    flex-direction: row;
+    padding: 0.2rem;
+}
+
+.inline-form .react-colorful {
+    position: absolute;
 }
 
 .icon-btn {
     cursor: pointer;
+    background: none;
+    margin: 0 0.2rem;
 }
 
 .svg-icon {

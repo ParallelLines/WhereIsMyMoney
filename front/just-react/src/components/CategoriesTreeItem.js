@@ -17,7 +17,7 @@ export default function CategoriesTreeItem({ actions, categoryData, selected }) 
 
     const newCategoryData = {
         name: '',
-        color: '',
+        color: '777777',
         parent_id: categoryData.id,
         level: levelToCreate
     }
@@ -42,7 +42,7 @@ export default function CategoriesTreeItem({ actions, categoryData, selected }) 
                 />}
                 {!editMode && categoryData &&
                     <>
-                        <div className="text-standart" onClick={() => { actions.select(categoryData.id) }}>{categoryData.name}</div>
+                        <span className="text-standart" onClick={() => { actions.select(categoryData.id) }}>{categoryData.name}</span>
                         <ColorMarker name={categoryData.name} color={categoryData.color} />
                         <button className="icon-btn invisible-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
                         <button className="icon-btn invisible-btn" onClick={() => setEditMode(true)}><IconEdit /></button>

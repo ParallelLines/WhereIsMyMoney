@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import VanishingBlock from './VanishingBlock'
+import PopoverPicker from './PopoverPicker'
 
 export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCancel }) {
     const [category, setCategory] = useState(categoryData ? categoryData : {
         name: '',
-        color: '',
+        color: 'ffabd5',
         parent_id: null,
         level: '1'
     })
@@ -27,6 +28,15 @@ export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCance
         onCancel()
     }
 
+    const handleColorChange = (color) => {
+        setCategory(currCategory => {
+            return {
+                ...currCategory,
+                color: color.slice(1)
+            }
+        })
+    }
+
     return (
         <VanishingBlock containerClassName="category-inline-form-container" onClose={handleCancel}>
             <form className="inline-form" onSubmit={handleSubmit}>
@@ -37,14 +47,7 @@ export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCance
                     onChange={handleChange}
                     required
                 ></input>
-                <input name="color"
-                    className="form-input"
-                    value={category.color}
-                    placeholder="ffffff"
-                    onChange={handleChange}
-                    minLength={6}
-                    maxLength={6}
-                ></input>
+                <PopoverPicker color={category.color} onChange={handleColorChange} />
                 <button>Save</button>
                 <button onClick={handleCancel}>Cancel</button>
             </form>
