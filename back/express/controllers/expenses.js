@@ -76,6 +76,7 @@ module.exports.editOne = async (req, res) => {
             expense.sum = req.body.sum ? req.body.sum : expense.sum
             expense.currency = req.body.currency ? req.body.currency : expense.currency
             expense.date = req.body.date ? req.body.date : expense.date
+            console.log(expense)
             await db.query(db.expenses.updateOne, [
                 userId,
                 id,
