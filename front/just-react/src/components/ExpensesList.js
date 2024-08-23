@@ -70,7 +70,6 @@ export default function ExpensesList() {
             .then(response => {
                 if (response) {
                     expenseData.id = response.data[0].id
-                    console.log(expenseData)
                     insertNewExpense(expenseData)
                     setCreateMode(false)
                 }
