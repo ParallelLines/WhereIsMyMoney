@@ -6,6 +6,7 @@ const getCategoriesRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
 const getPopularCategories = readSql('./sql/categoriesGetPopular.sql')
 const getExpenses = readSql('./sql/expensesGetAll.sql')
 const getOneExpense = readSql('./sql/expensesGetOne.sql')
+const getAllCurrencies = readSql('./sql/currenciesGetAll.sql')
 
 const { Pool } = require('pg')
 const pool = new Pool({
@@ -26,7 +27,7 @@ const users = {
 }
 
 const currencies = {
-    getAll: 'SELECT * FROM currencies',
+    getAll: getAllCurrencies,
     getOne: 'SELECT * FROM currencies WHERE name = $1',
     createOne: 'INSERT INTO currencies (name, symbol) VALUES ($1, $2)',
     updateOne: 'UPDATE currencies SET name = $2, symbol = $3 WHERE name = $1',

@@ -1,8 +1,9 @@
 const db = require('../db')
 
 module.exports.getAll = async (req, res) => {
+    const { userId } = req
     try {
-        const currencies = await db.query(db.currencies.getAll)
+        const currencies = await db.query(db.currencies.getAll, [userId])
         res.json(currencies.rows)
     } catch (e) {
         console.log('error while getAll currencies: ', e.code)
