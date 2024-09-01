@@ -42,6 +42,10 @@ const expenses = {
     deleteOne: 'DELETE FROM expenses WHERE user_id = $1 AND id = $2'
 }
 
+const regulars = {
+
+}
+
 const categories = {
     getAll: 'SELECT * FROM categories WHERE user_id = $1',
     getAllRecursive: getCategoriesRecursive,
