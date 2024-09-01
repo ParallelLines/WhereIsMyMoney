@@ -1,14 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 import PopoverPicker from './PopoverPicker'
+import IconSave from './IconSave'
+import IconCancel from './IconCancel'
 
 export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCancel }) {
-    const [category, setCategory] = useState(categoryData ? categoryData : {
-        name: '',
-        color: 'ffabd5',
-        parent_id: null,
-        level: '1'
-    })
+    const [category, setCategory] = useState(categoryData)
 
     const handleChange = (e) => {
         setCategory(currCategory => {
@@ -41,15 +38,18 @@ export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCance
         <VanishingBlock containerClassName="category-inline-form-container" onClose={handleCancel}>
             <form className="inline-form" onSubmit={handleSubmit}>
                 <input name="name"
-                    className="form-input"
+                    className="standart-input"
                     value={category.name}
                     placeholder="name"
                     onChange={handleChange}
+                    autoFocus
                     required
                 ></input>
                 <PopoverPicker color={category.color} onChange={handleColorChange} />
-                <button>Save</button>
-                <button onClick={handleCancel}>Cancel</button>
+                <div className="btns">
+                    <button className="icon-btn" title="Save"><IconSave /></button>
+                    <button className="icon-btn" title="Cancel" onClick={handleCancel}><IconCancel /></button>
+                </div>
             </form>
         </VanishingBlock>
     )

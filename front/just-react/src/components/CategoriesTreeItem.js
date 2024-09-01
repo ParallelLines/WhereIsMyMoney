@@ -5,7 +5,7 @@ import IconEdit from './IconEdit'
 import IconDelete from './IconDelete'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
 
-export default function CategoriesTreeItem({ actions, categoryData, selected }) {
+export default function CategoriesTreeItem({ actions, categoryData, dummyCategory, selected }) {
     const [editMode, setEditMode] = useState(categoryData ? false : true)
     const [createMode, setCreateMode] = useState(false)
 
@@ -16,8 +16,7 @@ export default function CategoriesTreeItem({ actions, categoryData, selected }) 
     const secondContainer = containerClassName + ' level-' + levelToCreate
 
     const newCategoryData = {
-        name: '',
-        color: '777777',
+        ...dummyCategory,
         parent_id: categoryData.id,
         level: levelToCreate
     }
@@ -44,9 +43,24 @@ export default function CategoriesTreeItem({ actions, categoryData, selected }) 
                     <>
                         <span className="text-standart" onClick={() => { actions.select(categoryData.id) }}>{categoryData.name}</span>
                         <ColorMarker name={categoryData.name} color={categoryData.color} />
-                        <button className="icon-btn invisible-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
-                        <button className="icon-btn invisible-btn" onClick={() => setEditMode(true)}><IconEdit /></button>
-                        <button className="icon-btn invisible-btn" onClick={() => actions.delete(categoryData.id)}><IconDelete /></button>
+                        <button
+                            className="icon-btn invisible-btn"
+                            title="Add"
+                            onClick={() => setCreateMode(true)}>
+                            <IconAdd />
+                        </button>
+                        <button
+                            className="icon-btn invisible-btn"
+                            title="Edit"
+                            onClick={() => setEditMode(true)}>
+                            <IconEdit />
+                        </button>
+                        <button
+                            className="icon-btn invisible-btn"
+                            title="Delete"
+                            onClick={() => actions.delete(categoryData.id)}>
+                            <IconDelete />
+                        </button>
                     </>}
             </div>
             {createMode &&

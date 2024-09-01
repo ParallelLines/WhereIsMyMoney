@@ -8,12 +8,12 @@ import ExpensesListForm from './ExpensesListForm'
 const ENDPOINT = '/expenses'
 
 /** 
- * expense structure:
+ * regular expense structure: ??
  * { id, user_id, category_id, name, sum, inusd, currency, date, regular_id, regular_name, 
  * category_name, color, symbol }
 */
 
-export default function ExpensesList() {
+export default function RegularExpensesList() {
     const [loading, setLoading] = useState(true)
     const [expenses, setExpenses] = useState([])
     const [createMode, setCreateMode] = useState(false)
@@ -118,16 +118,11 @@ export default function ExpensesList() {
     }, [])
 
     return (
-        <div className="expenses-list list-column">
-            <button
-                className="btn-centered"
-                onClick={() => setCreateMode(true)}
-            >
-                <IconAdd />
-            </button>
+        <div className="expenses-list">
+            <button className="icon-btn" onClick={() => setCreateMode(true)}><IconAdd /></button>
+            {loading && <SkeletonExpensesList />}
             {createMode && <ExpensesListForm onSubmit={createExpense} onCancel={() => setCreateMode(false)} />}
             <div className='list-container'>
-                {loading && <SkeletonExpensesList />}
                 {expenses.map(expense =>
                     <Expense
                         expenseData={expense}

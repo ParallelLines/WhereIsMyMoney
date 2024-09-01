@@ -22,7 +22,7 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
     const [categoriesLoading, setCategoriesLoading] = useState(true)
     const [categories, setCategories] = useState([])
 
-    const date = formatDateForInput(expenseData ? new Date(expenseData.date) : expense.date)
+    const date = formatDateForInput(expenseData ? new Date(expenseData.date) : new Date(expense.date))
 
     const handleChange = (e) => {
         setExpense(currExpense => {
@@ -100,22 +100,26 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
 
     return (
         <VanishingBlock containerClassName="expenses-form-container" onClose={onCancel}>
-            <form className="expenses-list-form" onSubmit={handleSubmit}>
+            <form className="inline-form" onSubmit={handleSubmit}>
                 <input name="name"
+                    className="standart-input"
                     aria-label="name of expense"
                     value={expense.name}
                     placeholder="name"
                     onChange={handleChange}
+                    autoFocus
                     required
                 />
                 <input name="sum"
+                    className="short-input"
                     aria-label="expense amount"
                     value={expense.sum}
-                    placeholder="amount spent"
+                    placeholder="45.99"
                     onChange={handleChange}
                     required
                 />
                 <select name="currency"
+                    className="short-input"
                     aria-label="expense currency"
                     onChange={handleChange}
                     value={expense.currency}
@@ -126,6 +130,12 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
                             {currency.symbol} {currency.name}
                         </option>)}
                 </select>
+                <input name="date"
+                    aria-label="expense date"
+                    type="datetime-local"
+                    onChange={handleChange}
+                    defaultValue={date}
+                />
                 <select name="category_id"
                     aria-label="category of the expense"
                     onChange={handleChange}
@@ -137,14 +147,12 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
                             {category.name}
                         </option>)}
                 </select>
-                <input name="date"
-                    aria-label="expense date"
-                    type="datetime-local"
-                    onChange={handleChange}
-                    defaultValue={date}
-                />
-                <button type="submit">{expenseData ? 'Save' : 'Create'}</button>
-                <button onClick={onCancel}>Cancel</button>
+                <div className="btns">
+                    <button type="submit">
+                        {expenseData ? 'Save' : 'Create'}
+                    </button>
+                    <button onClick={onCancel}>Cancel</button>
+                </div>
             </form>
         </VanishingBlock>
     )

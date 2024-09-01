@@ -162,23 +162,46 @@ export default function CategoriesTree({ onSelect }) {
         select: selectCategory
     }
 
+    const newEmptyCategory = {
+        name: '',
+        color: 'ffabd5',
+        parent_id: null,
+        level: '1'
+    }
+
     return (
-        <div className="categories-tree">
-            <button className="icon-btn" onClick={() => setCreateMode(true)}>
+        <div className="categories-tree list-column">
+            <button
+                className="btn-centered"
+                onClick={() => setCreateMode(true)}>
                 <IconAdd />
             </button>
             {createMode &&
                 <CategoriesTreeItemForm
+                    categoryData={newEmptyCategory}
                     onSubmit={handleCreate}
                     onCancel={() => setCreateMode(false)}
                 />}
-            {loading && <SkeletonCategorieTree />}
-            {categories.map(cat => {
-                if (cat.id === selectedCategory) {
-                    return <CategoriesTreeItem key={cat.id} actions={actions} categoryData={{ ...cat }} selected={true} />
-                }
-                return <CategoriesTreeItem key={cat.id} actions={actions} categoryData={{ ...cat }} />
-            })}
+            <div className="list-container">
+                {loading && <SkeletonCategorieTree />}
+                {categories.map(cat => {
+                    if (cat.id === selectedCategory) {
+                        return <CategoriesTreeItem
+                            key={cat.id}
+                            actions={actions}
+                            categoryData={{ ...cat }}
+                            dummyCategory={newEmptyCategory}
+                            selected={true}
+                        />
+                    }
+                    return <CategoriesTreeItem
+                        key={cat.id}
+                        actions={actions}
+                        dummyCategory={newEmptyCategory}
+                        categoryData={{ ...cat }}
+                    />
+                })}
+            </div>
         </div>
     )
 }
