@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
 import CategoriesTreeItem from './CategoriesTreeItem'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
-import IconAdd from './IconAdd'
+import IconAdd from './icons/IconAdd'
 import SkeletonCategorieTree from './SkeletonCategorieTree'
 
 const ENDPOINT = '/categories'

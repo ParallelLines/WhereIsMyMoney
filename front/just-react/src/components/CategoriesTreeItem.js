@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import ColorMarker from './ColorMarker'
-import IconAdd from './IconAdd'
-import IconEdit from './IconEdit'
-import IconDelete from './IconDelete'
+import IconAdd from './icons/IconAdd'
+import IconEdit from './icons/IconEdit'
+import IconDelete from './icons/IconDelete'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
 
 export default function CategoriesTreeItem({ actions, categoryData, dummyCategory, selected }) {

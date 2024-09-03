@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import ColorMarker from './ColorMarker'
-import IconEdit from './IconEdit'
-import IconDelete from './IconDelete'
+import IconEdit from './icons/IconEdit'
+import IconDelete from './icons/IconDelete'
 import ExpensesListForm from './ExpensesListForm'
 import { dateString, dateTimeString } from '../utils/date'
 

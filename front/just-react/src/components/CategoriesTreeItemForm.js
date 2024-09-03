@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 import PopoverPicker from './PopoverPicker'
-import IconSave from './IconSave'
-import IconCancel from './IconCancel'
+import IconSave from './icons/IconSave'
+import IconCancel from './icons/IconCancel'
 
 export default function CategoriesTreeItemForm({ categoryData, onSubmit, onCancel }) {
     const [category, setCategory] = useState(categoryData)
