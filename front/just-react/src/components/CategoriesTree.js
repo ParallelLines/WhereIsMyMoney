@@ -3,7 +3,7 @@ import axiosInstance from '../utils/axiosInstance'
 import CategoriesTreeItem from './CategoriesTreeItem'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
 import IconAdd from './icons/IconAdd'
-import SkeletonCategorieTree from './SkeletonCategorieTree'
+import SkeletonCategorieTree from './skeleton/SkeletonCategorieTree'
 
 const ENDPOINT = '/categories'
 
