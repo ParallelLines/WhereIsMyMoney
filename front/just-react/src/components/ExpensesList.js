@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
 import Expense from './Expense'
 import SkeletonExpensesList from './SkeletonExpensesList'
-import IconAdd from './IconAdd'
+import IconAdd from './icons/IconAdd'
 import ExpensesListForm from './ExpensesListForm'
 
 const ENDPOINT = '/expenses'
