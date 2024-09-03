@@ -3,6 +3,7 @@ import { useCookies } from 'react-cookie'
 import axios from 'axios'
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+const COOKIE_AUTH_NAME = process.env.REACT_APP_COOKIE_AUTH_NAME
 
 export default function Auth() {
     const [cookie, setCookie, removeCookie] = useCookies(null)
@@ -36,7 +37,7 @@ export default function Auth() {
         await axios
             .post(url, reqBody, params)
             .then(res => {
-                setCookie('budgetAuthToken', res.data)
+                setCookie(COOKIE_AUTH_NAME, res.data)
                 window.location.reload() // do i need this??
             })
             .catch(e => {
