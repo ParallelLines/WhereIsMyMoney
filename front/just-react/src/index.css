@@ -112,7 +112,6 @@ html {
     width: 100%;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding: 0.5rem;
 }
 
 .categories-tree {
@@ -130,6 +129,7 @@ html {
     justify-content: flex-start;
     gap: 0.5rem;
     width: 100%;
+    min-height: 1.5rem;
     cursor: pointer;
     border-radius: var(--input-radius);
 }
@@ -182,7 +182,7 @@ html {
     justify-content: flex-start;
     gap: 0.5rem;
     width: 100%;
-    cursor: pointer;
+    min-height: 1.5rem;
 }
 
 .expense-name {

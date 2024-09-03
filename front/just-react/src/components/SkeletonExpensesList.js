@@ -14,6 +14,8 @@ export default function SkeletonExpensesList() {
             <SkeletonCard containerClassName={containerClassName} />
             <SkeletonCard containerClassName={containerClassName} />
             <SkeletonCard containerClassName={containerClassName} />
+            <SkeletonCard containerClassName={containerClassName} />
+            <SkeletonCard containerClassName={containerClassName} />
         </>
     )
 }

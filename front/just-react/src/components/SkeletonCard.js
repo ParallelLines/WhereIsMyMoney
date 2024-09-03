@@ -1,3 +1,3 @@
 export default function SkeletonCard({ containerClassName = '' }) {
-    return <div className={`skeleton-card ${containerClassName}`}></div>
+    return <div className={`skeleton-card ${containerClassName}`}>&nbsp;</div>
 }
