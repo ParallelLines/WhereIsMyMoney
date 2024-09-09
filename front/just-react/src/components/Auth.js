@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
+import BlackHole from './BlackHole'
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 const COOKIE_AUTH_NAME = process.env.REACT_APP_COOKIE_AUTH_NAME
@@ -49,49 +50,51 @@ export default function Auth() {
     }
 
     return (
-        <div className="auth">
-            <form className="auth-form">
-                <h2>{isLogIn ? 'Please, log in' : 'Create new account'}</h2>
+        <BlackHole>
+            <div className="auth">
+                <form className="auth-form">
+                    <h2>{isLogIn ? 'Please, log in' : 'Create new account'}</h2>
 
-                <input
-                    className="auth-input"
-                    name="username"
-                    placeholder="username"
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-
-                <input
-                    className="auth-input"
-                    name="password"
-                    type="password"
-                    placeholder="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                {!isLogIn &&
                     <input
                         className="auth-input"
-                        type="password"
-                        placeholder="confirm password"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />}
+                        name="username"
+                        placeholder="username"
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
 
-                <button className="auth-button"
-                    onClick={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')}>
-                    {isLogIn ? 'Log In' : 'Sign Up'}
-                </button>
-                {error && <div className="input-error">{error}</div>}
-            </form>
-            <div className="auth-options">
-                <button
-                    onClick={() => viewLogIn(true)}
-                    className={isLogIn ? "auth-option" : "auth-option dull"}
-                >Log In</button>
-                <button
-                    onClick={() => viewLogIn(false)}
-                    className={isLogIn ? "auth-option dull" : "auth-option"}
-                >Sign Up</button>
+                    <input
+                        className="auth-input"
+                        name="password"
+                        type="password"
+                        placeholder="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+
+                    {!isLogIn &&
+                        <input
+                            className="auth-input"
+                            type="password"
+                            placeholder="confirm password"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />}
+
+                    <button className="auth-button"
+                        onClick={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')}>
+                        {isLogIn ? 'Log In' : 'Sign Up'}
+                    </button>
+                    {error && <div className="input-error">{error}</div>}
+                </form>
+                <div className="auth-options">
+                    <button
+                        onClick={() => viewLogIn(true)}
+                        className={isLogIn ? "auth-option" : "auth-option dull"}
+                    >Log In</button>
+                    <button
+                        onClick={() => viewLogIn(false)}
+                        className={isLogIn ? "auth-option dull" : "auth-option"}
+                    >Sign Up</button>
+                </div>
             </div>
-        </div>
+        </BlackHole>
     )
 }

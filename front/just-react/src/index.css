@@ -9,8 +9,11 @@
     --border-width: 0.08rem;
     --text-main: #f6f6f6;
     --text-muted: #bbbbbb;
+    --text-error: #fd7171;
     --input-radius: 0.2rem;
     --input-font-size: 0.8rem;
+    --black-hole-core-fg-diameter: 500px;
+    --black-hole-core-bg-diameter: 510px;
 }
 
 html,
@@ -22,8 +25,7 @@ body {
     font-family: sans-serif;
     background:
         url("./assets/noise.svg"),
-        linear-gradient(0deg, var(--background-1), var(--background-2));
-    /* background-color: var(--background); */
+        var(--background-2);
     /* background-image: url("./assets/noise.svg"); */
 }
 
@@ -39,6 +41,11 @@ html {
 .app {
     width: 100%;
     height: 100%;
+}
+
+.grid-container {
+    width: 100%;
+    height: 100%;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: 1fr 2fr 6fr;
@@ -47,6 +54,9 @@ html {
         "graph-1  graph-2  graph-3"
         "column-1 column-2 column-3";
     gap: 1rem 1rem;
+    background:
+        url("./assets/noise.svg"),
+        linear-gradient(0deg, var(--background-1), var(--background-2));
 }
 
 .text-standart {
@@ -254,6 +264,19 @@ html {
     position: relative;
 }
 
+.inline-form select {
+    height: 1.5rem;
+    appearance: none;
+    border: none;
+    border-radius: 0%;
+    outline: none;
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding: 0 0.2rem;
+    font-size: 1rem;
+    background: none;
+    color: inherit;
+}
+
 .inline-form .short-input {
     width: 4.4rem;
 }
@@ -270,6 +293,15 @@ html {
     display: flex;
     flex-direction: row;
     gap: 0 0.5rem;
+}
+
+.logout {
+    grid-area: logo;
+}
+
+.logout.icon-btn {
+    width: 2rem;
+    height: 2rem;
 }
 
 button {
@@ -313,4 +345,92 @@ button:hover {
 .svg-icon {
     width: 1rem;
     height: 1rem;
+}
+
+.orbits {
+    position: absolute;
+    margin: -150px -150px;
+}
+
+/* .orbits circle {
+    filter: url(#glow);
+} */
+.black-hole-container {
+    margin: 6rem auto;
+    width: var(--black-hole-core-fg-diameter);
+    height: var(--black-hole-core-fg-diameter);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#black-hole-core-bg {
+    position: absolute;
+    margin: -5px -5px;
+    width: var(--black-hole-core-bg-diameter);
+    height: var(--black-hole-core-bg-diameter);
+    background: radial-gradient(circle closest-side, white 80%, transparent)
+}
+
+#black-hole-core-fg {
+    z-index: 1;
+}
+
+.auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.auth-form input {
+    height: 1.5rem;
+    width: 9rem;
+    border: none;
+    outline: none;
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding: 0 0.2rem;
+    font-size: 1rem;
+    background: none;
+    color: inherit;
+    position: relative;
+}
+
+button.auth-option {
+    border: none;
+    border-bottom: var(--border-width) solid var(--border-color);
+    box-sizing: border-box;
+    border-radius: 0%;
+}
+
+button.auth-option:hover {
+    background: none;
+    color: var(--border-color)
+}
+
+button.auth-option.dull {
+    color: var(--text-muted);
+    border: none;
+}
+
+button.auth-option.dull:hover {
+    color: var(--border-color);
+}
+
+.error {
+    display: inline-block;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--input-radius);
+    color: var(--text-error);
+    margin: 1rem 1rem;
+    padding: 1rem 1rem;
 }
