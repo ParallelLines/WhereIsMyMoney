@@ -1,12 +1,12 @@
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     require('dotenv').config()
+// }
 const { readSql } = require('./utils/sqlReader')
 const getCategoriesRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
 const getPopularCategories = readSql('./sql/categoriesGetPopular.sql')
 const getExpenses = readSql('./sql/expensesGetAll.sql')
 const getOneExpense = readSql('./sql/expensesGetOne.sql')
-const getAllCurrencies = readSql('./sql/currenciesGetAll.sql')
+const getAllCurrenciesOrdered = readSql('./sql/currenciesGetAll.sql')
 
 const { Pool } = require('pg')
 const pool = new Pool({
@@ -27,7 +27,8 @@ const users = {
 }
 
 const currencies = {
-    getAll: getAllCurrencies,
+    getAllOrdered: getAllCurrenciesOrdered,
+    getAll: 'SELECT * FROM currencies',
     getOne: 'SELECT * FROM currencies WHERE name = $1',
     createOne: 'INSERT INTO currencies (name, symbol) VALUES ($1, $2)',
     updateOne: 'UPDATE currencies SET name = $2, symbol = $3 WHERE name = $1',
@@ -37,13 +38,15 @@ const currencies = {
 const expenses = {
     getAll: getExpenses,
     getOne: getOneExpense,
-    createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
+    createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
     updateOne: 'UPDATE expenses SET category_id = $3, name = $4, sum = $5, inUSD = $6, currency = $7, date = $8 WHERE user_id = $1 AND id = $2',
     deleteOne: 'DELETE FROM expenses WHERE user_id = $1 AND id = $2'
 }
 
 const regulars = {
-
+    getAll: '',
+    getOne: '',
+    createOne: ''
 }
 
 const categories = {
@@ -56,10 +59,15 @@ const categories = {
     deleteOne: 'DELETE FROM categories WHERE user_id = $1 AND id = $2'
 }
 
+const rates = {
+    getByDate: 'SELECT * FROM rates WHERE date = $1'
+}
+
 module.exports = {
     query: (text, params) => pool.query(text, params),
     users: users,
     currencies: currencies,
     expenses: expenses,
-    categories: categories
+    categories: categories,
+    rates: rates
 }

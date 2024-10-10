@@ -1,5 +1,9 @@
 const db = require('../db')
 
+const ratesURL = process.env.CURRENCY_RATES_URL
+const ratesVersion = process.env.CURRENCY_RATES_API_VERSION
+const ratesEndpoint1 = process.env.CURRENCY_RATES_ENPOINT_1
+
 module.exports.getAll = async (req, res) => {
     const { userId } = req
     try {
@@ -44,7 +48,8 @@ module.exports.create = async (req, res) => {
             newData.inUSD,
             newData.currency,
             newData.reqular_id,
-            newData.regular_name
+            newData.regular_name,
+            newData.date
         ])
         res.json(result.rows)
     } catch (e) {
@@ -76,7 +81,6 @@ module.exports.editOne = async (req, res) => {
             expense.sum = req.body.sum ? req.body.sum : expense.sum
             expense.currency = req.body.currency ? req.body.currency : expense.currency
             expense.date = req.body.date ? req.body.date : expense.date
-            console.log(expense)
             await db.query(db.expenses.updateOne, [
                 userId,
                 id,
@@ -116,5 +120,69 @@ async function isCategoryValid(categoryId, userId) {
     } catch (e) {
         console.log('error while isCategoryValid expenses: ', e.code)
         return null
+    }
+}
+
+async function calculateUSD(sum, date, currency) {
+
+}
+
+/**
+ * Selects from table 'rates' records for the date, and if there're any returns true
+ * 
+ * @param {String} date '2024-08-31'.
+ * @returns {Boolean}   returns true if the DB's table 'rates' contains some records for the date
+ */
+
+async function checkIfRatesExist(date) {
+    const rates = await db.query(db.rates.getByDate, [date])
+    return rates.rows.length > 0
+}
+
+/**
+ * Fetches rates and returns them as an Object.
+ * 
+ * @param {String} date     '2024-08-31', or 'latest' by default.
+ * @param {String} currency 'USD', 'EUR', etc.
+ * 
+ * @returns {Object} Example: {date: '2024-08-31', 'usd': {'eur': 0.90167411, etc}}.
+ */
+async function getRates(date = 'latest', currency = 'USD') {
+    const url = `${ratesURL}@${date}/${ratesVersion}/${ratesEndpoint1}/${currency.toLowerCase()}.json`
+    try {
+        const response = await fetch(url)
+        const rates = await response.json()
+        return rates
+    } catch (e) {
+        console.log(e)
+    }
+}
+/**
+ * Inserts into table 'rates'
+ * 
+ * Writes into the table 'rates' new rates for the given currency and the given date 
+ * (which is inside the 'data' Object).
+ * 
+ * @param {Object} data     Example: {date: '2024-08-31', 'usd': {'eur': 0.90167411, ...}}.
+ * @param {String} currency Examples: 'USD', 'EUR'.
+ */
+async function updateRates(data, currency) {
+    try {
+        const result = await db.query(db.currencies.getAll)
+        const currencies = result.rows
+        const date = data.date
+        const rates = data[currency.toLowerCase()]
+
+        const queryParts = []
+        for (let curr of currencies) {
+            const rate = rates[curr.name.toLowerCase()]
+            queryParts.push(`('${date}', '${curr.name}', '${currency}', ${rate})`)
+        }
+        const query = 'INSERT INTO rates (date, from_currency, to_currency, rate) VALUES ' + queryParts.join(',')
+        console.log(query)
+        await db.query(query)
+    } catch (e) {
+        console.log('error while updating rates: ', e.code)
+        console.log(e)
     }
 }
