@@ -381,7 +381,8 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between;
+    height: 12rem;
 }
 
 .auth-form {

@@ -53,7 +53,7 @@ export default function Auth() {
         <BlackHole>
             <div className="auth">
                 <form className="auth-form">
-                    <h2>{isLogIn ? 'Please, log in' : 'Create new account'}</h2>
+                    <h2>{isLogIn ? 'Log in' : 'Create new account'}</h2>
 
                     <input
                         className="auth-input"
@@ -80,7 +80,7 @@ export default function Auth() {
 
                     <button className="auth-button"
                         onClick={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')}>
-                        {isLogIn ? 'Log In' : 'Sign Up'}
+                        {isLogIn ? 'Enter' : 'Create'}
                     </button>
                     {error && <div className="input-error">{error}</div>}
                 </form>
