@@ -199,6 +199,7 @@ async function getRateFromDB(date, currency) {
  * @returns {Object} Example: {date: '2024-08-31', 'usd': {'eur': 0.90167411, etc}}.
  */
 async function getRatesFromOutside(date = 'latest', currency = 'USD') {
+    //https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@2024-10-16/v1/currencies/usd.json
     const url = `${ratesURL}@${date}/${ratesVersion}/${ratesEndpoint1}/${currency.toLowerCase()}.json`
     try {
         const response = await fetch(url)
