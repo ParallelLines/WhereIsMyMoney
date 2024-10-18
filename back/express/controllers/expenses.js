@@ -1,4 +1,5 @@
 const db = require('../db')
+const HttpError = require('../utils/HttpError')
 
 const ratesURL = process.env.CURRENCY_RATES_URL
 const ratesVersion = process.env.CURRENCY_RATES_API_VERSION
@@ -10,7 +11,7 @@ module.exports.getAll = async (req, res) => {
         const expenses = await db.query(db.expenses.getAll, [userId])
         res.json(expenses.rows)
     } catch (e) {
-        console.log('error while getAll expenses: ', e.code)
+        console.error('error while getAll expenses: ', e.code)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -22,7 +23,7 @@ module.exports.getOne = async (req, res) => {
         const expense = await db.query(db.expenses.getOne, [userId, id])
         res.json(expense.rows)
     } catch (e) {
-        console.log('error while getOne expenses: ', e.code)
+        console.error('error while getOne expenses: ', e.code)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -30,31 +31,14 @@ module.exports.getOne = async (req, res) => {
 module.exports.create = async (req, res) => {
     const { userId } = req
     const newData = req.body
-    console.log(newData)
-    newData.inUSD = 0
-    newData.regular_name = null
-    newData.reqular_id = null
-    const isCatValid = await isCategoryValid(newData.category_id, userId)
-    if (!isCatValid) {
-        res.status(400).send('cannot use this category')
-        return
-    }
+    newData.userId = userId
+    console.info('create expense: ', newData)
     try {
-        const result = await db.query(db.expenses.createOne, [
-            userId,
-            newData.category_id,
-            newData.name,
-            newData.sum,
-            newData.inUSD,
-            newData.currency,
-            newData.reqular_id,
-            newData.regular_name,
-            newData.date
-        ])
-        res.json(result.rows)
+        const result = await createExpense(newData)
+        res.json(result)
     } catch (e) {
-        console.log('error while create expenses: ', e.code)
-        res.status(500).send('something went wrong :(')
+        console.error('error while create: ', e)
+        res.status(e.status ? e.status : 500).send(e.status ? e.message : 'something went wrong :(')
     }
 }
 
@@ -96,7 +80,7 @@ module.exports.editOne = async (req, res) => {
             res.status(500).send('no such expense :(')
         }
     } catch (e) {
-        console.log('error while editOne expenses: ', e.code)
+        console.error('error while editOne expenses: ', e.code)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -108,8 +92,35 @@ module.exports.deleteOne = async (req, res) => {
         await db.query(db.expenses.deleteOne, [userId, id])
         res.sendStatus(200)
     } catch (e) {
-        console.log('error while deleteOne expenses: ', e.code)
+        console.error('error while deleteOne expenses: ', e.code)
         res.status(500).send('something went wrong :(')
+    }
+}
+
+async function createExpense(expenseData) {
+    expenseData.inUSD = await calculateUSD(expenseData.sum, expenseData.date, expenseData.currency)
+    expenseData.regular_name = null
+    expenseData.reqular_id = null
+    const isCatValid = await isCategoryValid(expenseData.category_id, expenseData.userId)
+    if (!isCatValid) {
+        throw new HttpError(400, 'cannot use this category')
+    }
+    try {
+        const result = await db.query(db.expenses.createOne, [
+            expenseData.userId,
+            expenseData.category_id,
+            expenseData.name,
+            expenseData.sum,
+            expenseData.inUSD,
+            expenseData.currency,
+            expenseData.reqular_id,
+            expenseData.regular_name,
+            expenseData.date
+        ])
+        return result.rows
+    } catch (e) {
+        console.error('error while createExpense: ', e.code)
+        throw new HttpError(500, 'something went wrong :(')
     }
 }
 
@@ -118,25 +129,65 @@ async function isCategoryValid(categoryId, userId) {
         const category = await db.query(db.categories.getOne, [userId, categoryId])
         return category.rows.length === 1
     } catch (e) {
-        console.log('error while isCategoryValid expenses: ', e.code)
+        console.error('error while isCategoryValid expenses: ', e.code)
         return null
     }
 }
 
+/**
+ * 
+ * @param {String} sum  '13.45', '45.00'.
+ * @param {String} date '2024-10-01T17:45'.
+ * @param {*} currency  'USD', 'EUR', etc.
+ */
 async function calculateUSD(sum, date, currency) {
-
+    try {
+        const num = parseFloat(sum)
+        const day = date.split('T')[0]
+        const ratesExist = await checkIfRatesExist(day)
+        if (!ratesExist) {
+            const freshRates = await getRatesFromOutside(day)
+            await insertRatesInDB(freshRates)
+        }
+        const rate = await getRateFromDB(day, currency)
+        return num / rate
+    } catch (e) {
+        console.error('error while calculateUSD: ', e.code)
+        return 0
+    }
 }
 
 /**
- * Selects from table 'rates' records for the date, and if there're any returns true
+ * With a DB query checks if at least one row with such date exists.
  * 
  * @param {String} date '2024-08-31'.
- * @returns {Boolean}   returns true if the DB's table 'rates' contains some records for the date
+ * @returns {Boolean}   true if rates exist and false if not
  */
-
 async function checkIfRatesExist(date) {
-    const rates = await db.query(db.rates.getByDate, [date])
-    return rates.rows.length > 0
+    try {
+        const result = await db.query(db.rates.checkExistenceByDate, [date])
+        return result.rows[0].exists
+    } catch (e) {
+        console.error('error while checkIfRatesExist: ', e.code)
+        return null
+    }
+}
+
+/**
+ * Selects from table 'rates' records for the date and currency
+ * 
+ * @param {String} date     '2024-08-31'.
+ * @param {String} currency 'USD', 'EUR', etc.
+ * @returns {Number}   returns the float number for rate
+ */
+async function getRateFromDB(date, currency) {
+    try {
+        const rates = await db.query(db.rates.getRateByDateAndCurrency, [date, currency])
+        return parseFloat(rates.rows[0].rate)
+    } catch (e) {
+        console.error('error while getRatesFromDB: ', e.code)
+        return null
+    }
 }
 
 /**
@@ -147,42 +198,40 @@ async function checkIfRatesExist(date) {
  * 
  * @returns {Object} Example: {date: '2024-08-31', 'usd': {'eur': 0.90167411, etc}}.
  */
-async function getRates(date = 'latest', currency = 'USD') {
+async function getRatesFromOutside(date = 'latest', currency = 'USD') {
     const url = `${ratesURL}@${date}/${ratesVersion}/${ratesEndpoint1}/${currency.toLowerCase()}.json`
     try {
         const response = await fetch(url)
         const rates = await response.json()
         return rates
     } catch (e) {
-        console.log(e)
+        console.error('error while getRatesFromOutside', e)
     }
 }
 /**
  * Inserts into table 'rates'
  * 
  * Writes into the table 'rates' new rates for the given currency and the given date 
- * (which is inside the 'data' Object).
+ * (which is inside the 'data' Object), and it only takes those currencies from data object, which 
+ * we have in our table 'currencies'
  * 
  * @param {Object} data     Example: {date: '2024-08-31', 'usd': {'eur': 0.90167411, ...}}.
- * @param {String} currency Examples: 'USD', 'EUR'.
+ * @param {String} currency Examples: 'USD', 'EUR', but is USD by default.
  */
-async function updateRates(data, currency) {
+async function insertRatesInDB(data, currency = 'USD') {
     try {
         const result = await db.query(db.currencies.getAll)
         const currencies = result.rows
         const date = data.date
         const rates = data[currency.toLowerCase()]
-
         const queryParts = []
         for (let curr of currencies) {
             const rate = rates[curr.name.toLowerCase()]
             queryParts.push(`('${date}', '${curr.name}', '${currency}', ${rate})`)
         }
         const query = 'INSERT INTO rates (date, from_currency, to_currency, rate) VALUES ' + queryParts.join(',')
-        console.log(query)
         await db.query(query)
     } catch (e) {
-        console.log('error while updating rates: ', e.code)
-        console.log(e)
+        console.error('error while updating rates: ', e.code)
     }
 }

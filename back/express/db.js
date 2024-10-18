@@ -60,7 +60,8 @@ const categories = {
 }
 
 const rates = {
-    getByDate: 'SELECT * FROM rates WHERE date = $1'
+    checkExistenceByDate: 'SELECT EXISTS (SELECT 1 FROM rates WHERE date = $1)',
+    getRateByDateAndCurrency: 'SELECT rate FROM rates WHERE date = $1 AND from_currency = $2'
 }
 
 module.exports = {
