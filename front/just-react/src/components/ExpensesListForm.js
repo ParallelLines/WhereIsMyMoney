@@ -16,6 +16,8 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
         date: new Date()
     })
 
+    const [loading, setLoading] = useState(false)
+
     const [currenciesLoading, setCurrenciesLoading] = useState(true)
     const [currencies, setCurrencies] = useState([])
 
@@ -33,15 +35,16 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
         })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        setLoading(true)
         const cat = categories.filter(c => c.id === expense.category_id)[0]
         const curr = currencies.filter(c => c.name === expense.currency)[0]
         expense.sum = expense.sum.replace(',', '.')
         if (Number.isInteger(parseFloat(expense.sum))) {
             expense.sum = parseFloat(expense.sum) + '.00'
         }
-        onSubmit({
+        await onSubmit({
             ...expense,
             'symbol': curr.symbol,
             'category_name': cat.name,
@@ -148,12 +151,13 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
                         </option>)}
                 </select>
                 <div className="btns">
-                    <button type="submit">
+                    <button type="submit" disabled={loading}>
                         {expenseData ? 'Save' : 'Create'}
                     </button>
-                    <button onClick={onCancel}>Cancel</button>
+                    <button onClick={onCancel} disabled={loading}>Cancel</button>
                 </div>
             </form>
+
         </VanishingBlock>
     )
 }

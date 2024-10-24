@@ -5,6 +5,7 @@
     --bg-form: #ffffff;
     --bg-form-input: #f1f1f1;
     --border-color: #ffffff;
+    --border-color-disabled: #c9c9c9;
     --opposite-color: #333333;
     --border-width: 0.08rem;
     --text-main: #f6f6f6;
@@ -317,10 +318,17 @@ button {
     height: 1.5rem;
 }
 
-button:hover {
+button:not([disabled]):hover {
     background-color: var(--border-color);
     fill: var(--opposite-color);
     color: var(--opposite-color);
+}
+
+button:disabled {
+    cursor: progress;
+    border-color: var(--border-color-disabled);
+    color: var(--border-color-disabled);
+    fill: var(--border-color-disabled);
 }
 
 .icon-btn {
