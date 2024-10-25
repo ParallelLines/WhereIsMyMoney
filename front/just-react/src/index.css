@@ -341,7 +341,7 @@ button:disabled {
     height: 1rem;
 }
 
-.icon-btn:hover {
+button.icon-btn:hover {
     background: none;
     fill: var(--border-color);
 }
