@@ -5,6 +5,7 @@ import Auth from './components/Auth'
 import ExpensesList from './components/ExpensesList'
 import PieChart from './components/PieChart'
 import LogOut from './components/LogOut'
+import { CategoriesProvider } from './components/CategoriesContext'
 
 const COOKIE_AUTH_NAME = process.env.REACT_APP_COOKIE_AUTH_NAME
 
@@ -19,10 +20,12 @@ export default function App() {
       {!authToken && <Auth />}
       {authToken &&
         <div className="grid-container">
-          <LogOut />
-          <CategoriesTree onSelect={(id) => { setCategory(id) }} />
-          <ExpensesList />
-          <PieChart categoryId={category} />
+          <CategoriesProvider>
+            <LogOut />
+            <CategoriesTree onSelect={(id) => { setCategory(id) }} />
+            <ExpensesList />
+            <PieChart categoryId={category} />
+          </CategoriesProvider>
         </div>}
     </div>
   )
