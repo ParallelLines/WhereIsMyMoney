@@ -185,20 +185,12 @@ export default function CategoriesTree({ onSelect }) {
             <div className="list-container">
                 {loading && <SkeletonCategorieTree />}
                 {categories.map(cat => {
-                    if (cat.id === selectedCategory) {
-                        return <CategoriesTreeItem
-                            key={cat.id}
-                            actions={actions}
-                            categoryData={{ ...cat }}
-                            dummyCategory={newEmptyCategory}
-                            selected={true}
-                        />
-                    }
                     return <CategoriesTreeItem
                         key={cat.id}
                         actions={actions}
                         dummyCategory={newEmptyCategory}
                         categoryData={{ ...cat }}
+                        selected={cat.id === selectedCategory}
                     />
                 })}
             </div>
