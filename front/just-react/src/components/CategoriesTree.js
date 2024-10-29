@@ -1,131 +1,42 @@
 import { useEffect, useState } from 'react'
-import axiosInstance from '../utils/axiosInstance'
 import CategoriesTreeItem from './CategoriesTreeItem'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
 import IconAdd from './icons/IconAdd'
 import SkeletonCategorieTree from './skeleton/SkeletonCategorieTree'
-import { useCategories, useCategoriesDispatch } from './CategoriesContext'
-
-const ENDPOINT = '/categories'
+import { useCategories, useCategoriesDispatch } from '../utils/CategoriesContext'
+import useCategoryApi from '../utils/useCategoryApi'
 
 /**
  * category structure:
  * { id, user_id, parent_id, name, color }
  */
 
-export default function CategoriesTree({ onSelect }) {
+export default function CategoriesTree() {
     const categories = useCategories()
     const categoriesDispatch = useCategoriesDispatch()
+    const { getAll, create, loading, error } = useCategoryApi()
 
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
     const [createMode, setCreateMode] = useState(false)
-    const [selectedCategory, setSelectedCategory] = useState(null)
 
-    const getCategories = async () => {
-        await axiosInstance
-            .get(ENDPOINT)
+    const handleCreate = async (data) => {
+        await create(data)
             .then(response => {
-                if (response) {
-                    categoriesDispatch({
-                        type: 'insert_all',
-                        categories: response.data
-                    })
-                    // setCategories(response.data)
-                    setLoading(false)
-                }
+                data.id = response.data[0].id
+                categoriesDispatch({
+                    type: 'insert',
+                    category: data
+                })
             })
-            .catch(e => {
-                console.log('Error trying to request categories: ', e)
-                setError('couldn\'t get the data :(')
-            })
-    }
-
-    const createCategory = async (categoryData) => {
-        await axiosInstance
-            .post(ENDPOINT, {
-                name: categoryData.name,
-                parent_id: categoryData.parent_id,
-                color: categoryData.color
-            })
-            .then(response => {
-                if (response) {
-                    categoryData.id = response.data[0].id
-                    categoriesDispatch({
-                        type: 'insert',
-                        category: categoryData
-                    })
-                }
-            })
-            .catch(e => {
-                console.log('Error trying to create a categorie: ', e)
-                setError('couldn\'t create a category :(')
-            })
-    }
-
-    const editCategory = async (categoryData) => {
-        await axiosInstance
-            .put(ENDPOINT + '/' + categoryData.id, {
-                name: categoryData.name,
-                parent_id: categoryData.parent_id,
-                color: categoryData.color
-            })
-            .then(response => {
-                if (response) {
-                    categoriesDispatch({
-                        type: 'update',
-                        category: categoryData
-                    })
-                }
-            })
-            .catch(e => {
-                console.log('Error trying to edit a categorie: ', e)
-                setError('couldn\'t edit a category :(')
-            })
-    }
-
-    const deleteCategory = async (id) => {
-        await axiosInstance
-            .delete(ENDPOINT + '/' + id)
-            .then(response => {
-                if (response) {
-                    categoriesDispatch({
-                        type: 'delete',
-                        category: { id: id }
-                    })
-                }
-            })
-            .catch(e => {
-                console.log('Error trying to delete a categorie: ', e)
-                setError('couldn\'t delete a category :(')
-            })
-    }
-
-    const selectCategory = (id) => {
-        if (selectedCategory === id) {
-            setSelectedCategory(null)
-            onSelect(null)
-        } else {
-            setSelectedCategory(id)
-            onSelect(id)
-        }
-    }
-
-    const handleCreate = (data) => {
-        createCategory(data)
         setCreateMode(false)
     }
 
     useEffect(() => {
-        getCategories()
+        getAll()
+            .then(response => categoriesDispatch({
+                type: 'insert_all',
+                categories: response.data
+            }))
     }, [])
-
-    const actions = {
-        create: createCategory,
-        delete: deleteCategory,
-        edit: editCategory,
-        select: selectCategory
-    }
 
     const newEmptyCategory = {
         name: '',
@@ -152,10 +63,8 @@ export default function CategoriesTree({ onSelect }) {
                 {categories.map(cat => {
                     return <CategoriesTreeItem
                         key={cat.id}
-                        actions={actions}
                         dummyCategory={newEmptyCategory}
                         categoryData={{ ...cat }}
-                        selected={cat.id === selectedCategory}
                     />
                 })}
             </div>

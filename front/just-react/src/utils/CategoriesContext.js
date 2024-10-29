@@ -1,16 +1,20 @@
-import { createContext, useContext, useReducer } from 'react'
+import { createContext, useContext, useReducer, useState } from 'react'
 
 const CategoriesContext = createContext(null)
+const SelectedCategoryContext = createContext(null)
 const CategoriesDispatchContext = createContext(null)
 
 export function CategoriesProvider({ children }) {
     const [categories, dispatch] = useReducer(categoriesReducer, [])
+    const [selectedCategory, setSelectedCategory] = useState(null)
 
     return (
         <CategoriesContext.Provider value={categories}>
-            <CategoriesDispatchContext.Provider value={dispatch}>
-                {children}
-            </CategoriesDispatchContext.Provider>
+            <SelectedCategoryContext.Provider value={{ selectedCategory, setSelectedCategory }}>
+                <CategoriesDispatchContext.Provider value={dispatch}>
+                    {children}
+                </CategoriesDispatchContext.Provider>
+            </SelectedCategoryContext.Provider>
         </CategoriesContext.Provider>
     )
 }
@@ -21,6 +25,10 @@ export function useCategories() {
 
 export function useCategoriesDispatch() {
     return useContext(CategoriesDispatchContext)
+}
+
+export function useSelectedCategory() {
+    return useContext(SelectedCategoryContext)
 }
 
 function categoriesReducer(categories, action) {
