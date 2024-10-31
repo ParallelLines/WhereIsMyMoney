@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { createCategory, deleteCategory, editCategory, getCategories } from './apiService'
 
 export default function useCategoryApi() {
-    const [selectedCategory, setSelectedCategory] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 

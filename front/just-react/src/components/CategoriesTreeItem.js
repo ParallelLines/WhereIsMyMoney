@@ -42,7 +42,7 @@ export default function CategoriesTreeItem({ categoryData, dummyCategory }) {
 
     const handleEdit = async (data) => {
         await edit(data)
-            .then(categoriesDispatch({
+            .then(() => categoriesDispatch({
                 type: 'update',
                 category: data
             }))
@@ -51,7 +51,7 @@ export default function CategoriesTreeItem({ categoryData, dummyCategory }) {
 
     const handleDelete = async (id) => {
         await remove(id)
-            .then(categoriesDispatch({
+            .then(() => categoriesDispatch({
                 type: 'delete',
                 category: { id: id }
             }))

@@ -4,18 +4,30 @@ import IconEdit from './icons/IconEdit'
 import IconDelete from './icons/IconDelete'
 import ExpensesListForm from './ExpensesListForm'
 import { dateString, dateTimeString } from '../utils/date'
+import { useExpensesDispatch } from '../utils/ExpensesContext'
+import useExpenseApi from '../utils/useExpenseApi'
 
-export default function Expense({ expenseData, onEdit, onDelete }) {
+export default function Expense({ expenseData }) {
+    const expensesDispatch = useExpensesDispatch()
+    const { edit, remove } = useExpenseApi()
     const [editMode, setEditMode] = useState(false)
     const date = new Date(expenseData.date)
 
-    const handleEdit = (data) => {
+    const handleEdit = async (data) => {
         setEditMode(false)
-        onEdit(data)
+        await edit(data)
+            .then(() => expensesDispatch({
+                type: 'update',
+                expense: data
+            }))
     }
 
-    const handleDelete = () => {
-        onDelete(expenseData.id)
+    const handleDelete = async () => {
+        await remove(expenseData.id)
+            .then(() => expensesDispatch({
+                type: 'delete',
+                expense: { id: expenseData.id }
+            }))
     }
 
     return (
