@@ -31,3 +31,6 @@ export const editExpense = (data) => axiosInstance.put(ENDPOINT_EXPENSES + '/' +
     date: data.date
 })
 export const deleteExpense = (expenseId) => axiosInstance.delete(ENDPOINT_EXPENSES + '/' + expenseId)
+
+const ENDPOINT_CURRENCIES = '/currencies'
+export const getCurrencies = () => axiosInstance.get(ENDPOINT_CURRENCIES)

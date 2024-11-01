@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
-import axiosInstance from '../utils/axiosInstance'
 import { formatDateForInput } from '../utils/date'
 import VanishingBlock from './VanishingBlock'
 import { useCategories } from '../utils/CategoriesContext'
-
-const CURRENCIES_ENDPOINT = '/currencies'
+import useCurrencyApi from '../utils/useCurrencyApi'
 
 export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
     const categories = useCategories()
@@ -19,8 +17,8 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
 
     const [loading, setLoading] = useState(false)
 
-    const [currenciesLoading, setCurrenciesLoading] = useState(true)
     const [currencies, setCurrencies] = useState([])
+    const { getAll: requestCurrencies, loading: currenciesLoading } = useCurrencyApi()
 
     const date = formatDateForInput(expenseData ? new Date(expenseData.date) : new Date(expense.date))
 
@@ -51,24 +49,17 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
     }
 
     const getCurrencies = async () => {
-        await axiosInstance
-            .get(CURRENCIES_ENDPOINT)
+        await requestCurrencies()
             .then((response) => {
-                if (response) {
-                    setCurrencies(response.data)
-                    setCurrenciesLoading(false)
-                    if (!expenseData) {
-                        setExpense(currExpense => {
-                            return {
-                                ...currExpense,
-                                'currency': response.data[0].name
-                            }
-                        })
-                    }
+                setCurrencies(response.data)
+                if (!expenseData) {
+                    setExpense(currExpense => {
+                        return {
+                            ...currExpense,
+                            'currency': response.data[0].name
+                        }
+                    })
                 }
-            })
-            .catch(e => {
-                console.log('Error trying to request currencies: ', e)
             })
     }
 
