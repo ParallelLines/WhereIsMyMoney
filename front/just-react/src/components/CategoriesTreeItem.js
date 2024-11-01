@@ -6,11 +6,14 @@ import IconDelete from './icons/IconDelete'
 import CategoriesTreeItemForm from './CategoriesTreeItemForm'
 import { useCategoriesDispatch, useSelectedCategory } from '../utils/CategoriesContext'
 import useCategoryApi from '../utils/useCategoryApi'
+import { useExpensesDispatch } from '../utils/ExpensesContext'
 
 export default function CategoriesTreeItem({ categoryData, dummyCategory }) {
     const categoriesDispatch = useCategoriesDispatch()
     const { create, edit, remove } = useCategoryApi()
     const { selectedCategory, setSelectedCategory } = useSelectedCategory()
+
+    const expensesDispatch = useExpensesDispatch()
 
     const [editMode, setEditMode] = useState(categoryData ? false : true)
     const [createMode, setCreateMode] = useState(false)
@@ -42,19 +45,31 @@ export default function CategoriesTreeItem({ categoryData, dummyCategory }) {
 
     const handleEdit = async (data) => {
         await edit(data)
-            .then(() => categoriesDispatch({
-                type: 'update',
-                category: data
-            }))
+            .then(() => {
+                categoriesDispatch({
+                    type: 'update',
+                    category: data
+                })
+                expensesDispatch({
+                    type: 'update_category',
+                    category: data
+                })
+            })
         setEditMode(false)
     }
 
     const handleDelete = async (id) => {
         await remove(id)
-            .then(() => categoriesDispatch({
-                type: 'delete',
-                category: { id: id }
-            }))
+            .then(() => {
+                categoriesDispatch({
+                    type: 'delete',
+                    category: { id: id }
+                })
+                expensesDispatch({
+                    type: 'update_category',
+                    category: { id: id }
+                })
+            })
     }
 
     const handleSelect = () => {
