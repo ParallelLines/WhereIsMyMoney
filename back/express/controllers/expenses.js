@@ -49,9 +49,12 @@ module.exports.editOne = async (req, res) => {
         const expenseRes = await db.query(db.expenses.getOne, [userId, id])
         const expense = expenseRes.rows[0]
         if (expense) {
-            if (req.body.sum !== expense.sum) {
-                //add logic for recalculating inUSD
-                expense.inUSD = 1
+            if (req.body.sum !== expense.sum ||
+                req.body.date !== expense.date ||
+                req.body.currency !== expense.currency ||
+                !expense.inUSD) {
+                console.log(`date: req.body.date = ${req.body.date}, expense.date = ${expense.date}, equals: ${req.body.date === expense.date}`)
+                expense.inUSD = await calculateUSD(req.body.sum, req.body.date, req.body.currency)
             }
             if (req.body.category_id) {
                 const isCatValid = await isCategoryValid(req.body.category_id, userId)
@@ -199,6 +202,7 @@ async function getRateFromDB(date, currency) {
  * @returns {Object} Example: {date: '2024-08-31', 'usd': {'eur': 0.90167411, etc}}.
  */
 async function getRatesFromOutside(date = 'latest', currency = 'USD') {
+    //info: https://github.com/fawazahmed0/exchange-api/issues/90
     //https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@2024-10-16/v1/currencies/usd.json
     const url = `${ratesURL}@${date}/${ratesVersion}/${ratesEndpoint1}/${currency.toLowerCase()}.json`
     try {
