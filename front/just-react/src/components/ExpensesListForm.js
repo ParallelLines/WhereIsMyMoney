@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react'
 import axiosInstance from '../utils/axiosInstance'
 import { formatDateForInput } from '../utils/date'
 import VanishingBlock from './VanishingBlock'
+import { useCategories } from '../utils/CategoriesContext'
 
 const CURRENCIES_ENDPOINT = '/currencies'
-const CATEGORIES_ENDPOINT = '/categories'
 
 export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
+    const categories = useCategories()
     const [expense, setExpense] = useState(expenseData ? expenseData : {
         name: '',
         sum: '',
-        category_id: '',
+        category_id: categories[0].id,
         category_name: '',
         color: '',
         date: new Date()
@@ -20,9 +21,6 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
 
     const [currenciesLoading, setCurrenciesLoading] = useState(true)
     const [currencies, setCurrencies] = useState([])
-
-    const [categoriesLoading, setCategoriesLoading] = useState(true)
-    const [categories, setCategories] = useState([])
 
     const date = formatDateForInput(expenseData ? new Date(expenseData.date) : new Date(expense.date))
 
@@ -74,31 +72,8 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
             })
     }
 
-    const getCategories = async () => {
-        await axiosInstance
-            .get(CATEGORIES_ENDPOINT)
-            .then((response) => {
-                if (response) {
-                    setCategories(response.data)
-                    setCategoriesLoading(false)
-                    if (!expenseData) {
-                        setExpense(currExpense => {
-                            return {
-                                ...currExpense,
-                                'category_id': response.data[0].id
-                            }
-                        })
-                    }
-                }
-            })
-            .catch(e => {
-                console.log('Error trying to request categories: ', e)
-            })
-    }
-
     useEffect(() => {
         getCurrencies()
-        getCategories()
     }, [])
 
     return (
