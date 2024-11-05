@@ -39,18 +39,20 @@ export default function Expense({ expenseData }) {
                     <span className='expense-currency'>{expenseData.symbol}</span>
                     <span className='expense-date' title={dateTimeString(date)}>{dateString(date)}</span>
                     <ColorMarker name={expenseData.category_name} color={expenseData.color} />
-                    <button
-                        className="icon-btn invisible-btn"
-                        title="Edit"
-                        onClick={() => setEditMode(true)}>
-                        <IconEdit />
-                    </button>
-                    <button
-                        className="icon-btn invisible-btn"
-                        title="Delete"
-                        onClick={handleDelete}>
-                        <IconDelete />
-                    </button>
+                    <span className='expense-invisible_btns'>
+                        <button
+                            className="icon-btn invisible-btn"
+                            title="Edit"
+                            onClick={() => setEditMode(true)}>
+                            <IconEdit />
+                        </button>
+                        <button
+                            className="icon-btn invisible-btn"
+                            title="Delete"
+                            onClick={handleDelete}>
+                            <IconDelete />
+                        </button>
+                    </span>
                 </div>}
             {editMode && <ExpensesListForm
                 expenseData={expenseData}

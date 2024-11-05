@@ -193,18 +193,19 @@ html {
     justify-content: flex-start;
     gap: 0.5rem;
     width: 100%;
+    max-height: 1.5rem;
     min-height: 1.5rem;
 }
 
 .expense-name {
     min-width: 4rem;
     width: 15rem;
-    /* max-width: 15rem; */
     overflow: hidden;
+    white-space: nowrap;
 }
 
 .expense-sum {
-    min-width: 4rem;
+    min-width: 3.5rem;
     width: 6rem;
 }
 
@@ -217,6 +218,15 @@ html {
     width: 5rem;
     color: var(--text-muted);
     font-size: 0.7rem;
+}
+
+.expense-invisible_btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    min-width: 3rem;
 }
 
 .expense:hover .invisible-btn {
