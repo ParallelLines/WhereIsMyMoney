@@ -2,11 +2,15 @@
 //     require('dotenv').config()
 // }
 const { readSql } = require('./utils/sqlReader')
-const getCategoriesRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
-const getPopularCategories = readSql('./sql/categoriesGetPopular.sql')
-const getExpenses = readSql('./sql/expensesGetAll.sql')
-const getOneExpense = readSql('./sql/expensesGetOne.sql')
-const getAllCurrenciesOrdered = readSql('./sql/currenciesGetAll.sql')
+const categoriesGetAllRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
+const categoriesGetPopular = readSql('./sql/categoriesGetPopular.sql')
+const expensesGetAll = readSql('./sql/expensesGetAll.sql')
+const expensesGetOne = readSql('./sql/expensesGetOne.sql')
+const regularsGetAll = readSql('./sql/regularsGetAll.sql')
+const regularsGetOne = readSql('./sql/regularsGetOne.sql')
+const regularsCreateOne = readSql('./sql/regularsCreateOne.sql')
+const regularsUpdateOne = readSql('./sql/regularsUpdateOne.sql')
+const currenciesGetAll = readSql('./sql/currenciesGetAll.sql')
 
 const { Pool } = require('pg')
 const pool = new Pool({
@@ -27,7 +31,7 @@ const users = {
 }
 
 const currencies = {
-    getAllOrdered: getAllCurrenciesOrdered,
+    getAllOrdered: currenciesGetAll,
     getAll: 'SELECT * FROM currencies',
     getOne: 'SELECT * FROM currencies WHERE name = $1',
     createOne: 'INSERT INTO currencies (name, symbol) VALUES ($1, $2)',
@@ -36,23 +40,25 @@ const currencies = {
 }
 
 const expenses = {
-    getAll: getExpenses,
-    getOne: getOneExpense,
+    getAll: expensesGetAll,
+    getOne: expensesGetOne,
     createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
     updateOne: 'UPDATE expenses SET category_id = $3, name = $4, sum = $5, inUSD = $6, currency = $7, date = $8 WHERE user_id = $1 AND id = $2',
     deleteOne: 'DELETE FROM expenses WHERE user_id = $1 AND id = $2'
 }
 
 const regulars = {
-    getAll: '',
-    getOne: '',
-    createOne: ''
+    getAll: regularsGetAll,
+    getOne: regularsGetOne,
+    createOne: regularsCreateOne,
+    updateOne: regularsUpdateOne,
+    deleteOne: 'DELETE FROM regulars WHERE user_id = $1 AND id = $2'
 }
 
 const categories = {
     getAll: 'SELECT * FROM categories WHERE user_id = $1',
-    getAllRecursive: getCategoriesRecursive,
-    getPopular: getPopularCategories,
+    getAllRecursive: categoriesGetAllRecursive,
+    getPopular: categoriesGetPopular,
     getOne: 'SELECT * FROM categories WHERE user_id = $1 AND id = $2',
     createOne: 'INSERT INTO categories (user_id, name, parent_id, color) VALUES ($1, $2, $3, $4) RETURNING id',
     updateOne: 'UPDATE categories SET name = $2, color = $3 WHERE id = $1',
@@ -69,6 +75,7 @@ module.exports = {
     users: users,
     currencies: currencies,
     expenses: expenses,
+    regulars: regulars,
     categories: categories,
     rates: rates
 }

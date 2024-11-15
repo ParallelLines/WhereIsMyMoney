@@ -1,5 +1,6 @@
 const db = require('../db')
 const HttpError = require('../utils/HttpError')
+const { datesEqual } = require('../utils/dateUtils')
 
 const ratesURL = process.env.CURRENCY_RATES_URL
 const ratesVersion = process.env.CURRENCY_RATES_API_VERSION
@@ -48,42 +49,40 @@ module.exports.editOne = async (req, res) => {
     try {
         const expenseRes = await db.query(db.expenses.getOne, [userId, id])
         const expense = expenseRes.rows[0]
-        if (expense) {
-            if (req.body.sum !== expense.sum ||
-                req.body.date !== expense.date ||
-                req.body.currency !== expense.currency ||
-                !expense.inUSD) {
-                console.log(`date: req.body.date = ${req.body.date}, expense.date = ${expense.date}, equals: ${req.body.date === expense.date}`)
-                expense.inUSD = await calculateUSD(req.body.sum, req.body.date, req.body.currency)
-            }
-            if (req.body.category_id) {
-                const isCatValid = await isCategoryValid(req.body.category_id, userId)
-                if (!isCatValid) {
-                    res.status(400).send('cannot use this category')
-                    return
-                }
-            }
-            expense.category_id = req.body.category_id ? req.body.category_id : expense.category_id
-            expense.name = req.body.name ? req.body.name : expense.name
-            expense.sum = req.body.sum ? req.body.sum : expense.sum
-            expense.currency = req.body.currency ? req.body.currency : expense.currency
-            expense.date = req.body.date ? req.body.date : expense.date
-            await db.query(db.expenses.updateOne, [
-                userId,
-                id,
-                expense.category_id,
-                expense.name,
-                expense.sum,
-                expense.inUSD,
-                expense.currency,
-                expense.date
-            ])
-            res.sendStatus(200)
-        } else {
+        if (!expense) {
             res.status(500).send('no such expense :(')
         }
+        if (req.body.sum !== expense.sum ||
+            !datesEqual(req.body.date, expense.date) ||
+            req.body.currency !== expense.currency ||
+            !expense.inusd) {
+            expense.inusd = await calculateUSD(req.body.sum, req.body.date, req.body.currency)
+        }
+        if (req.body.category_id) {
+            const isCatValid = await isCategoryValid(req.body.category_id, userId)
+            if (!isCatValid) {
+                res.status(400).send('cannot use this category')
+                return
+            }
+        }
+        expense.category_id = req.body.category_id ? req.body.category_id : expense.category_id
+        expense.name = req.body.name ? req.body.name : expense.name
+        expense.sum = req.body.sum ? req.body.sum : expense.sum
+        expense.currency = req.body.currency ? req.body.currency : expense.currency
+        expense.date = req.body.date ? req.body.date : expense.date
+        await db.query(db.expenses.updateOne, [
+            userId,
+            id,
+            expense.category_id,
+            expense.name,
+            expense.sum,
+            expense.inusd,
+            expense.currency,
+            expense.date
+        ])
+        res.sendStatus(200)
     } catch (e) {
-        console.error('error while editOne expenses: ', e.code)
+        console.error('error while editOne expenses: ', e.code ? e.code : e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -156,7 +155,7 @@ async function calculateUSD(sum, date, currency) {
         return num / rate
     } catch (e) {
         console.error('error while calculateUSD: ', e.code)
-        return 0
+        return -1
     }
 }
 
