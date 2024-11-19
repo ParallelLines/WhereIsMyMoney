@@ -12,7 +12,7 @@ module.exports.getAll = async (req, res) => {
         const expenses = await db.query(db.expenses.getAll, [userId])
         res.json(expenses.rows)
     } catch (e) {
-        console.error('error while getAll expenses: ', e.code)
+        console.error('error while getAll expenses: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -24,7 +24,7 @@ module.exports.getOne = async (req, res) => {
         const expense = await db.query(db.expenses.getOne, [userId, id])
         res.json(expense.rows)
     } catch (e) {
-        console.error('error while getOne expenses: ', e.code)
+        console.error('error while getOne expenses: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -82,7 +82,7 @@ module.exports.editOne = async (req, res) => {
         ])
         res.sendStatus(200)
     } catch (e) {
-        console.error('error while editOne expenses: ', e.code ? e.code : e)
+        console.error('error while editOne expenses: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -94,7 +94,7 @@ module.exports.deleteOne = async (req, res) => {
         await db.query(db.expenses.deleteOne, [userId, id])
         res.sendStatus(200)
     } catch (e) {
-        console.error('error while deleteOne expenses: ', e.code)
+        console.error('error while deleteOne expenses: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -121,7 +121,7 @@ async function createExpense(expenseData) {
         ])
         return result.rows
     } catch (e) {
-        console.error('error while createExpense: ', e.code)
+        console.error('error while createExpense: ', e)
         throw new HttpError(500, 'something went wrong :(')
     }
 }
@@ -131,7 +131,7 @@ async function isCategoryValid(categoryId, userId) {
         const category = await db.query(db.categories.getOne, [userId, categoryId])
         return category.rows.length === 1
     } catch (e) {
-        console.error('error while isCategoryValid expenses: ', e.code)
+        console.error('error while isCategoryValid expenses: ', e)
         return null
     }
 }
@@ -154,7 +154,7 @@ async function calculateUSD(sum, date, currency) {
         const rate = await getRateFromDB(day, currency)
         return num / rate
     } catch (e) {
-        console.error('error while calculateUSD: ', e.code)
+        console.error('error while calculateUSD: ', e)
         return -1
     }
 }
@@ -170,7 +170,7 @@ async function checkIfRatesExist(date) {
         const result = await db.query(db.rates.checkExistenceByDate, [date])
         return result.rows[0].exists
     } catch (e) {
-        console.error('error while checkIfRatesExist: ', e.code)
+        console.error('error while checkIfRatesExist: ', e)
         return null
     }
 }
@@ -187,7 +187,7 @@ async function getRateFromDB(date, currency) {
         const rates = await db.query(db.rates.getRateByDateAndCurrency, [date, currency])
         return parseFloat(rates.rows[0].rate)
     } catch (e) {
-        console.error('error while getRatesFromDB: ', e.code)
+        console.error('error while getRatesFromDB: ', e)
         return null
     }
 }
@@ -236,6 +236,6 @@ async function insertRatesInDB(data, currency = 'USD') {
         const query = 'INSERT INTO rates (date, from_currency, to_currency, rate) VALUES ' + queryParts.join(',')
         await db.query(query)
     } catch (e) {
-        console.error('error while updating rates: ', e.code)
+        console.error('error while updating rates: ', e)
     }
 }
