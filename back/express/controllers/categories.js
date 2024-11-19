@@ -6,7 +6,7 @@ module.exports.getAll = async (req, res) => {
         const categories = await db.query(db.categories.getAllRecursive, [userId])
         res.json(categories.rows)
     } catch (e) {
-        console.log('error while getAll categories: ', e.code)
+        console.error('error while getAll categories: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -18,7 +18,7 @@ module.exports.getOne = async (req, res) => {
         const category = await db.query(db.categories.getOne, [userId, id])
         res.json(category.rows)
     } catch (e) {
-        console.log('error while getOne categories: ', e.code)
+        console.error('error while getOne categories: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -35,7 +35,7 @@ module.exports.create = async (req, res) => {
         ])
         res.json(result.rows)
     } catch (e) {
-        console.log('error while create categories: ', e.code)
+        console.error('error while create categories: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -60,7 +60,7 @@ module.exports.editOne = async (req, res) => {
             res.status(500).send('no such category :(')
         }
     } catch (e) {
-        console.log('error while editOne categories: ', e.code)
+        console.error('error while editOne categories: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -72,7 +72,7 @@ module.exports.deleteOne = async (req, res) => {
         await db.query(db.categories.deleteOne, [userId, id])
         res.sendStatus(200)
     } catch (e) {
-        console.log('error while deleteOne categories: ', e.code)
+        console.error('error while deleteOne categories: ', e)
         res.status(500).send('something went wrong :(')
     }
 }

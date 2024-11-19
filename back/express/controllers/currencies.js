@@ -6,7 +6,7 @@ module.exports.getAll = async (req, res) => {
         const currencies = await db.query(db.currencies.getAllOrdered, [userId])
         res.json(currencies.rows)
     } catch (e) {
-        console.log('error while getAll currencies: ', e.code)
+        console.error('error while getAll currencies: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -17,7 +17,7 @@ module.exports.getOne = async (req, res) => {
         const currencies = await db.query(db.currencies.getOne, [name])
         res.json(currencies.rows)
     } catch (e) {
-        console.log('error while getOne currencies: ', e.code)
+        console.error('error while getOne currencies: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -31,7 +31,7 @@ module.exports.create = async (req, res) => {
         ])
         res.sendStatus(200)
     } catch (e) {
-        console.log('error while create currencies: ', e.code)
+        console.error('error while create currencies: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -54,7 +54,7 @@ module.exports.editOne = async (req, res) => {
             res.status(400).send('no such currency :(')
         }
     } catch (e) {
-        console.log('error while editOne currencies: ', e.code)
+        console.error('error while editOne currencies: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -65,7 +65,7 @@ module.exports.deleteOne = async (req, res) => {
         await db.query(db.currencies.deleteOne, [name])
         res.sendStatus(200)
     } catch (e) {
-        console.log('error while deleteOne currencies: ', e.code)
+        console.error('error while deleteOne currencies: ', e)
         res.status(500).send('something went wrong :(')
     }
 }

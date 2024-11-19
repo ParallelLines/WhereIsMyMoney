@@ -6,7 +6,7 @@ module.exports.getOne = async (req, res) => {
         const user = await db.query(db.users.getOne, [id])
         res.json(user.rows)
     } catch (e) {
-        console.log('error while getOne users: ', e.code)
+        console.error('error while getOne users: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -20,7 +20,7 @@ module.exports.create = async (req, res) => {
         ])
         res.sendStatus(200)
     } catch (e) {
-        console.log('error while create users: ', e.code)
+        console.error('error while create users: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -43,7 +43,7 @@ module.exports.editOne = async (req, res) => {
             res.status(400).send('no such user :(')
         }
     } catch (e) {
-        console.log('error while editOne users: ', e.code)
+        console.error('error while editOne users: ', e)
         res.status(500).send('something went wrong :(')
     }
 }
@@ -54,7 +54,7 @@ module.exports.deleteOne = async (req, res) => {
         await db.query(db.users.deleteOne, [id])
         res.sendStatus(200)
     } catch (e) {
-        console.log('error while deleteOne users: ', e.code)
+        console.error('error while deleteOne users: ', e)
         res.status(500).send('something went wrong :(')
     }
 }

@@ -22,7 +22,7 @@ module.exports.signUp = async (req, res) => {
         if (e.code === '23505') {
             res.status(500).send('The name already exists :(')
         } else {
-            console.log('error while sign up: ', e.code)
+            console.error('error while sign up: ', e)
             res.status(500).send('something went wrong :(')
         }
     }
@@ -45,7 +45,7 @@ module.exports.logIn = async (req, res) => {
             }
         }
     } catch (e) {
-        console.log('error while log in: ', e.code)
+        console.error('error while log in: ', e)
         res.status(500).send('something went wrong :(')
     }
 
