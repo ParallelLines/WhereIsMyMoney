@@ -1,6 +1,7 @@
 const db = require('../db')
 const HttpError = require('../utils/HttpError')
 const { datesEqual } = require('../utils/dateUtils')
+const { isCategoryValid } = require('./categories')
 
 const ratesURL = process.env.CURRENCY_RATES_URL
 const ratesVersion = process.env.CURRENCY_RATES_API_VERSION
@@ -8,25 +9,15 @@ const ratesEndpoint1 = process.env.CURRENCY_RATES_ENPOINT_1
 
 module.exports.getAll = async (req, res) => {
     const { userId } = req
-    try {
-        const expenses = await db.query(db.expenses.getAll, [userId])
-        res.json(expenses.rows)
-    } catch (e) {
-        console.error('error while getAll expenses: ', e)
-        res.status(500).send('something went wrong :(')
-    }
+    const expenses = await db.query(db.expenses.getAll, [userId])
+    res.json(expenses.rows)
 }
 
 module.exports.getOne = async (req, res) => {
     const { id } = req.params
     const { userId } = req
-    try {
-        const expense = await db.query(db.expenses.getOne, [userId, id])
-        res.json(expense.rows)
-    } catch (e) {
-        console.error('error while getOne expenses: ', e)
-        res.status(500).send('something went wrong :(')
-    }
+    const expense = await db.query(db.expenses.getOne, [userId, id])
+    res.json(expense.rows)
 }
 
 module.exports.create = async (req, res) => {
@@ -34,69 +25,54 @@ module.exports.create = async (req, res) => {
     const newData = req.body
     newData.userId = userId
     console.info('create expense: ', newData)
-    try {
-        const result = await createExpense(newData)
-        res.json(result)
-    } catch (e) {
-        console.error('error while create: ', e)
-        res.status(e.status ? e.status : 500).send(e.status ? e.message : 'something went wrong :(')
-    }
+    const result = await createExpense(newData)
+    res.json(result)
 }
 
 module.exports.editOne = async (req, res) => {
     const { id } = req.params
     const { userId } = req
-    try {
-        const expenseRes = await db.query(db.expenses.getOne, [userId, id])
-        const expense = expenseRes.rows[0]
-        if (!expense) {
-            res.status(500).send('no such expense :(')
-        }
-        if (req.body.sum !== expense.sum ||
-            !datesEqual(req.body.date, expense.date) ||
-            req.body.currency !== expense.currency ||
-            !expense.inusd) {
-            expense.inusd = await calculateUSD(req.body.sum, req.body.date, req.body.currency)
-        }
-        if (req.body.category_id) {
-            const isCatValid = await isCategoryValid(req.body.category_id, userId)
-            if (!isCatValid) {
-                res.status(400).send('cannot use this category')
-                return
-            }
-        }
-        expense.category_id = req.body.category_id ? req.body.category_id : expense.category_id
-        expense.name = req.body.name ? req.body.name : expense.name
-        expense.sum = req.body.sum ? req.body.sum : expense.sum
-        expense.currency = req.body.currency ? req.body.currency : expense.currency
-        expense.date = req.body.date ? req.body.date : expense.date
-        await db.query(db.expenses.updateOne, [
-            userId,
-            id,
-            expense.category_id,
-            expense.name,
-            expense.sum,
-            expense.inusd,
-            expense.currency,
-            expense.date
-        ])
-        res.sendStatus(200)
-    } catch (e) {
-        console.error('error while editOne expenses: ', e)
-        res.status(500).send('something went wrong :(')
+    const expenseRes = await db.query(db.expenses.getOne, [userId, id])
+    const expense = expenseRes.rows[0]
+    if (!expense) {
+        throw new HttpError(400, 'no such expense :(')
     }
+    if (req.body.sum && parseFloat(req.body.sum) !== parseFloat(expense.sum) ||
+        req.body.date && !datesEqual(req.body.date, expense.date) ||
+        req.body.currency && req.body.currency !== expense.currency ||
+        !expense.inusd || expense.inusd === -1) {
+        console.log('calculating inUSD...')
+        expense.inusd = await calculateUSD(req.body.sum, req.body.date, req.body.currency)
+    }
+    if (req.body.category_id) {
+        const isCatValid = await isCategoryValid(req.body.category_id, userId)
+        if (!isCatValid) {
+            throw new HttpError(400, 'cannot use this category')
+        }
+    }
+    expense.category_id = req.body.category_id ? req.body.category_id : expense.category_id
+    expense.name = req.body.name ? req.body.name : expense.name
+    expense.sum = req.body.sum ? req.body.sum : expense.sum
+    expense.currency = req.body.currency ? req.body.currency : expense.currency
+    expense.date = req.body.date ? req.body.date : expense.date
+    await db.query(db.expenses.updateOne, [
+        userId,
+        id,
+        expense.category_id,
+        expense.name,
+        expense.sum,
+        expense.inusd,
+        expense.currency,
+        expense.date
+    ])
+    res.sendStatus(200)
 }
 
 module.exports.deleteOne = async (req, res) => {
     const { id } = req.params
     const { userId } = req
-    try {
-        await db.query(db.expenses.deleteOne, [userId, id])
-        res.sendStatus(200)
-    } catch (e) {
-        console.error('error while deleteOne expenses: ', e)
-        res.status(500).send('something went wrong :(')
-    }
+    await db.query(db.expenses.deleteOne, [userId, id])
+    res.sendStatus(200)
 }
 
 async function createExpense(expenseData) {
@@ -107,33 +83,18 @@ async function createExpense(expenseData) {
     if (!isCatValid) {
         throw new HttpError(400, 'cannot use this category')
     }
-    try {
-        const result = await db.query(db.expenses.createOne, [
-            expenseData.userId,
-            expenseData.category_id,
-            expenseData.name,
-            expenseData.sum,
-            expenseData.inUSD,
-            expenseData.currency,
-            expenseData.reqular_id,
-            expenseData.regular_name,
-            expenseData.date
-        ])
-        return result.rows
-    } catch (e) {
-        console.error('error while createExpense: ', e)
-        throw new HttpError(500, 'something went wrong :(')
-    }
-}
-
-async function isCategoryValid(categoryId, userId) {
-    try {
-        const category = await db.query(db.categories.getOne, [userId, categoryId])
-        return category.rows.length === 1
-    } catch (e) {
-        console.error('error while isCategoryValid expenses: ', e)
-        return null
-    }
+    const result = await db.query(db.expenses.createOne, [
+        expenseData.userId,
+        expenseData.category_id,
+        expenseData.name,
+        expenseData.sum,
+        expenseData.inUSD,
+        expenseData.currency,
+        expenseData.reqular_id,
+        expenseData.regular_name,
+        expenseData.date
+    ])
+    return result.rows
 }
 
 /**
@@ -154,7 +115,7 @@ async function calculateUSD(sum, date, currency) {
         const rate = await getRateFromDB(day, currency)
         return num / rate
     } catch (e) {
-        console.error('error while calculateUSD: ', e)
+        console.error(e)
         return -1
     }
 }
@@ -170,7 +131,7 @@ async function checkIfRatesExist(date) {
         const result = await db.query(db.rates.checkExistenceByDate, [date])
         return result.rows[0].exists
     } catch (e) {
-        console.error('error while checkIfRatesExist: ', e)
+        console.error(e)
         return null
     }
 }
@@ -187,7 +148,7 @@ async function getRateFromDB(date, currency) {
         const rates = await db.query(db.rates.getRateByDateAndCurrency, [date, currency])
         return parseFloat(rates.rows[0].rate)
     } catch (e) {
-        console.error('error while getRatesFromDB: ', e)
+        console.error(e)
         return null
     }
 }
@@ -204,13 +165,9 @@ async function getRatesFromOutside(date = 'latest', currency = 'USD') {
     //info: https://github.com/fawazahmed0/exchange-api/issues/90
     //https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@2024-10-16/v1/currencies/usd.json
     const url = `${ratesURL}@${date}/${ratesVersion}/${ratesEndpoint1}/${currency.toLowerCase()}.json`
-    try {
-        const response = await fetch(url)
-        const rates = await response.json()
-        return rates
-    } catch (e) {
-        console.error('error while getRatesFromOutside', e)
-    }
+    const response = await fetch(url)
+    const rates = await response.json()
+    return rates
 }
 /**
  * Inserts into table 'rates'
@@ -223,19 +180,15 @@ async function getRatesFromOutside(date = 'latest', currency = 'USD') {
  * @param {String} currency Examples: 'USD', 'EUR', but is USD by default.
  */
 async function insertRatesInDB(data, currency = 'USD') {
-    try {
-        const result = await db.query(db.currencies.getAll)
-        const currencies = result.rows
-        const date = data.date
-        const rates = data[currency.toLowerCase()]
-        const queryParts = []
-        for (let curr of currencies) {
-            const rate = rates[curr.name.toLowerCase()]
-            queryParts.push(`('${date}', '${curr.name}', '${currency}', ${rate})`)
-        }
-        const query = 'INSERT INTO rates (date, from_currency, to_currency, rate) VALUES ' + queryParts.join(',')
-        await db.query(query)
-    } catch (e) {
-        console.error('error while updating rates: ', e)
+    const result = await db.query(db.currencies.getAll)
+    const currencies = result.rows
+    const date = data.date
+    const rates = data[currency.toLowerCase()]
+    const queryParts = []
+    for (let curr of currencies) {
+        const rate = rates[curr.name.toLowerCase()]
+        queryParts.push(`('${date}', '${curr.name}', '${currency}', ${rate})`)
     }
+    const query = 'INSERT INTO rates (date, from_currency, to_currency, rate) VALUES ' + queryParts.join(',')
+    await db.query(query)
 }
