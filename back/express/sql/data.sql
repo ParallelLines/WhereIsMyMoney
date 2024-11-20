@@ -1,6 +1,13 @@
 CREATE DATABASE budget;
 
 DROP TABLE IF EXISTS users, categories, inusd, currencies, expenses, regulars;
+DROP TYPE IF EXISTS recurrence, weekday, month, day_num, weekday_extended;
+
+CREATE TYPE recurrence AS ENUM ('daily', 'weekly', 'monthly', 'yearly');
+CREATE TYPE weekday AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+CREATE TYPE month AS ENUM ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Okt', 'Nov', 'Dec');
+CREATE TYPE day_num AS ENUM ('first', 'second', 'third', 'forth', 'fifth', 'last');
+CREATE TYPE weekday_extended AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'day', 'weekday', 'weekend day');
 
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
@@ -36,8 +43,16 @@ CREATE TABLE regulars (
     name VARCHAR(100),
     sum NUMERIC(10, 2) NOT NULL,
     currency VARCHAR(8) NOT NULL REFERENCES currencies(name) ON DELETE RESTRICT,
-    last_time_completed DATE,
-    pattern VARCHAR(100) NOT NULL
+    start_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    end_date TIMESTAMP WITH TIME ZONE,
+    next_date TIMESTAMP WITH TIME ZONE,
+    repeat_interval recurrence,
+    repeat_every SMALLINT,
+    repeat_each_weekday weekday[],
+    repeat_each_day_of_month SMALLINT[],
+    repeat_each_month month[],
+    repeat_on_day_num day_num,
+    repeat_on_weekday weekday_extended
 );
 
 CREATE TABLE expenses (
