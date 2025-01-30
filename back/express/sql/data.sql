@@ -5,7 +5,7 @@ DROP TYPE IF EXISTS recurrence, weekday, month, day_num, weekday_extended;
 
 CREATE TYPE recurrence AS ENUM ('daily', 'weekly', 'monthly', 'yearly');
 CREATE TYPE weekday AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
-CREATE TYPE month AS ENUM ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Okt', 'Nov', 'Dec');
+CREATE TYPE month AS ENUM ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
 CREATE TYPE day_num AS ENUM ('first', 'second', 'third', 'forth', 'fifth', 'last');
 CREATE TYPE weekday_extended AS ENUM ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'day', 'weekday', 'weekend day');
 
