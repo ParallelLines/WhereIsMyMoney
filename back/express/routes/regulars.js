@@ -10,6 +10,9 @@ router.route('/')
     .get(catchAsync(regulars.getAll))
     .post(catchAsync(regulars.create))
 
+router.route('/nextDate')
+    .post(catchAsync(regulars.getNextDate))
+
 router.route('/:id')
     .get(catchAsync(regulars.getOne))
     .put(catchAsync(regulars.editOne))
