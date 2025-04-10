@@ -62,6 +62,7 @@ function categoriesReducer(categories, action) {
                     return copy
                 }
             }
+            break
         }
         case 'delete': {
             const copy = [...categories]
