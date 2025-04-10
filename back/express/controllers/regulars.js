@@ -33,6 +33,12 @@ module.exports.create = async (req, res) => {
     const newData = req.body
     newData.userId = userId
     console.info('create regular: ', newData)
+
+    if (!isPatternValid(req.body)) {
+        res.status(400).send('repeat pattern is invalid :(')
+        return
+    }
+
     const result = await createRegular(newData)
     res.json(result)
 }
@@ -116,6 +122,8 @@ async function createRegular(regularData) {
     if (!isCatValid) {
         throw new HttpError(400, 'cannot use this category')
     }
+    const prev_date = req.body.prev_date ? new Date(req.body.prev_date) : null
+    regularData.next_date = calculateNextDate(prev_date, regularData)
     const result = await db.query(db.regulars.createOne, [
         regularData.userId,
         regularData.category_id,
