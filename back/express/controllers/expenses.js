@@ -13,6 +13,14 @@ module.exports.getAll = async (req, res) => {
     res.json(expenses.rows)
 }
 
+module.exports.getNamesByPrefix = async (req, res) => {
+    let { prefix } = req.params
+    const { userId } = req
+    prefix += '%'
+    const names = await db.query(db.expenses.getNamesByPrefix, [userId, prefix])
+    res.json(names.rows)
+}
+
 module.exports.getOne = async (req, res) => {
     const { id } = req.params
     const { userId } = req

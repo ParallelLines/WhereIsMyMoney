@@ -10,6 +10,9 @@ router.route('/')
     .get(catchAsync(expenses.getAll))
     .post(catchAsync(expenses.create))
 
+router.route('/names/:prefix')
+    .get(catchAsync(expenses.getNamesByPrefix))
+
 router.route('/:id')
     .get(catchAsync(expenses.getOne))
     .put(catchAsync(expenses.editOne))

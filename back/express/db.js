@@ -6,6 +6,7 @@ const categoriesGetAllRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
 const categoriesGetPopular = readSql('./sql/categoriesGetPopular.sql')
 const expensesGetAll = readSql('./sql/expensesGetAll.sql')
 const expensesGetOne = readSql('./sql/expensesGetOne.sql')
+const expensesNamesByPrefix = readSql('./sql/expensesNamesByPrefix.sql')
 const regularsGetAll = readSql('./sql/regularsGetAll.sql')
 const regularsGetOne = readSql('./sql/regularsGetOne.sql')
 const regularsCreateOne = readSql('./sql/regularsCreateOne.sql')
@@ -41,6 +42,7 @@ const currencies = {
 
 const expenses = {
     getAll: expensesGetAll,
+    getNamesByPrefix: expensesNamesByPrefix,
     getOne: expensesGetOne,
     createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
     updateOne: 'UPDATE expenses SET category_id = $3, name = $4, sum = $5, inUSD = $6, currency = $7, date = $8 WHERE user_id = $1 AND id = $2',

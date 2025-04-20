@@ -67,3 +67,5 @@ CREATE TABLE expenses (
     regular_id BIGINT REFERENCES regulars(id) ON DELETE SET NULL,
     regular_name VARCHAR(100)
 );
+
+CREATE INDEX expenses_name_index ON expenses(name varchar_pattern_ops);
