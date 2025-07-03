@@ -1,0 +1,122 @@
+html {
+    font-size: 20px;
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+    overflow-y: hidden;
+    font-family: "Verdana", sans-serif;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+.app {
+    width: 100%;
+    height: 100%;
+}
+
+.grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr;
+    grid-template-rows: 1fr 2fr 6fr;
+    grid-template-areas:
+        "logo     graph-2  graph-3"
+        "graph-1  graph-2  graph-3"
+        "column-1 column-2 column-3";
+    gap: 1rem 1rem;
+}
+
+.regular-expenses-list {
+    grid-area: column-1;
+}
+
+.expenses-list {
+    grid-area: column-2;
+    min-width: 20rem;
+}
+
+.categories-list {
+    grid-area: column-3;
+}
+
+.expense {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+    max-height: 1.5rem;
+    min-height: 1.5rem;
+}
+
+.expense-name {
+    min-width: 4rem;
+    width: 15rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.expense-sum {
+    min-width: 3.5rem;
+    width: 6rem;
+}
+
+.expense-currency {
+    min-width: 1.5rem;
+}
+
+.expense-date {
+    min-width: 4rem;
+    width: 5rem;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
+
+.color-marker {
+    min-width: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: var(--border-width) solid var(--border-color);
+    cursor: pointer;
+}
+
+.category {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 1.5rem;
+    cursor: pointer;
+    border-radius: var(--input-radius);
+}
+
+.category.level-1 {
+    margin-left: 0;
+}
+
+.category.level-2 {
+    margin-left: 1rem;
+}
+
+.category.level-3 {
+    margin-left: 2rem;
+}
+
+.category.level-4 {
+    margin-left: 3rem;
+}
+
+.category.level-5 {
+    margin-left: 4rem;
+}
