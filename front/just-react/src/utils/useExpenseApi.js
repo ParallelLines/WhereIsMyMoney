@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createExpense, deleteExpense, editExpense, getExpenses } from './apiService'
+import { createExpense, deleteExpense, editExpense, getExpenses, getExpensesNamesByPrefix } from './apiService'
 
 export default function useExpenseApi() {
     const [loading, setLoading] = useState(false)
@@ -10,6 +10,16 @@ export default function useExpenseApi() {
         return getExpenses()
             .catch(e => {
                 console.log('Error trying to request expenses: ', e)
+                setError('couldn\'t get the data :(')
+            })
+            .finally(() => setLoading(false))
+    }
+
+    const getNamesByPrefix = async (prefix) => {
+        setLoading(true)
+        return getExpensesNamesByPrefix(prefix)
+            .catch(e => {
+                console.log('Error trying to request expenses\' names: ', e)
                 setError('couldn\'t get the data :(')
             })
             .finally(() => setLoading(false))

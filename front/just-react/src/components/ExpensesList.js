@@ -15,7 +15,7 @@ import { useExpenses, useExpensesDispatch } from '../utils/ExpensesContext'
 export default function ExpensesList() {
     const expenses = useExpenses()
     const expensesDispatch = useExpensesDispatch()
-    const { getAll, create, edit, remove, loading, error } = useExpenseApi()
+    const { getAll, create, loading, error } = useExpenseApi()
     const [createMode, setCreateMode] = useState(false)
 
     const handleCreate = async (data) => {

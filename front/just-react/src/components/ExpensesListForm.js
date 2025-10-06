@@ -14,6 +14,7 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
         color: '',
         date: new Date()
     })
+    const [suggestions, setSuggestions] = useState('')
 
     const [loading, setLoading] = useState(false)
 
@@ -78,6 +79,11 @@ export default function ExpensesListForm({ expenseData, onSubmit, onCancel }) {
                     onChange={handleChange}
                     autoFocus
                     required
+                />
+                <input name="name-suggestion"
+                    className="suggestion-input"
+                    id="suggestion-name-input"
+                    value="suggestion..."
                 />
                 <input name="sum"
                     className="short-input"

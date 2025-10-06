@@ -16,6 +16,7 @@ export const deleteCategory = (categoryId) => axiosInstance.delete(ENDPOINT_CATE
 
 const ENDPOINT_EXPENSES = '/expenses'
 export const getExpenses = () => axiosInstance.get(ENDPOINT_EXPENSES)
+export const getExpensesNamesByPrefix = (prefix) => axiosInstance.get(ENDPOINT_EXPENSES + '/names/' + prefix)
 export const createExpense = (data) => axiosInstance.post(ENDPOINT_EXPENSES, {
     name: data.name,
     sum: data.sum,
