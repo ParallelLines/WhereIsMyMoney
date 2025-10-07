@@ -37,6 +37,18 @@ body {
     grid-area: column-1;
 }
 
+.list-column {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem 0;
+    justify-content: start;
+    align-items: start;
+}
+
 .expenses-list {
     grid-area: column-2;
     min-width: 20rem;
