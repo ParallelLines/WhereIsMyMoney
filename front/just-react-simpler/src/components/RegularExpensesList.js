@@ -1,14 +1,13 @@
-import RegularExpense from "./RegularExpense"
-
-const regulars = [
-    { id: '1', name: 'HOWOGE', sum: '681.09', currency: 'EUR', symbol: '€', next_date: '2024-12-31 17:57:16.516+01' },
-    { id: '2', name: 'Rundfunc', sum: '112', currency: 'EUR', symbol: '€', next_date: '2024-12-31 17:57:16.516+01' }
-]
+import RegularExpense from './RegularExpense'
+import { useQuery } from '@tanstack/react-query'
+import { getRegulars } from '../apiService/regulars'
 
 export default function RegularExpensesList() {
+    const query = useQuery({ queryKey: ['regulars'], queryFn: getRegulars })
+
     return (
-        <div className="regular-expenses-list">
-            {regulars.map(regular => {
+        <div className="regular-expenses-list list-column">
+            {query.data?.map(regular => {
                 return <RegularExpense data={regular} key={regular.id} />
             })}
         </div>
