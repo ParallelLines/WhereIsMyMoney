@@ -7,11 +7,18 @@ export default function ExpensesList() {
 
     return (
         <div className="expenses-list list-column">
-            {query.data?.map(expense => {
-                return (
-                    <Expense data={expense} key={expense.id} />
-                )
-            })}
+            <div className="list-controls">
+                <button>+</button>
+            </div>
+            <div className="list-column">
+                {query.isLoading && <div>Loading...</div>}
+                {query.isError && <div>Error: {query.error.message}</div>}
+                {query.data?.map(expense => {
+                    return (
+                        <Expense data={expense} key={expense.id} />
+                    )
+                })}
+            </div>
         </div>
     )
 }

@@ -4,6 +4,7 @@ import ColorMarker from './ColorMarker'
 export default function Expense({ data }) {
     return (
         <div className="expense">
+            <input type="checkbox"></input>
             <span className="expense-name">{data.name}</span>
             <span className="expense-sum">{data.sum}</span>
             <span className="expense-currency">{data.symbol}</span>
