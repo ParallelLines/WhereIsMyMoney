@@ -6,7 +6,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 const COOKIE_AUTH_NAME = process.env.REACT_APP_COOKIE_AUTH_NAME
 
 export default function Login() {
-    const [setCookie] = useCookies(null)
+    const [, setCookie] = useCookies()
     const [isLogIn, setIsLogIn] = useState(true)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
