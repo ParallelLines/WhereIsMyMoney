@@ -5,6 +5,7 @@ const { readSql } = require('./utils/sqlReader')
 const categoriesGetAllRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
 const categoriesGetPopular = readSql('./sql/categoriesGetPopular.sql')
 const expensesGetAll = readSql('./sql/expensesGetAll.sql')
+const expensesGetAllByPage = readSql('./sql/expensesGetAllByPage.sql')
 const expensesGetOne = readSql('./sql/expensesGetOne.sql')
 const expensesNamesByPrefix = readSql('./sql/expensesNamesByPrefix.sql')
 const regularsGetAll = readSql('./sql/regularsGetAll.sql')
@@ -42,6 +43,7 @@ const currencies = {
 
 const expenses = {
     getAll: expensesGetAll,
+    getAllByPage: expensesGetAllByPage,
     getNamesByPrefix: expensesNamesByPrefix,
     getOne: expensesGetOne,
     createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
