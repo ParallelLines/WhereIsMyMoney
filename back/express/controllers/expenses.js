@@ -9,8 +9,9 @@ const ratesEndpoint1 = process.env.CURRENCY_RATES_ENPOINT_1
 
 module.exports.getAll = async (req, res) => {
     const { userId } = req
-    let { page = 1, elementsProPage = 10 } = req.query
-    const expenses = await db.query(db.expenses.getAllByPage, [userId, elementsProPage, elementsProPage * (page - 1)])
+    let { page = 0, elementsPerPage = 10 } = req.query
+    const offset = elementsPerPage * page
+    const expenses = await db.query(db.expenses.getAllByPage, [userId, elementsPerPage, offset])
     res.json(expenses.rows)
 }
 
