@@ -1,8 +1,12 @@
-import Expense from "./Expense"
+import Expense from './Expense'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { getExpenses } from "../apiService/expenses"
+import { getExpenses } from '../apiService/expenses'
+import { useState } from 'react'
+import ExpensesForm from './ExpensesForm'
 
 export default function ExpensesList() {
+    const [createMode, setCreateMode] = useState(false)
+
     const query = useInfiniteQuery({
         queryKey: ['expenses'],
         queryFn: getExpenses,
@@ -18,8 +22,9 @@ export default function ExpensesList() {
     return (
         <div className="expenses-list list-column">
             <div className="list-controls">
-                <button>+</button>
+                <button onClick={() => setCreateMode(true)}>+</button>
             </div>
+            {createMode && <ExpensesForm onCancel={() => setCreateMode(false)} onSubmit={() => setCreateMode(false)} />}
             <div className="list-column">
                 {query.isLoading && <div>Loading...</div>}
                 {query.isError && <div>Error: {query.error.message}</div>}

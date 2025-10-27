@@ -38,6 +38,25 @@ body {
     gap: 1rem 1rem;
 }
 
+.vanishing-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vanishing-bg.clear {
+    background: none;
+}
+
+.vanishing-bg.blur {
+    backdrop-filter: blur(10px);
+}
+
 .regular-expenses-list {
     grid-area: column-1;
 }
@@ -96,6 +115,8 @@ body {
     color: var(--text-muted);
     font-size: 0.7rem;
 }
+
+.expenses-form-container {}
 
 .color-marker {
     min-width: 1rem;
