@@ -9,6 +9,7 @@ router.use(verifyJWT)
 router.route('/')
     .get(catchAsync(expenses.getAll))
     .post(catchAsync(expenses.create))
+    .delete(catchAsync(expenses.deleteMany))
 
 router.route('/names/:prefix')
     .get(catchAsync(expenses.getNamesByPrefix))

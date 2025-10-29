@@ -85,6 +85,15 @@ module.exports.deleteOne = async (req, res) => {
     res.sendStatus(200)
 }
 
+module.exports.deleteMany = async (req, res) => {
+    const { ids } = req.body
+    const { userId } = req
+    const offset = 2
+    const placeholders = ids.map((val, i) => '$' + (i + offset)).join(', ')
+    await db.query(db.expenses.deleteMany + '(' + placeholders + ')', [userId, ...ids])
+    res.sendStatus(200)
+}
+
 async function createExpense(expenseData) {
     expenseData.inUSD = await calculateUSD(expenseData.sum, expenseData.date, expenseData.currency)
     expenseData.regular_name = null

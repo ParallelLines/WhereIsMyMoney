@@ -48,7 +48,8 @@ const expenses = {
     getOne: expensesGetOne,
     createOne: 'INSERT INTO expenses (user_id, category_id, name, sum, inUSD, currency, regular_id, regular_name, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
     updateOne: 'UPDATE expenses SET category_id = $3, name = $4, sum = $5, inUSD = $6, currency = $7, date = $8 WHERE user_id = $1 AND id = $2',
-    deleteOne: 'DELETE FROM expenses WHERE user_id = $1 AND id = $2'
+    deleteOne: 'DELETE FROM expenses WHERE user_id = $1 AND id = $2',
+    deleteMany: 'DELETE FROM expenses WHERE user_id = $1 AND id IN '
 }
 
 const regulars = {
