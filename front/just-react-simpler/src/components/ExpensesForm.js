@@ -10,6 +10,7 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const queryClient = useQueryClient()
     const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getCategories })
     const currenciesQuery = useQuery({ queryKey: ['currencies'], queryFn: getCurrencies })
+
     const create = useMutation({
         mutationFn: createExpense,
         onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] }),
@@ -27,7 +28,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         color: '',
         date: new Date()
     })
-
     const date = formatDateForInput(expenseData ? new Date(expenseData.date) : new Date(expense.date))
 
     const handleChange = (e) => {

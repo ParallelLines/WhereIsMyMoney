@@ -24,3 +24,7 @@ export const editExpense = (data) => axiosInstance.put(ENDPOINT_EXPENSES + '/' +
 })
 
 export const deleteExpense = (expenseId) => axiosInstance.delete(ENDPOINT_EXPENSES + '/' + expenseId)
+
+export const deleteExpenses = (expenseIds) => axiosInstance.delete(ENDPOINT_EXPENSES, {
+    data: { ids: expenseIds }
+})

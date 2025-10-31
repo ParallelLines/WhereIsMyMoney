@@ -39,7 +39,7 @@ body {
 }
 
 .vanishing-bg {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     height: 100%;
@@ -55,6 +55,10 @@ body {
 
 .vanishing-bg.blur {
     backdrop-filter: blur(10px);
+}
+
+.expenses-form-container {
+    position: relative;
 }
 
 .regular-expenses-list {
@@ -73,7 +77,37 @@ body {
     align-items: start;
 }
 
+.checkbox-column {
+    min-width: 1rem;
+}
+
+.list-column .checkbox-column * {
+    display: none;
+}
+
+.list-item {
+    display: flex;
+}
+
+.list-column:hover .checkbox-column *,
+.list-column.visible-checkbox .checkbox-column * {
+    display: inline;
+}
+
+.invisible-ctrls {
+    min-width: 2rem;
+}
+
+.invisible-ctrl {
+    display: none;
+}
+
+.expense:hover .invisible-ctrl {
+    display: inline;
+}
+
 .expenses-list {
+    position: relative;
     grid-area: column-2;
     min-width: 20rem;
 }
@@ -115,8 +149,6 @@ body {
     color: var(--text-muted);
     font-size: 0.7rem;
 }
-
-.expenses-form-container {}
 
 .color-marker {
     min-width: 1rem;
@@ -192,4 +224,19 @@ body {
     width: 8rem;
     color: var(--text-muted);
     font-size: 0.7rem;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    fill: var(--text-main);
+    /* stroke: var(--text-main); */
+    width: 1rem;
+    min-height: 1rem;
+    height: 1rem;
+}
+
+button.icon-btn:hover {
+    background: none;
+    fill: var(--border-color);
 }
