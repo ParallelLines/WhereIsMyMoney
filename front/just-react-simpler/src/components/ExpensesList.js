@@ -1,15 +1,17 @@
 import Expense from './Expense'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteExpenses, getExpenses } from '../apiService/expenses'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ExpensesForm from './ExpensesForm'
 import ConfirmationPopup from './ConfirmationPopup'
+import { useInfiniteScroll } from '../utils/hooks'
 
 export default function ExpensesList() {
     const queryClient = useQueryClient()
     const [createMode, setCreateMode] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
     const [expensesToDelete, setExpensesToDelete] = useState([])
+    const scrollContainer = useRef(null)
 
     const query = useInfiniteQuery({
         queryKey: ['expenses'],
@@ -38,6 +40,8 @@ export default function ExpensesList() {
         }
     }
 
+    useInfiniteScroll(scrollContainer, query)
+
     return (
         <div className="expenses-list">
             {deleteMode && <ConfirmationPopup
@@ -51,7 +55,7 @@ export default function ExpensesList() {
                 {expensesToDelete.length > 0 && <button onClick={() => setExpensesToDelete([])}>Deselect all</button>}
             </div>
             {createMode && <ExpensesForm onCancel={() => setCreateMode(false)} onSubmit={() => setCreateMode(false)} />}
-            <div className={expensesToDelete.length > 0 ? "list-column visible-checkbox" : "list-column"}>
+            <div className={expensesToDelete.length > 0 ? "list-column visible-checkbox" : "list-column"} ref={scrollContainer}>
                 {query.isLoading && <div>Loading...</div>}
                 {query.isError && <div>Error: {query.error.message}</div>}
                 {query.data?.pages.map((page) => {
@@ -65,16 +69,8 @@ export default function ExpensesList() {
 
                     ))
                 })}
-                <button
-                    onClick={() => query.fetchNextPage()}
-                    disabled={!query.hasNextPage || query.isFetching}
-                >
-                    {query.isFetchingNextPage
-                        ? 'Loading more...'
-                        : query.hasNextPage
-                            ? 'Load More'
-                            : 'Nothing more to load'}
-                </button>
+                {query.isFetchingNextPage && <span>Loading more...</span>}
+                {!query.hasNextPage && <span>Nothing more to load</span>}
             </div>
 
         </div >

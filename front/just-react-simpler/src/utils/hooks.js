@@ -66,3 +66,23 @@ export function useClickOnBg(backgroundRef, blockRef, handler) {
         }
     }, [backgroundRef, blockRef, handler])
 }
+
+export function useInfiniteScroll(scrollContainer, infiniteQuery) {
+    const handleScroll = () => {
+        const container = scrollContainer.current
+        if (!container || infiniteQuery.isFetching || !infiniteQuery.hasNextPage) return
+        // scrollTop: The vertical scroll position(how far the user has scrolled from the top).
+        // clientHeight: The visible height of the scroll container.
+        // scrollHeight: The total height of the content inside the container, including scrolled - out content.
+        const { scrollTop, scrollHeight, clientHeight } = container
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+            infiniteQuery.fetchNextPage()
+        }
+    }
+    useEffect(() => {
+        const container = scrollContainer.current
+        if (!container) return
+        container.addEventListener("scroll", handleScroll)
+        return () => container.removeEventListener("scroll", handleScroll)
+    }, [infiniteQuery.isFetching])
+}

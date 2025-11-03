@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react'
-import { useClickOnBg } from '../utils/useClickHooks'
+import { useClickOnBg } from '../utils/hooks'
 
 /**
  * 
