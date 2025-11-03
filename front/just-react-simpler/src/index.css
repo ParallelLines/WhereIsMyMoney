@@ -30,7 +30,7 @@ body {
     height: 100%;
     display: grid;
     grid-template-columns: 2fr 3fr 2fr;
-    grid-template-rows: 1fr 2fr 6fr;
+    grid-template-rows: 1fr 2fr minmax(0, 6fr);
     grid-template-areas:
         "logo     graph-2  graph-3"
         "graph-1  graph-2  graph-3"
@@ -85,10 +85,6 @@ body {
     display: none;
 }
 
-.list-item {
-    display: flex;
-}
-
 .list-column:hover .checkbox-column *,
 .list-column.visible-checkbox .checkbox-column * {
     display: inline;
@@ -107,7 +103,6 @@ body {
 }
 
 .expenses-list {
-    position: relative;
     grid-area: column-2;
     min-width: 20rem;
 }
@@ -129,7 +124,7 @@ body {
 
 .expense-name {
     min-width: 4rem;
-    width: 15rem;
+    width: 18rem;
     overflow: hidden;
     white-space: nowrap;
 }

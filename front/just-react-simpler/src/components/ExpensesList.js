@@ -56,31 +56,27 @@ export default function ExpensesList() {
                 {query.isError && <div>Error: {query.error.message}</div>}
                 {query.data?.pages.map((page) => {
                     return page.map(expense => (
-                        <div className="list-item" key={expense.id}>
-                            <div className="checkbox-column">
-                                <input
-                                    type="checkbox"
-                                    id={expense.id}
-                                    onChange={handleCheckboxChange}
-                                    checked={expensesToDelete.indexOf(expense.id) > -1}>
-                                </input>
-                            </div>
-                            <label htmlFor={expense.id}><Expense data={expense} /></label>
-                        </div>
+                        <Expense
+                            data={expense}
+                            key={expense.id}
+                            isChecked={expensesToDelete.indexOf(expense.id) > -1}
+                            onCheckboxChange={handleCheckboxChange}
+                        />
 
                     ))
                 })}
+                <button
+                    onClick={() => query.fetchNextPage()}
+                    disabled={!query.hasNextPage || query.isFetching}
+                >
+                    {query.isFetchingNextPage
+                        ? 'Loading more...'
+                        : query.hasNextPage
+                            ? 'Load More'
+                            : 'Nothing more to load'}
+                </button>
             </div>
-            <button
-                onClick={() => query.fetchNextPage()}
-                disabled={!query.hasNextPage || query.isFetching}
-            >
-                {query.isFetchingNextPage
-                    ? 'Loading more...'
-                    : query.hasNextPage
-                        ? 'Load More'
-                        : 'Nothing more to load'}
-            </button>
+
         </div >
     )
 }
