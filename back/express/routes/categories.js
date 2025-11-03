@@ -9,6 +9,7 @@ router.use(verifyJWT)
 router.route('/')
     .get(catchAsync(categories.getAll))
     .post(catchAsync(categories.create))
+    .delete(catchAsync(categories.deleteMany))
 
 router.route('/:id')
     .get(catchAsync(categories.getOne))

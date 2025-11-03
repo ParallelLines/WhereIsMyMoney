@@ -57,7 +57,8 @@ const regulars = {
     getOne: regularsGetOne,
     createOne: regularsCreateOne,
     updateOne: regularsUpdateOne,
-    deleteOne: 'DELETE FROM regulars WHERE user_id = $1 AND id = $2'
+    deleteOne: 'DELETE FROM regulars WHERE user_id = $1 AND id = $2',
+    deleteMany: 'DELETE FROM regulars WHERE user_id = $1 AND id IN '
 }
 
 const categories = {
@@ -67,7 +68,8 @@ const categories = {
     getOne: 'SELECT * FROM categories WHERE user_id = $1 AND id = $2',
     createOne: 'INSERT INTO categories (user_id, name, parent_id, color) VALUES ($1, $2, $3, $4) RETURNING id',
     updateOne: 'UPDATE categories SET name = $2, color = $3 WHERE id = $1',
-    deleteOne: 'DELETE FROM categories WHERE user_id = $1 AND id = $2'
+    deleteOne: 'DELETE FROM categories WHERE user_id = $1 AND id = $2',
+    deleteMany: 'DELETE FROM categories WHERE user_id = $1 AND id IN '
 }
 
 const rates = {

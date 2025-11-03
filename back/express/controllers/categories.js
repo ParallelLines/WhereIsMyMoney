@@ -48,7 +48,22 @@ module.exports.editOne = async (req, res) => {
 module.exports.deleteOne = async (req, res) => {
     const { userId } = req
     const { id } = req.params
+    if (!id) {
+        throw new HttpError(400, 'empty request')
+    }
     await db.query(db.categories.deleteOne, [userId, id])
+    res.sendStatus(200)
+}
+
+module.exports.deleteMany = async (req, res) => {
+    const { userId } = req
+    const { ids } = req.body
+    if (!ids || !ids.length) {
+        throw new HttpError(400, 'empty request')
+    }
+    const offset = 2
+    const placeholders = ids.map((val, i) => '$' + (i + offset)).join(', ')
+    await db.query(db.categories.deleteMany + '(' + placeholders + ')', [userId, ...ids])
     res.sendStatus(200)
 }
 

@@ -9,6 +9,7 @@ router.use(verifyJWT)
 router.route('/')
     .get(catchAsync(regulars.getAll))
     .post(catchAsync(regulars.create))
+    .delete(catchAsync(regulars.deleteMany))
 
 router.route('/nextDate')
     .post(catchAsync(regulars.getNextDate))
