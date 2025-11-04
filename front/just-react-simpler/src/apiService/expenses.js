@@ -1,7 +1,7 @@
 import axiosInstance from '../utils/axiosInstance'
 
 const ENDPOINT_EXPENSES = '/expenses'
-const ELEMENTS_PER_PAGE = 20
+const ELEMENTS_PER_PAGE = 10
 
 export const getExpenses = ({ pageParam }) => axiosInstance.get(ENDPOINT_EXPENSES + `?page=${pageParam}&elementsPerPage=${ELEMENTS_PER_PAGE}`).then(res => res.data)
 

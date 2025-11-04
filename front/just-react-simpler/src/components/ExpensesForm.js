@@ -8,8 +8,8 @@ import { createExpense, editExpense } from '../apiService/expenses'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const queryClient = useQueryClient()
-    const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getCategories })
-    const currenciesQuery = useQuery({ queryKey: ['currencies'], queryFn: getCurrencies })
+    const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getCategories, staleTime: Infinity })
+    const currenciesQuery = useQuery({ queryKey: ['currencies'], queryFn: getCurrencies, staleTime: Infinity })
 
     const create = useMutation({
         mutationFn: createExpense,

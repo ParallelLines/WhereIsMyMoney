@@ -22,8 +22,25 @@ export default function ExpensesList() {
                 return undefined
             }
             return lastPageParam + 1
-        }
+        },
+        staleTime: Infinity
     })
+
+    const prefetchExpenses = async () => {
+        await queryClient.prefetchInfiniteQuery({
+            queryKey: ['expenses'],
+            queryFn: getExpenses,
+            pages: 5,
+            initialPageParam: 0,
+            getNextPageParam: (lastPage, allPages, lastPageParam) => {
+                if (lastPage.length === 0) {
+                    return undefined
+                }
+                return lastPageParam + 1
+            },
+            staleTime: Infinity
+        })
+    }
 
     const deleteBulk = useMutation({
         mutationFn: deleteExpenses,
@@ -40,6 +57,7 @@ export default function ExpensesList() {
         }
     }
 
+    prefetchExpenses()
     useInfiniteScroll(scrollContainer, query)
 
     return (
