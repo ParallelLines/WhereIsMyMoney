@@ -7,6 +7,7 @@ import { CookiesProvider } from 'react-cookie'
 import { ErrorBoundary } from 'react-error-boundary'
 import Error from './components/Error'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { AppContext } from './utils/AppContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 const queryClient = new QueryClient()
@@ -16,7 +17,9 @@ root.render(
     <ErrorBoundary fallback={<Error />}>
       <CookiesProvider>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <AppContext>
+            <App />
+          </AppContext>
         </QueryClientProvider >
       </CookiesProvider>
     </ErrorBoundary>

@@ -38,6 +38,10 @@ body {
     gap: 1rem 1rem;
 }
 
+.pie-chart {
+    grid-area: graph-3;
+}
+
 .regular-expenses-list {
     grid-area: column-1;
 }
@@ -57,6 +61,9 @@ body {
     top: 0;
     height: 100%;
     width: 100%;
+}
+
+.vanishing-bg.centered {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -168,6 +175,10 @@ body {
     min-height: 1.5rem;
     cursor: pointer;
     border-radius: var(--input-radius);
+}
+
+.category.selected {
+    background-color: #c4c4c4;
 }
 
 .category.level-1 {
