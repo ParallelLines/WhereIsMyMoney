@@ -68,7 +68,11 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     }
 
     return (
-        <VanishingBlock containerClassName="expenses-form-container" background="blur" onClose={onCancel}>
+        <VanishingBlock
+            emptyBlockClassName='expense'
+            containerClassName="expenses-form-container"
+            onClose={onCancel}
+        >
             <form className="inline-form" onSubmit={handleSubmit}>
                 <input name="name"
                     className="standart-input"

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // Improved version of https://usehooks.com/useOnClickOutside/
 // This code is from https://codesandbox.io/p/sandbox/react-colorful-popover-opmco?file=%2Fsrc%2FuseClickOutside.js%3A1%2C1-33%2C2
@@ -85,4 +85,38 @@ export function useInfiniteScroll(scrollContainer, infiniteQuery) {
         container.addEventListener("scroll", handleScroll)
         return () => container.removeEventListener("scroll", handleScroll)
     }, [infiniteQuery, scrollContainer])
+}
+
+export function useCalculatePosition() {
+    const [position, setPosition] = useState(null)
+    const [element, setElement] = useState(null)
+
+    const ref = useCallback(node => {
+        if (node) {
+            setElement(node);
+            const rect = node.getBoundingClientRect()
+            setPosition({ x: rect.left, y: rect.top })
+        }
+    }, [])
+
+    const updatePosition = useCallback(() => {
+        if (element) {
+            const rect = element.getBoundingClientRect()
+            setPosition({ x: rect.left, y: rect.top })
+        }
+    }, [element])
+
+    useEffect(() => {
+        if (!element) return
+
+        window.addEventListener('resize', updatePosition)
+        window.addEventListener('scroll', updatePosition)
+
+        return () => {
+            window.removeEventListener('resize', updatePosition)
+            window.removeEventListener('scroll', updatePosition)
+        }
+    }, [element, updatePosition])
+
+    return { ref, position }
 }
