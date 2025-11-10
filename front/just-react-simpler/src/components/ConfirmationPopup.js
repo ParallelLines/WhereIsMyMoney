@@ -1,5 +1,5 @@
-import { useState } from "react"
-import VanishingBlock from "./VanishingBlock"
+import { useState } from 'react'
+import VanishingBlock from './VanishingBlock'
 
 export default function ConfirmationPopup({ message, onConfirm, onCancel }) {
     const [open, setOpen] = useState(true)
@@ -9,8 +9,8 @@ export default function ConfirmationPopup({ message, onConfirm, onCancel }) {
     }
     return (
         open &&
-        <VanishingBlock containerClassName="confirmation-popup-container" background="blur" onClose={onCancel}>
-            <div className="confirmation-popup">
+        <VanishingBlock containerClassName='confirmation-popup-container' background='blur' onClose={onCancel}>
+            <div className='confirmation-popup'>
                 {message}
                 <button onClick={handleConfirm}>Yes</button>
                 <button onClick={onCancel}>Cancel</button>

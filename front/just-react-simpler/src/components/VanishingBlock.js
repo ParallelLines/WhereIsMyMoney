@@ -36,7 +36,7 @@ export default function VanishingBlock({ children, anchorClassName, containerCla
             {anchorClassName &&
                 <div className={anchorClassName} ref={ref}></div>
             }
-            {position &&
+            {((anchorClassName && position) || !anchorClassName) &&
                 <div className={bgClass} ref={backgroundRef}>
                     <div className={containerClassName} ref={blockRef} style={style}>
                         {children}
