@@ -1,24 +1,13 @@
 import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getCurrencies } from '../apiService/currencies'
-import { getCategories } from '../apiService/categories'
 import { formatDateForInput } from '../utils/date'
-import { createExpense, editExpense } from '../apiService/expenses'
+import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
-    const queryClient = useQueryClient()
-    const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getCategories, staleTime: Infinity })
-    const currenciesQuery = useQuery({ queryKey: ['currencies'], queryFn: getCurrencies, staleTime: Infinity })
-
-    const create = useMutation({
-        mutationFn: createExpense,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] }),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['currencies'] })
-        }
-    })
-    const edit = useMutation({ mutationFn: editExpense })
+    const categoriesQuery = useFetchCategories()
+    const currenciesQuery = useFetchCurrencies()
+    const create = useCreateExpense()
+    const edit = useEditExpense()
 
     const [expense, setExpense] = useState(expenseData ? expenseData : {
         name: '',
