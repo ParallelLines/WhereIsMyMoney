@@ -69,7 +69,7 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
 
     return (
         <VanishingBlock
-            emptyBlockClassName='expense'
+            anchorClassName='expense'
             containerClassName="expenses-form-container"
             onClose={onCancel}
         >
