@@ -3,7 +3,7 @@ import axiosInstance from '../utils/axiosInstance'
 const ENDPOINT_EXPENSES = '/expenses'
 const ELEMENTS_PER_PAGE = 10
 
-export const getExpenses = ({ pageParam }) => axiosInstance.get(ENDPOINT_EXPENSES + `?page=${pageParam}&elementsPerPage=${ELEMENTS_PER_PAGE}`).then(res => res.data)
+export const getExpenses = ({ pageParam, selectedCategory }) => axiosInstance.get(ENDPOINT_EXPENSES + `?page=${pageParam}&elementsPerPage=${ELEMENTS_PER_PAGE}&category=${selectedCategory}`).then(res => res.data)
 
 export const getExpensesNamesByPrefix = (prefix) => axiosInstance.get(ENDPOINT_EXPENSES + '/names/' + prefix).then(res => res.data)
 

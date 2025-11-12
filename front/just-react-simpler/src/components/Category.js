@@ -1,6 +1,5 @@
-
-import { useSelectedCategory } from "../utils/AppContext"
-import ColorMarker from "./ColorMarker"
+import { useSelectedCategory } from '../utils/AppContext'
+import ColorMarker from './ColorMarker'
 
 export default function Category({ data }) {
     data.name = data.name ? data.name : ''
@@ -19,8 +18,8 @@ export default function Category({ data }) {
     }
 
     return (
-        <div className={`category level-${data.level} ${selected ? 'selected' : ''}`} onClick={handleSelect}>
-            <input type="checkbox"></input>
+        <div className={`list-item category level-${data.level} ${selected ? 'selected' : ''}`} onClick={handleSelect}>
+            <input type='checkbox'></input>
             <span>{data.name}</span>
             <ColorMarker name={data.name} color={data.color} />
         </div>

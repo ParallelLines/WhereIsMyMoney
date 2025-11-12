@@ -1,13 +1,16 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createExpense, deleteExpense, deleteExpenses, editExpense, getExpenses } from '../apiService/expenses'
-import { deleteRegular, deleteRegulars, getRegulars } from '../apiService/regulars'
+import { deleteRegular, deleteRegulars, editRegular, getRegulars } from '../apiService/regulars'
+import { useSelectedCategory } from '../utils/AppContext'
 import { getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
 
 export const useFetchExpenses = () => {
+    const { selectedCategory } = useSelectedCategory()
     return useInfiniteQuery({
-        queryKey: ['expenses'],
-        queryFn: getExpenses,
+        queryKey: ['expenses', selectedCategory],
+        queryFn: ({ pageParam = 0 }) =>
+            getExpenses({ pageParam, selectedCategory }),
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages, lastPageParam) => {
             if (lastPage.length === 0) {
@@ -21,9 +24,11 @@ export const useFetchExpenses = () => {
 
 export const usePrefetchExpenses = async () => {
     const queryClient = useQueryClient()
+    const { selectedCategory } = useSelectedCategory()
     await queryClient.prefetchInfiniteQuery({
-        queryKey: ['expenses'],
-        queryFn: getExpenses,
+        queryKey: ['expenses', selectedCategory],
+        queryFn: ({ pageParam = 0 }) =>
+            getExpenses({ pageParam, selectedCategory }),
         pages: 5,
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages, lastPageParam) => {
@@ -76,6 +81,17 @@ export const useDeleteExpenses = () => {
 
 export const useFetchRegulars = () => {
     return useQuery({ queryKey: ['regulars'], queryFn: getRegulars })
+}
+
+export const useEditRegular = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: editRegular,
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['currencies'] })
+        }
+    })
 }
 
 export const useDeleteRegular = () => {

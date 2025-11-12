@@ -118,7 +118,7 @@ body {
     display: none;
 }
 
-.expense:hover .invisible-ctrl {
+.list-item:hover .invisible-ctrl {
     display: inline;
 }
 

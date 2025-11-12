@@ -23,7 +23,7 @@ export default function Expense({ data, onCheckboxChange, isChecked }) {
     return (
         <>
             {!editMode &&
-                <div className='expense'>
+                <div className='list-item expense'>
                     {deleteMode && <ConfirmationPopup
                         message={`Are you sure you want to delete ${data.name}?`}
                         onConfirm={() => del.mutate(data.id)}
@@ -63,8 +63,8 @@ export default function Expense({ data, onCheckboxChange, isChecked }) {
             {editMode && <ExpensesForm
                 expenseData={data}
                 onCancel={() => setEditMode(false)}
-                onSubmit={handleEdit} />
-            }
+                onSubmit={handleEdit}
+            />}
         </>
     )
 }
