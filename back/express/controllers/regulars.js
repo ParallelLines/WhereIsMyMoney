@@ -1,6 +1,6 @@
 const db = require('../db')
 const HttpError = require('../utils/HttpError')
-const { datesEqual, calculateNextDate } = require('../utils/dateUtils')
+const { datesEqual, calculateNextDate, addYears } = require('../utils/dateUtils')
 const { arraysEqual } = require('../utils/arrayUtils')
 const { isCategoryValid } = require('./categories')
 
@@ -39,7 +39,8 @@ module.exports.create = async (req, res) => {
         return
     }
 
-    const result = await createRegular(newData)
+    const prev_date = req.body.prev_date ? new Date(req.body.prev_date) : null
+    const result = await createRegular(newData, prev_date)
     res.json(result)
 }
 
@@ -132,13 +133,13 @@ module.exports.deleteMany = async (req, res) => {
     res.sendStatus(200)
 }
 
-async function createRegular(regularData) {
+async function createRegular(regularData, prevDate) {
     const isCatValid = await isCategoryValid(regularData.category_id, regularData.userId)
     if (!isCatValid) {
         throw new HttpError(400, 'cannot use this category')
     }
-    const prev_date = req.body.prev_date ? new Date(req.body.prev_date) : null
-    regularData.next_date = calculateNextDate(prev_date, regularData)
+    const endDate = regularData.end_date ? regularData.end_date : addYears(regularData.start_date, 100)
+    regularData.next_date = calculateNextDate(prevDate, regularData)
     const result = await db.query(db.regulars.createOne, [
         regularData.userId,
         regularData.category_id,
@@ -146,7 +147,7 @@ async function createRegular(regularData) {
         regularData.sum,
         regularData.currency,
         regularData.start_date,
-        regularData.end_date,
+        endDate,
         regularData.next_date,
         regularData.repeat_interval,
         regularData.repeat_every,
@@ -175,7 +176,6 @@ function isPatternValid(pattern) {
     console.info('Validating the pattern for a regular: ', pattern)
 
     if (pattern.start_date === undefined ||
-        pattern.end_date === undefined ||
         pattern.repeat_interval === undefined ||
         pattern.repeat_every === undefined ||
         pattern.repeat_each_weekday === undefined ||

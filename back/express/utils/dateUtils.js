@@ -29,6 +29,19 @@ function datesEqual(string1, string2) {
 
 /**
  * 
+ * @param {String} dateString '2030-11-12T16:57:16.516Z' for example
+ * @param {Number} yearsNum   how many years to add to the date in dateString; 69, for example
+ * @returns {String} the same string but with added yearsNum
+ */
+
+function addYears(dateString, yearsNum) {
+    const date = new Date(dateString)
+    date.setFullYear(date.getFullYear() + yearsNum)
+    return date.toISOString()
+}
+
+/**
+ * 
  * @param {Number} currWeekday 0-6 for Sun-Sat accordingly. 
  * @param {[String]} weekdays  ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].
  * @returns {Number} 0-6 if the day was found, or null if nothing was found.
@@ -311,4 +324,4 @@ function calculateNextDate(prevDate, pattern) {
     return nextDate < endDate || datesEqual(nextDate, endDate) ? nextDate : null
 }
 
-module.exports = { datesEqual, calculateNextDate }
+module.exports = { datesEqual, addYears, calculateNextDate }
