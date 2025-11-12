@@ -224,6 +224,7 @@ function isPatternValid(pattern) {
             return allNull
         }
         case 'monthly': {
+            // TODO: check here if pattern.repeat_each_day_of_month === undeined and return false if it is?
             if (pattern.repeat_each_day_of_month) {
                 if (pattern.repeat_each_day_of_month.length < 1) {
                     console.error('when repeat interval is "monthly" repeat_each_day_of_month should contain at least one day of month.')

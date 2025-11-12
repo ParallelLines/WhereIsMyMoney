@@ -9,10 +9,15 @@ const ratesEndpoint1 = process.env.CURRENCY_RATES_ENPOINT_1
 
 module.exports.getAll = async (req, res) => {
     const { userId } = req
-    let { page = 0, elementsPerPage = 10 } = req.query
+    let { page = 0, elementsPerPage = 10, category = null } = req.query
     const offset = elementsPerPage * page
-    const expenses = await db.query(db.expenses.getAllByPage, [userId, elementsPerPage, offset])
-    res.json(expenses.rows)
+    if (category && category !== 'null') {
+        const expenses = await db.query(db.expenses.getAllByCategory, [userId, category, elementsPerPage, offset])
+        res.json(expenses.rows)
+    } else {
+        const expenses = await db.query(db.expenses.getAll, [userId, elementsPerPage, offset])
+        res.json(expenses.rows)
+    }
 }
 
 module.exports.getNamesByPrefix = async (req, res) => {
