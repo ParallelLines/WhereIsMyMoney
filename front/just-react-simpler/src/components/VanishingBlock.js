@@ -22,7 +22,9 @@ export default function VanishingBlock({ children, anchorClassName, containerCla
         if (onClose) onClose()
     }, [onClose])
 
-    let style = {}
+    let style = {
+        position: 'relative'
+    }
     if (position) {
         style.left = position.x + 'px'
         style.top = position.y + 'px'
@@ -36,7 +38,7 @@ export default function VanishingBlock({ children, anchorClassName, containerCla
             {anchorClassName &&
                 <div className={anchorClassName} ref={ref}></div>
             }
-            {((anchorClassName && position) || !anchorClassName) &&
+            {(position || !anchorClassName) &&
                 <div className={bgClass} ref={backgroundRef}>
                     <div className={containerClassName} ref={blockRef} style={style}>
                         {children}

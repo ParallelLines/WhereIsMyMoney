@@ -17,3 +17,7 @@ export const editCategory = (data) => axiosInstance.put(ENDPOINT_CATEGORIES + '/
 })
 
 export const deleteCategory = (categoryId) => axiosInstance.delete(ENDPOINT_CATEGORIES + '/' + categoryId)
+
+export const deleteCategories = (categoryIds) => axiosInstance.delete(ENDPOINT_CATEGORIES, {
+    data: { ids: categoryIds }
+})

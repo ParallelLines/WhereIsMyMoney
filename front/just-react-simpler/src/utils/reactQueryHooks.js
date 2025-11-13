@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createExpense, deleteExpense, deleteExpenses, editExpense, getExpenses } from '../apiService/expenses'
-import { deleteRegular, deleteRegulars, editRegular, getRegulars } from '../apiService/regulars'
+import { createRegular, deleteRegular, deleteRegulars, editRegular, getRegulars } from '../apiService/regulars'
 import { useSelectedCategory } from '../utils/AppContext'
 import { getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
@@ -83,14 +83,19 @@ export const useFetchRegulars = () => {
     return useQuery({ queryKey: ['regulars'], queryFn: getRegulars })
 }
 
+export const useCreateRegular = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: createRegular,
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] })
+    })
+}
+
 export const useEditRegular = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: editRegular,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] }),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['currencies'] })
-        }
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] })
     })
 }
 

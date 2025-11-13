@@ -1,15 +1,14 @@
-import { useState } from 'react'
-import VanishingBlock from './VanishingBlock'
-import { formatDateForInput } from '../utils/date'
-import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks'
+import { useState } from 'react';
+import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks';
+import VanishingBlock from './VanishingBlock';
 
-export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
+export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
     const currenciesQuery = useFetchCurrencies()
-    const create = useCreateExpense()
-    const edit = useEditExpense()
+    const create = useCreateRegular()
+    const edit = useEditRegular()
 
-    const [expense, setExpense] = useState(expenseData ? expenseData : {
+    const [regular, setRegular] = useState(regularData ? regularData : {
         name: '',
         sum: '',
         category_id: categoriesQuery.data?.[0].id,
@@ -17,12 +16,11 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         color: '',
         date: new Date()
     })
-    const date = formatDateForInput(expenseData ? new Date(expenseData.date) : new Date(expense.date))
 
     const handleChange = (e) => {
-        setExpense(currExpense => {
+        setRegular(currRegular => {
             return {
-                ...currExpense,
+                ...currRegular,
                 [e.target.name]: e.target.value
             }
         })
@@ -30,22 +28,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const cat = categoriesQuery.data?.find(c => c.id === expense.category_id)
-        expense.currency = expense.currency ? expense.currency : currenciesQuery.data?.[0].name
-        expense.sum = expense.sum.replace(',', '.')
-        if (Number.isInteger(parseFloat(expense.sum))) {
-            expense.sum = parseFloat(expense.sum) + '.00'
-        }
-        const preppedExpense = {
-            ...expense,
-            'category_name': cat.name,
-            'color': cat.color
-        }
-        if (!expenseData) {
-            create.mutate(preppedExpense)
-        } else {
-            edit.mutate(preppedExpense)
-        }
         onSubmit()
     }
 
@@ -58,15 +40,15 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
 
     return (
         <VanishingBlock
-            anchorClassName='expense'
-            containerClassName='expenses-form-container'
+            anchorClassName='regular-expense'
+            containerClassName='regulars-form-container'
             onClose={onCancel}
         >
             <form className='inline-form' onSubmit={handleSubmit}>
                 <input name='name'
                     className='standart-input'
-                    aria-label='name of expense'
-                    value={expense.name}
+                    aria-label='name of regular expense'
+                    value={regular.name}
                     onChange={handleChange}
                     placeholder='name'
                     autoFocus
@@ -74,18 +56,17 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                 />
                 <input name='sum'
                     className='short-input'
-                    aria-label='expense amount'
-                    value={expense.sum}
+                    aria-label='regular expense amount'
+                    value={regular.sum}
                     onChange={handleChange}
                     placeholder='45.99'
                     required
                 />
-                {currenciesQuery.isLoading && <span>Loading...</span>}
                 <select name='currency'
                     className='short-input'
-                    aria-label='expense currency'
+                    aria-label='regular expense currency'
                     onChange={handleChange}
-                    value={expense.currency}
+                    value={regular.currency}
                     required
                 >
                     {currenciesQuery.data?.map(currency =>
@@ -93,17 +74,10 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                             {currency.symbol} {currency.name}
                         </option>)}
                 </select>
-                <input name='date'
-                    aria-label='expense date'
-                    type='datetime-local'
-                    onChange={handleChange}
-                    defaultValue={date}
-                />
-                {categoriesQuery.isLoading && <span>Loading...</span>}
                 <select name='category_id'
-                    aria-label='category of the expense'
+                    aria-label='category of the regular expense'
                     onChange={handleChange}
-                    defaultValue={expense.category_id}
+                    defaultValue={regular.category_id}
                     required
                 >
                     {categoriesQuery.data?.map(category =>
@@ -113,14 +87,13 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                 </select>
                 <div className='btns'>
                     <button type='submit' disabled={create.isPending || edit.isPending}>
-                        {expenseData ? 'Save' : 'Create'}
+                        {regularData ? 'Save' : 'Create'}
                     </button>
                     <button onClick={onCancel} disabled={create.isPending || edit.isPending}>
                         Cancel
                     </button>
                 </div>
             </form>
-
         </VanishingBlock>
     )
 }

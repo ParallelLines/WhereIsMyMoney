@@ -93,7 +93,7 @@ export function useCalculatePosition() {
 
     const ref = useCallback(node => {
         if (node) {
-            setElement(node);
+            setElement(node)
             const rect = node.getBoundingClientRect()
             setPosition({ x: rect.left, y: rect.top })
         }

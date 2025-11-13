@@ -77,10 +77,6 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.expenses-form-container {
-    position: relative;
-}
-
 .list-controls {
     height: 5%;
 }
