@@ -33,7 +33,6 @@ function datesEqual(string1, string2) {
  * @param {Number} yearsNum   how many years to add to the date in dateString; 69, for example
  * @returns {String} the same string but with added yearsNum
  */
-
 function addYears(dateString, yearsNum) {
     const date = new Date(dateString)
     date.setFullYear(date.getFullYear() + yearsNum)
