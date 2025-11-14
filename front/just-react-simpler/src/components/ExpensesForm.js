@@ -2,6 +2,7 @@ import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
 import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks'
+import { prepareSum } from '../utils/useful'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
@@ -30,21 +31,12 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const cat = categoriesQuery.data?.find(c => c.id === expense.category_id)
         expense.currency = expense.currency ? expense.currency : currenciesQuery.data?.[0].name
-        expense.sum = expense.sum.replace(',', '.')
-        if (Number.isInteger(parseFloat(expense.sum))) {
-            expense.sum = parseFloat(expense.sum) + '.00'
-        }
-        const preppedExpense = {
-            ...expense,
-            'category_name': cat.name,
-            'color': cat.color
-        }
+        expense.sum = prepareSum(expense.sum)
         if (!expenseData) {
-            create.mutate(preppedExpense)
+            create.mutate(expense)
         } else {
-            edit.mutate(preppedExpense)
+            edit.mutate(expense)
         }
         onSubmit()
     }

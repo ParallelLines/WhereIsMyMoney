@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks';
-import VanishingBlock from './VanishingBlock';
+import { useState } from 'react'
+import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks'
+import VanishingBlock from './VanishingBlock'
+import { formatDateForInput } from '../utils/date'
+import { prepareSum } from '../utils/useful'
 
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
@@ -8,14 +10,23 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const create = useCreateRegular()
     const edit = useEditRegular()
 
+    const [infinite, setInfinite] = useState(false)
+    const [interval, setInterval] = useState('monthly')
+
+    const now = new Date()
+
     const [regular, setRegular] = useState(regularData ? regularData : {
         name: '',
         sum: '',
         category_id: categoriesQuery.data?.[0].id,
         category_name: '',
         color: '',
-        date: new Date()
+        start_date: now,
+        end_date: now.setFullYear(now.getFullYear() + 1),
     })
+
+    const startDate = formatDateForInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
+    const endDate = formatDateForInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
 
     const handleChange = (e) => {
         setRegular(currRegular => {
@@ -28,6 +39,14 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (infinite) regular.end_date = null
+        regular.sum = prepareSum(regular.sum)
+        regular.currency = regular.currency ? regular.currency : currenciesQuery.data?.[0].name
+        if (!regularData) {
+            create.mutate(regular)
+        } else {
+            edit.mutate(regular)
+        }
         onSubmit()
     }
 
@@ -85,6 +104,25 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                             {category.name}
                         </option>)}
                 </select>
+                <input name='start_date'
+                    aria-label='regular expense start date'
+                    type='datetime-local'
+                    onChange={handleChange}
+                    defaultValue={startDate}
+                />
+                <input name='end_date'
+                    aria-label='regular expense start date'
+                    type='datetime-local'
+                    onChange={handleChange}
+                    defaultValue={endDate}
+                    disabled={infinite}
+                />
+                <input type='checkbox'
+                    id='ifinite'
+                    onChange={() => setInfinite(!infinite)}
+                    checked={infinite}
+                ></input>
+                <label htmlFor='ifinite'>Infinite</label>
                 <div className='btns'>
                     <button type='submit' disabled={create.isPending || edit.isPending}>
                         {regularData ? 'Save' : 'Create'}

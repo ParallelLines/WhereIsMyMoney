@@ -35,24 +35,26 @@ export default function RegularExpense({ data, onCheckboxChange, isChecked }) {
                             checked={isChecked}>
                         </input>
                     </div>
-                    <span className='regular-expense-name'>{data.name}</span>
-                    <span className='regular-expense-sum'>{data.sum}</span>
-                    <span className='regular-expense-currency' title={data.currency}>{data.symbol}</span>
-                    <span className='regular-expense-date'>next: {dateString(data.next_date)}</span>
-                    <span className='invisible-ctrls'>
-                        <button
-                            className='icon-btn invisible-ctrl'
-                            title='Edit'
-                            onClick={() => setEditMode(true)}>
-                            <IconEdit />
-                        </button>
-                        <button
-                            className='icon-btn invisible-ctrl'
-                            title='Delete'
-                            onClick={() => setDeleteMode(true)}>
-                            <IconDelete />
-                        </button>
-                    </span>
+                    <label htmlFor={data.id} className='regular-expense'>
+                        <span className='regular-expense-name'>{data.name}</span>
+                        <span className='regular-expense-sum'>{data.sum}</span>
+                        <span className='regular-expense-currency' title={data.currency}>{data.symbol}</span>
+                        <span className='regular-expense-date'>next: {dateString(data.next_date)}</span>
+                        <span className='invisible-ctrls'>
+                            <button
+                                className='icon-btn invisible-ctrl'
+                                title='Edit'
+                                onClick={() => setEditMode(true)}>
+                                <IconEdit />
+                            </button>
+                            <button
+                                className='icon-btn invisible-ctrl'
+                                title='Delete'
+                                onClick={() => setDeleteMode(true)}>
+                                <IconDelete />
+                            </button>
+                        </span>
+                    </label>
                 </div>}
             {editMode && <RegularExpenseForm
                 regularData={data}
