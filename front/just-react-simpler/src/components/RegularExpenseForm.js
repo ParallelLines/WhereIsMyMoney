@@ -10,8 +10,13 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const create = useCreateRegular()
     const edit = useEditRegular()
 
+    const repeatInterval = ['daily', 'weekly', 'monthly', 'yearly']
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+    const dayNums = ['first', 'second', 'third', 'forth', 'fifth', 'last']
+    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'day', 'weekday', 'weekend day']
+
     const [infinite, setInfinite] = useState(false)
-    const [interval, setInterval] = useState('monthly')
+    const [interval, setInterval] = useState(repeatInterval[2])
 
     const now = new Date()
 
@@ -23,6 +28,13 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         color: '',
         start_date: now,
         end_date: now.setFullYear(now.getFullYear() + 1),
+        repeat_interval: repeatInterval[2],
+        repeat_every: 1,
+        repeat_each_weekday: [],
+        repeat_each_day_of_month: [],
+        repeat_each_month: [],
+        repeat_on_day_num: dayNums[0],
+        repeat_on_weekday: weekdays[0]
     })
 
     const startDate = formatDateForInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
@@ -123,6 +135,34 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     checked={infinite}
                 ></input>
                 <label htmlFor='ifinite'>Infinite</label>
+
+                <select name='repeat_interval'
+                    aria-label='repeat interval of the regular expense'
+                    onChange={(e) => setInterval(e.target.value)}
+                    defaultValue={regular.repeat_interval}
+                    required
+                >
+                    {repeatInterval.map(str =>
+                        <option key={str} value={str}>
+                            {str}
+                        </option>)}
+                </select>
+
+                {interval === 'daily' &&
+                    <>
+                        <label htmlFor='repeatEvery'>Every: </label>
+                        <input name='repeat_every'
+                            id='repeatEvery'
+                            type='number'
+                            value={regular.repeat_every}
+                            onChange={handleChange}
+                            min='1'
+                            required
+                        ></input>
+                        <span> day{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
+                    </>
+                }
+
                 <div className='btns'>
                     <button type='submit' disabled={create.isPending || edit.isPending}>
                         {regularData ? 'Save' : 'Create'}
