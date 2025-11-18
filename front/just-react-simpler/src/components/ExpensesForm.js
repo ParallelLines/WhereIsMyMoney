@@ -74,7 +74,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                 />
                 {currenciesQuery.isLoading && <span>Loading...</span>}
                 <select name='currency'
-                    className='short-input'
                     aria-label='expense currency'
                     onChange={handleChange}
                     value={expense.currency}
@@ -104,10 +103,10 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                         </option>)}
                 </select>
                 <div className='btns'>
-                    <button type='submit' disabled={create.isPending || edit.isPending}>
+                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
                         {expenseData ? 'Save' : 'Create'}
                     </button>
-                    <button onClick={onCancel} disabled={create.isPending || edit.isPending}>
+                    <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
                         Cancel
                     </button>
                 </div>

@@ -128,6 +128,7 @@ body {
     width: 100%;
     max-height: 1.5rem;
     min-height: 1.5rem;
+    line-height: 1.5rem;
 }
 
 .expense-name {
@@ -165,6 +166,68 @@ body {
     width: 5rem;
     color: var(--text-muted);
     font-size: 0.7rem;
+    line-height: 0.7rem;
+}
+
+.regulars-form-container {
+    width: 25rem;
+}
+
+.regulars-form-container .line {
+    width: 100%;
+}
+
+.inline-form {
+    font-size: 0.8rem;
+}
+
+.inline-form input,
+select {
+    height: 1rem;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.inline-form .short-input {
+    width: 3rem;
+}
+
+.inline-form .standart-input {
+    min-width: 4rem;
+    width: 7rem;
+}
+
+.inline-form button {
+    background: none;
+    border: 2px solid #808080;
+    border-radius: 5px;
+    padding: 0.3rem 0.3rem;
+    margin-right: 0.4rem;
+}
+
+.inline-form button.positive {
+    background-color: #a2ebb6;
+}
+
+.inline-form button.negative {
+    background-color: #eba9a2;
+}
+
+.inline-form .btns {
+    display: inline-block;
+    margin: 0.4rem 0rem;
+}
+
+.calendar button {
+    border: 1px solid white;
+    border-radius: 0;
+    background-color: #a9a9a9;
+    padding: 0;
+    margin: 0;
+}
+
+.calendar button[aria-pressed="true"] {
+    background-color: #a2ebb6;
 }
 
 .color-marker {
