@@ -108,6 +108,7 @@ body {
 
 .invisible-ctrls {
     min-width: 2rem;
+    width: 2rem;
 }
 
 .invisible-ctrl {
@@ -136,9 +137,16 @@ body {
     white-space: nowrap;
 }
 
+.regular-expense-name {
+    min-width: 4rem;
+    width: 6rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .expense-sum {
     min-width: 3.5rem;
-    width: 6rem;
+    width: 5rem;
 }
 
 .expense-currency {
@@ -146,6 +154,13 @@ body {
 }
 
 .expense-date {
+    min-width: 4rem;
+    width: 5rem;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
+
+.regular-expense-date {
     min-width: 4rem;
     width: 5rem;
     color: var(--text-muted);
@@ -195,41 +210,6 @@ body {
 
 .category.level-5 {
     margin-left: 4rem;
-}
-
-.regular-expense {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    width: 100%;
-    max-height: 1.5rem;
-    min-height: 1.5rem;
-    margin-left: 1rem;
-}
-
-.regular-expense-name {
-    min-width: 4rem;
-    width: 6rem;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.regular-expense-sum {
-    min-width: 3.5rem;
-    width: 4rem;
-}
-
-.regular-expense-currency {
-    min-width: 1.5rem;
-}
-
-.regular-expense-date {
-    min-width: 4rem;
-    width: 8rem;
-    color: var(--text-muted);
-    font-size: 0.7rem;
 }
 
 .icon-btn {

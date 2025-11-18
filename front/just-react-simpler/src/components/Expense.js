@@ -43,7 +43,7 @@ export default function Expense({ data, onCheckboxChange, isChecked }) {
                         <span className='expense-currency'>{data.symbol}</span>
                         <span className='expense-date' title={dateTimeString(date)}>{dateString(date)}</span>
                         <ColorMarker name={data.category_name} color={data.color} />
-                        <span className='invisible-ctrls'>
+                        <div className='invisible-ctrls'>
                             <button
                                 className='icon-btn invisible-ctrl'
                                 title='Edit'
@@ -56,7 +56,7 @@ export default function Expense({ data, onCheckboxChange, isChecked }) {
                                 onClick={() => setDeleteMode(true)}>
                                 <IconDelete />
                             </button>
-                        </span>
+                        </div>
                     </label>
                 </div>
             }
