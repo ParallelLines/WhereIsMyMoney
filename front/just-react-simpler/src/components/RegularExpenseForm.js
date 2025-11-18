@@ -84,7 +84,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
     return (
         <VanishingBlock
-            // anchorClassName='regular-expense-form'
             background='blur'
             containerClassName='regulars-form-container'
             onClose={onCancel}

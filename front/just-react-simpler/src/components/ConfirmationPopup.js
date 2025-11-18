@@ -12,8 +12,8 @@ export default function ConfirmationPopup({ message, onConfirm, onCancel }) {
         <VanishingBlock containerClassName='confirmation-popup-container' background='blur' onClose={onCancel}>
             <div className='confirmation-popup'>
                 {message}
-                <button onClick={handleConfirm}>Yes</button>
-                <button onClick={onCancel}>Cancel</button>
+                <button className='negative' onClick={handleConfirm}>Yes</button>
+                <button className='positive' onClick={onCancel}>Cancel</button>
             </div>
         </VanishingBlock>
     )
