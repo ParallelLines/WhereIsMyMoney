@@ -21,11 +21,14 @@ export default function ButtonsGrid({ width, values, defaultSelected, onSelect }
         const index = selectedButtons.indexOf(value)
         if (index >= 0) {
             if (selectedButtons.length === 1) return
-            setSelectedButtons(selectedButtons.toSpliced(index, 1))
+            const newSelected = selectedButtons.toSpliced(index, 1)
+            setSelectedButtons(newSelected)
+            onSelect(newSelected)
         } else {
-            setSelectedButtons([...selectedButtons, value])
+            const newSelected = [...selectedButtons, value]
+            setSelectedButtons(newSelected)
+            onSelect(newSelected)
         }
-        onSelect(selectedButtons)
     }
 
     return (
