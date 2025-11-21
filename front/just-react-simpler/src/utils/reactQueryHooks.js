@@ -1,9 +1,10 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createExpense, deleteExpense, deleteExpenses, editExpense, getExpenses } from '../apiService/expenses'
 import { createRegular, deleteRegular, deleteRegulars, editRegular, getRegulars } from '../apiService/regulars'
-import { useSelectedCategory } from '../utils/AppContext'
+import { useErrorQueue, useSelectedCategory } from '../utils/AppContext'
 import { getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
+import { useEffect } from 'react'
 
 export const useFetchExpenses = () => {
     const { selectedCategory } = useSelectedCategory()
@@ -18,7 +19,8 @@ export const useFetchExpenses = () => {
             }
             return lastPageParam + 1
         },
-        staleTime: Infinity
+        staleTime: Infinity,
+        retry: retryAfterError
     })
 }
 
@@ -37,7 +39,8 @@ export const usePrefetchExpenses = async () => {
             }
             return lastPageParam + 1
         },
-        staleTime: Infinity
+        staleTime: Infinity,
+        retry: retryAfterError
     })
 }
 
@@ -80,7 +83,11 @@ export const useDeleteExpenses = () => {
 }
 
 export const useFetchRegulars = () => {
-    return useQuery({ queryKey: ['regulars'], queryFn: getRegulars })
+    return useQuery({
+        queryKey: ['regulars'],
+        queryFn: getRegulars,
+        retry: retryAfterError
+    })
 }
 
 export const useCreateRegular = () => {
@@ -116,10 +123,39 @@ export const useDeleteRegulars = () => {
 }
 
 export const useFetchCategories = () => {
-    return useQuery({ queryKey: ['categories'], queryFn: getCategories, staleTime: Infinity })
+    return useQuery({
+        queryKey: ['categories'],
+        queryFn: getCategories,
+        staleTime: Infinity,
+        retry: retryAfterError
+    })
 }
 
 export const useFetchCurrencies = () => {
-    return useQuery({ queryKey: ['currencies'], queryFn: getCurrencies, staleTime: Infinity })
+    return useQuery({
+        queryKey: ['currencies'],
+        queryFn: getCurrencies,
+        staleTime: Infinity,
+        retry: retryAfterError
+    })
+}
+
+export function useMonitorErrors(query, onCancel) {
+    const { addError } = useErrorQueue()
+    useEffect(() => {
+        if (query.isError) {
+            console.log('error: ', query.error)
+            const message = query.error.response && query.error.response.data ? query.error.response.data : query.error.message
+            addError(`Unexpected error: ${message}`)
+            onCancel()
+        }
+    }, [query.isError, query.error, addError, onCancel])
+}
+
+function retryAfterError(failureCount, error) {
+    if (error.response && error.response.status === 400) {
+        return false // don't retry on 400
+    }
+    return failureCount < 3 // otherwise, normal retry logic
 }
 

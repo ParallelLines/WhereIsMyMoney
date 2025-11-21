@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks'
+import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
 import { prepareSum } from '../utils/useful'
@@ -12,17 +12,22 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const edit = useEditRegular()
 
     const repeatInterval = ['daily', 'weekly', 'monthly', 'yearly']
+    const daysOfMonth = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const dayNums = ['first', 'second', 'third', 'forth', 'fifth', 'last']
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const weekdaysExtended = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'day', 'weekday', 'weekend day']
 
-    const [infinite, setInfinite] = useState(false)
+    const [infinite, setInfinite] = useState(true)
     const [interval, setInterval] = useState(repeatInterval[2])
+    const [repeatEach, setRepeatEach] = useState(true)
+    const [repeatOn, setRepeatOn] = useState(false)
 
     const now = new Date()
     const yearLater = new Date().setFullYear(now.getFullYear() + 1)
     const weekdayToday = weekdays[now.getDay()]
+    const dateToday = daysOfMonth[now.getDate() - 1]
+    const monthToday = months[now.getMonth()]
 
     const [regular, setRegular] = useState(regularData ? regularData : {
         name: '',
@@ -62,6 +67,33 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         })
     }
 
+    const setDaysOfMonth = (selectedDaysOfMonth) => {
+        const numArray = selectedDaysOfMonth.map(dayStr => Number.parseInt(dayStr))
+        setRegular(currRegular => {
+            return {
+                ...currRegular,
+                repeat_each_day_of_month: numArray
+            }
+        })
+    }
+
+    const setMonths = (selectedMonths) => {
+        setRegular(currRegular => {
+            return {
+                ...currRegular,
+                repeat_each_month: selectedMonths
+            }
+        })
+    }
+
+    const handleRadioChange = (e) => {
+        if (e.target.value === 'each') {
+            setRepeatEach(true)
+        } else {
+            setRepeatEach(false)
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (infinite) regular.end_date = null
@@ -75,12 +107,10 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         onSubmit()
     }
 
-    if (categoriesQuery.isPending || currenciesQuery.isPending) {
-        return <div>Loading...</div>
-    }
-    if (categoriesQuery.isError || currenciesQuery.isError) {
-        return <div>Error loading data</div>
-    }
+    useMonitorErrors(currenciesQuery, onCancel)
+    useMonitorErrors(categoriesQuery, onCancel)
+    useMonitorErrors(create, onCancel)
+    useMonitorErrors(edit, onCancel)
 
     return (
         <VanishingBlock
@@ -107,6 +137,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                         placeholder='45.99'
                         required
                     />
+                    {currenciesQuery.isPending && <div>Loading...</div>}
                     <select name='currency'
                         aria-label='regular expense currency'
                         onChange={handleChange}
@@ -118,6 +149,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 {currency.symbol} {currency.name}
                             </option>)}
                     </select>
+                    {categoriesQuery.isPending && <div>Loading...</div>}
                     <select name='category_id'
                         aria-label='category of the regular expense'
                         onChange={handleChange}
@@ -139,6 +171,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                         type='datetime-local'
                         onChange={handleChange}
                         defaultValue={startDate}
+                        required
                     />
 
                     <label htmlFor='endDate'>end: </label>
@@ -204,6 +237,122 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                         <div className='line'>
                             <span>on: </span>
                             <ButtonsGrid width={7} values={weekdays} defaultSelected={weekdayToday} onSelect={setWeekdays} />
+                        </div>
+                    </>
+                }
+
+                {interval === 'monthly' &&
+                    <>
+                        <label htmlFor='repeatEvery'>every: </label>
+                        <input name='repeat_every'
+                            id='repeatEvery'
+                            className='short-input'
+                            type='number'
+                            value={regular.repeat_every}
+                            onChange={handleChange}
+                            min='1'
+                            required
+                        ></input>
+                        <span> month{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
+
+                        <div className='line'>
+                            <input name='repeatGroup'
+                                id='repeatGroupEach'
+                                type='radio'
+                                value='each'
+                                onChange={handleRadioChange}
+                                checked={repeatEach}
+                            ></input>
+                            <label htmlFor='repeatGroupEach'>each</label>
+                            <ButtonsGrid width={7} values={daysOfMonth} defaultSelected={dateToday} onSelect={setDaysOfMonth} disabled={!repeatEach} />
+                        </div>
+
+                        <div className='line'>
+                            <input name='repeatGroup'
+                                id='repeatGroupOn'
+                                type='radio'
+                                value='on'
+                                onChange={handleRadioChange}
+                                checked={!repeatEach}
+                            ></input>
+                            <label htmlFor='repeatGroupOn'>on</label>
+                            <select name='repeat_on_day_num'
+                                aria-label='on which day by number to repeat'
+                                onChange={handleChange}
+                                defaultValue={regular.repeat_on_day_num}
+                                disabled={repeatEach}
+                                required
+                            >
+                                {dayNums.map(dayNum =>
+                                    <option key={dayNum} value={dayNum}>
+                                        {dayNum}
+                                    </option>)}
+                            </select>
+                            <select name='repeat_on_weekday'
+                                aria-label='on which weekday to repeat'
+                                onChange={handleChange}
+                                defaultValue={regular.repeat_on_weekday}
+                                disabled={repeatEach}
+                                required
+                            >
+                                {weekdaysExtended.map(weekday =>
+                                    <option key={weekday} value={weekday}>
+                                        {weekday}
+                                    </option>)}
+                            </select>
+                        </div>
+                    </>
+                }
+
+                {interval === 'yearly' &&
+                    <>
+                        <label htmlFor='repeatEvery'>every: </label>
+                        <input name='repeat_every'
+                            id='repeatEvery'
+                            className='short-input'
+                            type='number'
+                            value={regular.repeat_every}
+                            onChange={handleChange}
+                            min='1'
+                            required
+                        ></input>
+                        <span> year{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
+
+                        <div className='line'>
+                            <span>in: </span>
+                            <ButtonsGrid width={4} values={months} defaultSelected={monthToday} onSelect={setMonths} />
+                        </div>
+                        <div className='line'>
+                            <input type='checkbox'
+                                id='repeatOn'
+                                onChange={() => setRepeatOn(!repeatOn)}
+                                checked={repeatOn}
+                            ></input>
+                            <label htmlFor='repeatOn'>on the:</label>
+                            <select name='repeat_on_day_num'
+                                aria-label='on which day by number to repeat'
+                                onChange={handleChange}
+                                defaultValue={regular.repeat_on_day_num}
+                                disabled={!repeatOn}
+                                required
+                            >
+                                {dayNums.map(dayNum =>
+                                    <option key={dayNum} value={dayNum}>
+                                        {dayNum}
+                                    </option>)}
+                            </select>
+                            <select name='repeat_on_weekday'
+                                aria-label='on which weekday to repeat'
+                                onChange={handleChange}
+                                defaultValue={regular.repeat_on_weekday}
+                                disabled={!repeatOn}
+                                required
+                            >
+                                {weekdaysExtended.map(weekday =>
+                                    <option key={weekday} value={weekday}>
+                                        {weekday}
+                                    </option>)}
+                            </select>
                         </div>
                     </>
                 }

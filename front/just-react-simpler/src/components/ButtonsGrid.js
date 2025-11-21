@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function ButtonsGrid({ width, values, defaultSelected, onSelect }) {
+export default function ButtonsGrid({ width, values, defaultSelected, onSelect, disabled }) {
     const [selectedButtons, setSelectedButtons] = useState(defaultSelected ? [defaultSelected] : [])
     const buttonWidth = 2
     const gridWidth = buttonWidth * width
@@ -32,7 +32,7 @@ export default function ButtonsGrid({ width, values, defaultSelected, onSelect }
     }
 
     return (
-        <div className='calendar' style={gridStyle}>
+        <div className={`calendar ${disabled ? 'disabled' : ''}`} style={gridStyle}>
             {values.map(value =>
                 <button
                     name={value}
@@ -40,6 +40,7 @@ export default function ButtonsGrid({ width, values, defaultSelected, onSelect }
                     aria-pressed={selectedButtons.indexOf(value) >= 0 ? true : false}
                     onClick={handleClick}
                     style={buttonStyle}
+                    disabled={disabled}
                 >
                     {value}
                 </button>

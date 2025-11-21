@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
-import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies } from '../utils/reactQueryHooks'
+import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'
 import { prepareSum } from '../utils/useful'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
@@ -41,12 +41,10 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         onSubmit()
     }
 
-    if (categoriesQuery.isPending || currenciesQuery.isPending) {
-        return <div>Loading...</div>
-    }
-    if (categoriesQuery.isError || currenciesQuery.isError) {
-        return <div>Error loading data</div>
-    }
+    useMonitorErrors(currenciesQuery, onCancel)
+    useMonitorErrors(categoriesQuery, onCancel)
+    useMonitorErrors(create, onCancel)
+    useMonitorErrors(edit, onCancel)
 
     return (
         <VanishingBlock
