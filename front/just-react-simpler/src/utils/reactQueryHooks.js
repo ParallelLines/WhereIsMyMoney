@@ -144,7 +144,6 @@ export function useMonitorErrors(query, onCancel) {
     const { addError } = useErrorQueue()
     useEffect(() => {
         if (query.isError) {
-            console.log('error: ', query.error)
             const message = query.error.response && query.error.response.data ? query.error.response.data : query.error.message
             addError(`Unexpected error: ${message}`)
             onCancel()

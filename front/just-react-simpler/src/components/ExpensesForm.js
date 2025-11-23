@@ -3,12 +3,14 @@ import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
 import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'
 import { prepareSum } from '../utils/useful'
+import { useErrorQueue } from '../utils/AppContext'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
     const currenciesQuery = useFetchCurrencies()
     const create = useCreateExpense()
     const edit = useEditExpense()
+    const { addError } = useErrorQueue()
 
     const [expense, setExpense] = useState(expenseData ? expenseData : {
         name: '',
@@ -33,18 +35,24 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         e.preventDefault()
         expense.currency = expense.currency ? expense.currency : currenciesQuery.data?.[0].name
         expense.sum = prepareSum(expense.sum)
-        if (!expenseData) {
-            create.mutate(expense)
-        } else {
-            edit.mutate(expense)
+        try {
+            if (!expenseData) {
+                await create.mutateAsync(expense)
+            } else {
+                await edit.mutateAsync(expense)
+            }
+            onSubmit()
+        } catch (error) {
+            if (error.response) {
+                addError('Fail: ' + error.response.data)
+            } else {
+                addError('Fail: ' + error.message)
+            }
         }
-        onSubmit()
     }
 
     useMonitorErrors(currenciesQuery, onCancel)
     useMonitorErrors(categoriesQuery, onCancel)
-    useMonitorErrors(create, onCancel)
-    useMonitorErrors(edit, onCancel)
 
     return (
         <VanishingBlock

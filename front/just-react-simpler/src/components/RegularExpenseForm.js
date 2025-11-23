@@ -4,6 +4,7 @@ import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
 import { prepareSum } from '../utils/useful'
 import ButtonsGrid from './ButtonsGrid'
+import { useErrorQueue } from '../utils/AppContext'
 
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
@@ -22,6 +23,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const [interval, setInterval] = useState(repeatInterval[2])
     const [repeatEach, setRepeatEach] = useState(true)
     const [repeatOn, setRepeatOn] = useState(false)
+    const { addError } = useErrorQueue()
 
     const now = new Date()
     const yearLater = new Date().setFullYear(now.getFullYear() + 1)
@@ -99,18 +101,31 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         if (infinite) regular.end_date = null
         regular.sum = prepareSum(regular.sum)
         regular.currency = regular.currency ? regular.currency : currenciesQuery.data?.[0].name
-        if (!regularData) {
-            create.mutate(regular)
+        if (repeatEach) {
+            regular.repeat_on_day_num = null
+            regular.repeat_on_weekday = null
         } else {
-            edit.mutate(regular)
+            regular.repeat_each_day_of_month = null
         }
-        onSubmit()
+        try {
+            if (!regularData) {
+                await create.mutateAsync(regular)
+            } else {
+                await edit.mutateAsync(regular)
+            }
+            onSubmit()
+        } catch (error) {
+            if (error.response) {
+                addError('Fail: ' + error.response.data)
+            } else {
+                addError('Fail: ' + error.message)
+            }
+        }
+
     }
 
     useMonitorErrors(currenciesQuery, onCancel)
     useMonitorErrors(categoriesQuery, onCancel)
-    useMonitorErrors(create, onCancel)
-    useMonitorErrors(edit, onCancel)
 
     return (
         <VanishingBlock
