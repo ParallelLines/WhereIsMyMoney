@@ -26,7 +26,11 @@ export default function RegularExpensesList() {
         <div className='regular-expenses-list'>
             {deleteMode && <ConfirmationPopup
                 message={`Are you sure you want to delete ${regularsToDelete.length} regular expense record${regularsToDelete.length === 1 ? '' : 's'}?`}
-                onConfirm={() => deleteBulk.mutate(regularsToDelete)}
+                onConfirm={() => {
+                    deleteBulk.mutate(regularsToDelete)
+                    setRegularsToDelete([])
+                    setDeleteMode(false)
+                }}
                 onCancel={() => setDeleteMode(false)}
             />}
             <div className='list-controls'>

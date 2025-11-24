@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export default function ButtonsGrid({ width, values, defaultSelected, onSelect, disabled }) {
-    const [selectedButtons, setSelectedButtons] = useState(defaultSelected ? [defaultSelected] : [])
+    const [selectedButtons, setSelectedButtons] = useState(defaultSelected ? [...defaultSelected] : [])
     const buttonWidth = 2
     const gridWidth = buttonWidth * width
     const gridStyle = {
@@ -19,6 +19,8 @@ export default function ButtonsGrid({ width, values, defaultSelected, onSelect, 
         e.preventDefault()
         const value = e.target.name
         const index = selectedButtons.indexOf(value)
+        console.log('selected: ', selectedButtons)
+        console.log('index: ', index)
         if (index >= 0) {
             if (selectedButtons.length === 1) return
             const newSelected = selectedButtons.toSpliced(index, 1)

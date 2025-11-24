@@ -31,7 +31,11 @@ export default function ExpensesList() {
         <div className='expenses-list'>
             {deleteMode && <ConfirmationPopup
                 message={`Are you sure you want to delete ${expensesToDelete.length} expense record${expensesToDelete.length === 1 ? '' : 's'}?`}
-                onConfirm={() => deleteBulk.mutate(expensesToDelete)}
+                onConfirm={() => {
+                    deleteBulk.mutate(expensesToDelete)
+                    setExpensesToDelete([])
+                    setDeleteMode(false)
+                }}
                 onCancel={() => setDeleteMode(false)}
             />}
             <div className='list-controls'>

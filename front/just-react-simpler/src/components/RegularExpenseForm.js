@@ -20,7 +20,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const weekdaysExtended = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'day', 'weekday', 'weekend day']
 
     const [infinite, setInfinite] = useState(true)
-    const [interval, setInterval] = useState(repeatInterval[2])
+    const [interval, setInterval] = useState(regularData ? regularData.repeat_interval : repeatInterval[2])
     const [repeatEach, setRepeatEach] = useState(true)
     const [repeatOn, setRepeatOn] = useState(false)
     const { addError } = useErrorQueue()
@@ -42,11 +42,13 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         repeat_interval: repeatInterval[2],
         repeat_every: 1,
         repeat_each_weekday: [weekdayToday],
-        repeat_each_day_of_month: [],
+        repeat_each_day_of_month: [dateToday],
         repeat_each_month: [],
         repeat_on_day_num: dayNums[0],
         repeat_on_weekday: weekdays[0]
     })
+
+    console.log('regular: ', regular)
 
     const startDate = formatDateForInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
@@ -101,6 +103,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         if (infinite) regular.end_date = null
         regular.sum = prepareSum(regular.sum)
         regular.currency = regular.currency ? regular.currency : currenciesQuery.data?.[0].name
+        regular.repeat_interval = interval
         if (repeatEach) {
             regular.repeat_on_day_num = null
             regular.repeat_on_weekday = null
@@ -251,7 +254,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                         <span> week{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
                         <div className='line'>
                             <span>on: </span>
-                            <ButtonsGrid width={7} values={weekdays} defaultSelected={weekdayToday} onSelect={setWeekdays} />
+                            <ButtonsGrid width={7} values={weekdays} defaultSelected={regular.repeat_each_weekday} onSelect={setWeekdays} />
                         </div>
                     </>
                 }
@@ -279,7 +282,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 checked={repeatEach}
                             ></input>
                             <label htmlFor='repeatGroupEach'>each</label>
-                            <ButtonsGrid width={7} values={daysOfMonth} defaultSelected={dateToday} onSelect={setDaysOfMonth} disabled={!repeatEach} />
+                            <ButtonsGrid width={7} values={daysOfMonth} defaultSelected={regular.repeat_each_day_of_month} onSelect={setDaysOfMonth} disabled={!repeatEach} />
                         </div>
 
                         <div className='line'>
