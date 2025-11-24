@@ -139,6 +139,7 @@ async function createRegular(regularData, prevDate) {
         throw new HttpError(400, 'cannot use this category')
     }
     const endDate = regularData.end_date ? regularData.end_date : addYears(regularData.start_date, 100)
+    regularData.end_date = endDate
     regularData.next_date = calculateNextDate(prevDate, regularData)
     const result = await db.query(db.regulars.createOne, [
         regularData.userId,
@@ -199,13 +200,7 @@ function isPatternValid(pattern) {
     const freq = pattern.repeat_interval
     switch (freq) {
         case 'daily': {
-            const allNull = pattern.repeat_each_weekday === null &&
-                pattern.repeat_each_day_of_month === null &&
-                pattern.repeat_each_month === null &&
-                pattern.repeat_on_day_num === null &&
-                pattern.repeat_on_weekday === null
-            if (!allNull) console.error('when repeat interval is "daily" the following params should be null: repeat_each_weekday, repeat_each_day_of_month, repeat_each_month, repeat_on_day_num, repeat_on_weekday.')
-            return allNull
+            return true
         }
         case 'weekly': {
             if (!pattern.repeat_each_weekday) {
@@ -216,12 +211,7 @@ function isPatternValid(pattern) {
                 console.error('when repeat interval is "weekly" repeat_each_weekday should contain at least one day of week.')
                 return false
             }
-            const allNull = pattern.repeat_each_day_of_month === null &&
-                pattern.repeat_each_month === null &&
-                pattern.repeat_on_day_num === null &&
-                pattern.repeat_on_weekday === null
-            if (!allNull) console.error('when repeat interval is "weekly" the following params should be null: repeat_each_day_of_month, repeat_each_month, repeat_on_day_num, repeat_on_weekday.')
-            return allNull
+            return true
         }
         case 'monthly': {
             // TODO: check here if pattern.repeat_each_day_of_month === undeined and return false if it is?
@@ -240,9 +230,7 @@ function isPatternValid(pattern) {
                     return false
                 }
             }
-            const allNull = pattern.repeat_each_weekday === null && pattern.repeat_each_month === null
-            if (!allNull) console.error('when repeat interval is "monthly" the following params should be null: repeat_each_weekday, repeat_each_month.')
-            return allNull
+            return true
         }
         case 'yearly': {
             if (!pattern.repeat_each_month) {
@@ -250,16 +238,14 @@ function isPatternValid(pattern) {
                 return false
             }
             if (pattern.repeat_each_month.length < 1) {
-                console.error('when repeat interval is "yearly" repeat_each_month should contain at least one day of week.')
+                console.error('when repeat interval is "yearly" repeat_each_month should contain at least one month.')
                 return false
             }
             if (!pattern.repeat_on_day_num !== !pattern.repeat_on_weekday) {
                 console.error('when repeat interval is "yearly" repeat_on_day_num and repeat_on_weekday should both be null or not null.')
                 return false
             }
-            const allNull = pattern.repeat_each_weekday === null && pattern.repeat_each_day_of_month === null
-            if (!allNull) console.error('when repeat interval is "yearly" the following params should be null: repeat_each_weekday, repeat_each_day_of_month.')
-            return allNull
+            return true
         }
         default: {
             console.error('Unknown repeat interval: ', freq)
