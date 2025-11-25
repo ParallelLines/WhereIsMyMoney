@@ -2,7 +2,7 @@ import axiosInstance from '../utils/axiosInstance'
 
 const ENDPOINT_REGULARS = '/regulars'
 
-export const getRegulars = () => axiosInstance.get(ENDPOINT_REGULARS).then(res => res.data)
+export const getRegulars = (selectedCategory) => axiosInstance.get(ENDPOINT_REGULARS + '?category=' + selectedCategory).then(res => res.data)
 
 export const createRegular = (data) => axiosInstance.post(ENDPOINT_REGULARS, {
     name: data.name,

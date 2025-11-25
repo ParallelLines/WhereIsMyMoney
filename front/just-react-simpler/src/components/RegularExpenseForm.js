@@ -19,7 +19,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const weekdaysExtended = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'day', 'weekday', 'weekend day']
 
-    const [infinite, setInfinite] = useState(true)
+    const [infinite, setInfinite] = useState(regularData?.end_date ? false : true)
     const [interval, setInterval] = useState(regularData ? regularData.repeat_interval : repeatInterval[2])
     const [repeatEach, setRepeatEach] = useState(true)
     const [repeatOn, setRepeatOn] = useState(false)
@@ -28,7 +28,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const now = new Date()
     const yearLater = new Date().setFullYear(now.getFullYear() + 1)
     const weekdayToday = weekdays[now.getDay()]
-    const dateToday = daysOfMonth[now.getDate() - 1]
+    const dateToday = now.getDate().toString()
     const monthToday = months[now.getMonth()]
 
     const [regular, setRegular] = useState(regularData ? regularData : {
@@ -47,8 +47,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         repeat_on_day_num: dayNums[0],
         repeat_on_weekday: weekdays[0]
     })
-
-    console.log('regular: ', regular)
 
     const startDate = formatDateForInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))

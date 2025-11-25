@@ -83,9 +83,10 @@ export const useDeleteExpenses = () => {
 }
 
 export const useFetchRegulars = () => {
+    const { selectedCategory } = useSelectedCategory()
     return useQuery({
-        queryKey: ['regulars'],
-        queryFn: getRegulars,
+        queryKey: ['regulars', selectedCategory],
+        queryFn: () => getRegulars(selectedCategory),
         retry: retryAfterError
     })
 }
