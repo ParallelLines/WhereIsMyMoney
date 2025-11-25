@@ -6,8 +6,14 @@ const { isCategoryValid } = require('./categories')
 
 module.exports.getAll = async (req, res) => {
     const { userId } = req
-    const regulars = await db.query(db.regulars.getAll, [userId])
-    res.json(regulars.rows)
+    const { category = null } = req.query
+    if (category && category !== 'null') {
+        const regulars = await db.query(db.regulars.getAllByCategory, [userId, category])
+        res.json(regulars.rows)
+    } else {
+        const regulars = await db.query(db.regulars.getAll, [userId])
+        res.json(regulars.rows)
+    }
 }
 
 module.exports.getOne = async (req, res) => {

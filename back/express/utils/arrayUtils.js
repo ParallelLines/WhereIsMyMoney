@@ -15,10 +15,7 @@ function arraysEqual(arr1, arr2) {
         copy2 = parseArray(arr2)
     }
 
-    if (copy1.length !== copy2.length) {
-        console.log(`length ${copy1.length} !== ${copy2.length}`)
-        return false
-    }
+    if (copy1.length !== copy2.length) return false
 
     for (let i = 0; i < copy1.length; i++) {
         if (copy1[i] !== copy2[i]) return false

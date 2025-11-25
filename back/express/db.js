@@ -9,6 +9,7 @@ const expensesGetAllByCategory = readSql('./sql/expensesGetAllByCategory.sql')
 const expensesGetOne = readSql('./sql/expensesGetOne.sql')
 const expensesNamesByPrefix = readSql('./sql/expensesNamesByPrefix.sql')
 const regularsGetAll = readSql('./sql/regularsGetAll.sql')
+const regularsGetAllByCategory = readSql('./sql/regularsGetAllByCategory.sql')
 const regularsGetOne = readSql('./sql/regularsGetOne.sql')
 const regularsCreateOne = readSql('./sql/regularsCreateOne.sql')
 const regularsUpdateOne = readSql('./sql/regularsUpdateOne.sql')
@@ -54,6 +55,7 @@ const expenses = {
 
 const regulars = {
     getAll: regularsGetAll,
+    getAllByCategory: regularsGetAllByCategory,
     getOne: regularsGetOne,
     createOne: regularsCreateOne,
     updateOne: regularsUpdateOne,
