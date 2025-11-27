@@ -144,8 +144,6 @@ async function createRegular(regularData, prevDate) {
     if (!isCatValid) {
         throw new HttpError(400, 'cannot use this category')
     }
-    const endDate = regularData.end_date ? regularData.end_date : addYears(regularData.start_date, 100)
-    regularData.end_date = endDate
     regularData.next_date = calculateNextDate(prevDate, regularData)
     const result = await db.query(db.regulars.createOne, [
         regularData.userId,
@@ -154,7 +152,7 @@ async function createRegular(regularData, prevDate) {
         regularData.sum,
         regularData.currency,
         regularData.start_date,
-        endDate,
+        regularData.end_date,
         regularData.next_date,
         regularData.repeat_interval,
         regularData.repeat_every,
