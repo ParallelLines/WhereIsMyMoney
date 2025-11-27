@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createExpense, deleteExpense, deleteExpenses, editExpense, getExpenses } from '../apiService/expenses'
-import { createRegular, deleteRegular, deleteRegulars, editRegular, getRegulars } from '../apiService/regulars'
+import { createRegular, deleteRegular, deleteRegulars, editRegular, getNextDate, getRegulars } from '../apiService/regulars'
 import { useErrorQueue, useSelectedCategory } from '../utils/AppContext'
 import { getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
@@ -87,6 +87,14 @@ export const useFetchRegulars = () => {
     return useQuery({
         queryKey: ['regulars', selectedCategory],
         queryFn: () => getRegulars(selectedCategory),
+        retry: retryAfterError
+    })
+}
+
+export const useFetchNextDate = (pattern) => {
+    return useQuery({
+        queryKey: ['nextDate'],
+        queryFn: () => getNextDate(pattern),
         retry: retryAfterError
     })
 }

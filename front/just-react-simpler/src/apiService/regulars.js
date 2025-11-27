@@ -36,6 +36,8 @@ export const editRegular = (data) => axiosInstance.put(ENDPOINT_REGULARS + '/' +
     repeat_on_weekday: data.repeat_on_weekday
 })
 
+export const getNextDate = (data) => axiosInstance.post(ENDPOINT_REGULARS + '/nextDate', data)
+
 export const deleteRegular = (regularId) => axiosInstance.delete(ENDPOINT_REGULARS + '/' + regularId)
 
 export const deleteRegulars = (regularId) => axiosInstance.delete(ENDPOINT_REGULARS, {

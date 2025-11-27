@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'
+import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies, useFetchNextDate, useMonitorErrors } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
 import { prepareSum } from '../utils/useful'
 import ButtonsGrid from './ButtonsGrid'
 import { useErrorQueue } from '../utils/AppContext'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
+    const queryClient = useQueryClient()
     const categoriesQuery = useFetchCategories()
     const currenciesQuery = useFetchCurrencies()
     const create = useCreateRegular()
@@ -18,6 +20,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const dayNums = ['first', 'second', 'third', 'forth', 'fifth', 'last']
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const weekdaysExtended = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'day', 'weekday', 'weekend day']
+    const triggerDateChangeFields = new Set(['start_date', 'end_date', 'repeat_interval', 'repeat_every'])
 
     const [infinite, setInfinite] = useState(regularData?.end_date ? false : true)
     const [interval, setInterval] = useState(regularData ? regularData.repeat_interval : repeatInterval[2])
@@ -31,6 +34,8 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const dateToday = now.getDate().toString()
     const monthToday = months[now.getMonth()]
 
+    if (regularData && !regularData.end_date) regularData.end_date = yearLater
+
     const [regular, setRegular] = useState(regularData ? regularData : {
         name: '',
         sum: '',
@@ -43,13 +48,28 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         repeat_every: 1,
         repeat_each_weekday: [weekdayToday],
         repeat_each_day_of_month: [dateToday],
-        repeat_each_month: [],
+        repeat_each_month: [monthToday],
         repeat_on_day_num: dayNums[0],
         repeat_on_weekday: weekdays[0]
     })
 
     const startDate = formatDateForInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
+
+    const prepareData = () => {
+        const preparedData = { ...regular }
+        if (infinite) preparedData.end_date = null
+        preparedData.sum = prepareSum(preparedData.sum)
+        preparedData.currency = preparedData.currency ? preparedData.currency : currenciesQuery.data?.[0].name
+        preparedData.repeat_interval = interval
+        if (repeatEach && !repeatOn) {
+            preparedData.repeat_on_day_num = null
+            preparedData.repeat_on_weekday = null
+        } else {
+            preparedData.repeat_each_day_of_month = null
+        }
+        return preparedData
+    }
 
     const handleChange = (e) => {
         setRegular(currRegular => {
@@ -58,6 +78,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 [e.target.name]: e.target.value
             }
         })
+        if (triggerDateChangeFields.has(e.target.name)) queryClient.invalidateQueries({ queryKey: ['nextDate'] })
     }
 
     const setWeekdays = (selectedWeekdays) => {
@@ -67,6 +88,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 repeat_each_weekday: selectedWeekdays
             }
         })
+        queryClient.invalidateQueries({ queryKey: ['nextDate'] })
     }
 
     const setDaysOfMonth = (selectedDaysOfMonth) => {
@@ -77,6 +99,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 repeat_each_day_of_month: numArray
             }
         })
+        queryClient.invalidateQueries({ queryKey: ['nextDate'] })
     }
 
     const setMonths = (selectedMonths) => {
@@ -86,6 +109,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 repeat_each_month: selectedMonths
             }
         })
+        queryClient.invalidateQueries({ queryKey: ['nextDate'] })
     }
 
     const handleRadioChange = (e) => {
@@ -94,25 +118,17 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         } else {
             setRepeatEach(false)
         }
+        queryClient.invalidateQueries({ queryKey: ['nextDate'] })
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (infinite) regular.end_date = null
-        regular.sum = prepareSum(regular.sum)
-        regular.currency = regular.currency ? regular.currency : currenciesQuery.data?.[0].name
-        regular.repeat_interval = interval
-        if (repeatEach) {
-            regular.repeat_on_day_num = null
-            regular.repeat_on_weekday = null
-        } else {
-            regular.repeat_each_day_of_month = null
-        }
+        const preparedRegular = prepareData()
         try {
             if (!regularData) {
-                await create.mutateAsync(regular)
+                await create.mutateAsync(preparedRegular)
             } else {
-                await edit.mutateAsync(regular)
+                await edit.mutateAsync(preparedRegular)
             }
             onSubmit()
         } catch (error) {
@@ -124,6 +140,8 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         }
 
     }
+
+    const nextDateQuery = useFetchNextDate(prepareData())
 
     useMonitorErrors(currenciesQuery, onCancel)
     useMonitorErrors(categoriesQuery, onCancel)
@@ -336,7 +354,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
                         <div className='line'>
                             <span>in: </span>
-                            <ButtonsGrid width={4} values={months} defaultSelected={monthToday} onSelect={setMonths} />
+                            <ButtonsGrid width={4} values={months} defaultSelected={regular.repeat_each_month} onSelect={setMonths} />
                         </div>
                         <div className='line'>
                             <input type='checkbox'
@@ -372,6 +390,12 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                         </div>
                     </>
                 }
+
+                <div className='line'>will be executed:
+                    {nextDateQuery.isLoading && <span>Loading...</span>}
+                    {nextDateQuery.isError && <span>Error: {nextDateQuery.error.message}</span>}
+                    {nextDateQuery.data?.data.next_date ? nextDateQuery.data?.data.next_date : ' ...'}
+                </div>
 
                 <div className='line btns'>
                     <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
