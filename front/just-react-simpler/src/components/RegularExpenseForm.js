@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies, useFetchNextDate, useMonitorErrors } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
@@ -142,11 +142,16 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
     }
 
-    const nextDateQuery = useFetchNextDate(prepareData())
+    const preparedData = useMemo(() => {
+        return prepareData()
+    }, [regular, interval, repeatEach, repeatOn, infinite, currenciesQuery.data])
+
+    const nextDateQuery = useFetchNextDate(preparedData)
     console.log('next date: ', nextDateQuery.data?.data.next_date)
 
     useMonitorErrors(currenciesQuery, onCancel)
     useMonitorErrors(categoriesQuery, onCancel)
+    useMonitorErrors(nextDateQuery, onCancel)
 
     return (
         <VanishingBlock
@@ -394,9 +399,9 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 }
 
                 <div className='line'>will be executed:
-                    {nextDateQuery.isLoading && <span>Loading...</span>}
-                    {nextDateQuery.isError && <span>Error: {nextDateQuery.error.message}</span>}
-                    {nextDateQuery.data?.data.next_date ? dateString(nextDateQuery.data?.data.next_date) : ' ...'}
+                    {nextDateQuery.isLoading && ' Loading...'}
+                    {nextDateQuery.isError && ' Could not calculate the date'}
+                    {nextDateQuery.data?.data.next_date ? ' ' + dateString(nextDateQuery.data?.data.next_date) : ''}
                 </div>
 
                 <div className='line btns'>

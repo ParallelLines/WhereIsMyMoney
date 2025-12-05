@@ -8,7 +8,7 @@ export function AppContext({ children }) {
     const [errorQueue, setErrorQueue] = useState([])
 
     const addError = useCallback((message) => {
-        setErrorQueue(prevQueue => [...prevQueue, { id: prevQueue.length, message: message }])
+        setErrorQueue(prevQueue => [...prevQueue, { id: Date.now(), message: message }])
     }, [])
 
     const removeError = useCallback((id) => {
