@@ -237,12 +237,12 @@ function calculateWeekly(prevDate, pattern) {
 function calculateMonthly(prevDate, pattern) {
     const startDate = new Date(prevDate ? prevDate : pattern.start_date)
     const prevDay = startDate.getDate()
-    if (!prevDate && pattern.repeat_each_day_of_month.includes(prevDay))
-        return startDate
     const prevMonth = startDate.getMonth()
     const prevYear = startDate.getFullYear()
     const interval = prevDate ? parseInt(pattern.repeat_every) : 1
     if (pattern.repeat_each_day_of_month) {
+        if (!prevDate && pattern.repeat_each_day_of_month.includes(prevDay))
+            return startDate
         const closestDay = findNextDayInMonth(prevDay, pattern.repeat_each_day_of_month)
         const newMonth = closestDay <= prevDay ? (prevMonth + interval) % 12 : prevMonth
         const yearDiff = closestDay <= prevDay ? Math.floor((prevMonth + interval) / 12) : 0
@@ -257,11 +257,15 @@ function calculateMonthly(prevDate, pattern) {
         const dayNum = pattern.repeat_on_day_num
         const dayType = pattern.repeat_on_weekday
         let newDate = findDate(dayNum, dayType, prevMonth, prevYear)
+        if (!prevDate && prevDay === newDate)
+            return startDate
         if (newDate <= prevDay) {
             const newMonth = (prevMonth + interval) % 12
             const yearDiff = Math.floor((prevMonth + interval) / 12)
             const newYear = prevYear + yearDiff
             newDate = findDate(dayNum, dayType, newMonth, newYear)
+            if (!prevDate && prevDay === newDate)
+                return startDate
             const nextDate = new Date(startDate)
             nextDate.setFullYear(newYear)
             nextDate.setMonth(newMonth, newDate)
