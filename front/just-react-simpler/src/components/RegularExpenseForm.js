@@ -118,6 +118,15 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
             setRepeatEach(true)
         } else {
             setRepeatEach(false)
+            if (regularData) {
+                setRegular(currRegular => {
+                    return {
+                        ...currRegular,
+                        repeat_on_day_num: dayNums[0],
+                        repeat_on_weekday: weekdays[0]
+                    }
+                })
+            }
         }
         queryClient.invalidateQueries({ queryKey: ['nextDate'] })
     }
