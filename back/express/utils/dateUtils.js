@@ -39,16 +39,25 @@ function addYears(dateString, yearsNum) {
     return date.toISOString()
 }
 
+function isWeekdayInArray(dayNum, weekdaysArr) {
+    return weekdaysArr.includes(weekdays[dayNum])
+}
+
+function isMonthInArray(monthNum, monthsArr) {
+    return monthsArr.includes(months[monthNum])
+}
+
 /**
+ * TODO: throw error instead of returning null
  * 
  * @param {Number} currWeekday 0-6 for Sun-Sat accordingly. 
- * @param {[String]} weekdays  ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].
- * @returns {Number} 0-6 if the day was found, or null if nothing was found.
+ * @param {[String]} weekdaysArr  ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].
+ * @returns {Number} 0-6 if the day was found, or null if nothing was found. But it should not return null, unless the weekdaysArr is empty, which also should not happen.
  */
-function findClosestWeekday(currWeekday, weekdaysArr) {
-    for (let i = 0; i < 6; i++) {
+function findNextWeekday(currWeekday, weekdaysArr) {
+    for (let i = 1; i < 7; i++) {
         const dayNum = (currWeekday + i) % 7
-        if (weekdaysArr.includes(weekdays[dayNum])) return dayNum
+        if (isWeekdayInArray(dayNum, weekdaysArr)) return dayNum
     }
     return null
 }
@@ -59,7 +68,7 @@ function findClosestWeekday(currWeekday, weekdaysArr) {
  * @param {[Number]} daysArr [23, 1, 13], an array of numbers in range 1-31, not neccessarily sorted.
  * @returns 
  */
-function findClosestDayInMonth(currDay, daysArr) {
+function findNextDayInMonth(currDay, daysArr) {
     daysArr.sort((a, b) => a - b)
     for (let day of daysArr) {
         if (day > currDay) return day
@@ -72,8 +81,8 @@ function findClosestDayInMonth(currDay, daysArr) {
  * @param {Number} currMonth   0-11 for Jan-Dec accordingly.
  * @param {[String]} monthsArr ['Jan', 'Sept'], an array of months.
  */
-function findClosestMonth(currMonth, monthsArr) {
-    for (let i = 1; i < 12; i++) {
+function findNextMonth(currMonth, monthsArr) {
+    for (let i = 1; i <= 12; i++) {
         const month = (currMonth + i) % 12
         if (monthsArr.includes(months[month])) return month
     }
@@ -98,7 +107,7 @@ function findEndOfTheMonthDay(numOfDaysInMonth, startOfTheMonthDay) {
  * @returns {Boolean} true, if this week has more days after currWeekday, and false if it doesn't.
  */
 function haveAnotherDayThisWeek(currWeekday, weekdaysArr) {
-    const nextDay = findClosestWeekday(currWeekday, weekdaysArr)
+    const nextDay = findNextWeekday(currWeekday, weekdaysArr)
     return nextDay >= currWeekday
 }
 
@@ -196,6 +205,9 @@ function findDate(dayNum, dayType, month, year) {
 }
 
 function calculateDaily(prevDate, pattern) {
+    const now = new Date()
+    const startDate = new Date(pattern.start_date)
+    if (!prevDate || startDate > now) return startDate
     const nextDate = new Date(prevDate ? prevDate : pattern.start_date)
     const prevDayOfMonth = prevDate.getDate()
     const interval = parseInt(pattern.repeat_every)
@@ -206,9 +218,11 @@ function calculateDaily(prevDate, pattern) {
 function calculateWeekly(prevDate, pattern) {
     const startDate = new Date(prevDate ? prevDate : pattern.start_date)
     const prevDayOfWeek = startDate.getDay()
+    if (!prevDate && isWeekdayInArray(prevDayOfWeek, pattern.repeat_each_weekday))
+        return startDate
     const prevDayOfMonth = startDate.getDate()
     const interval = prevDate ? parseInt(pattern.repeat_every) : 1
-    const closestWeekday = findClosestWeekday(prevDayOfWeek, pattern.repeat_each_weekday)
+    const closestWeekday = findNextWeekday(prevDayOfWeek, pattern.repeat_each_weekday)
     const shouldUseInterval = !haveAnotherDayThisWeek(prevDayOfWeek, pattern.repeat_each_weekday)
     const diff = weekdayDiff(prevDayOfWeek, closestWeekday)
     const nextDate = new Date(startDate)
@@ -222,14 +236,16 @@ function calculateWeekly(prevDate, pattern) {
 
 function calculateMonthly(prevDate, pattern) {
     const startDate = new Date(prevDate ? prevDate : pattern.start_date)
-    const interval = prevDate ? parseInt(pattern.repeat_every) : 1
     const prevDay = startDate.getDate()
+    if (!prevDate && pattern.repeat_each_day_of_month.includes(prevDay))
+        return startDate
     const prevMonth = startDate.getMonth()
     const prevYear = startDate.getFullYear()
+    const interval = prevDate ? parseInt(pattern.repeat_every) : 1
     if (pattern.repeat_each_day_of_month) {
-        const closestDay = findClosestDayInMonth(prevDay, pattern.repeat_each_day_of_month)
-        const newMonth = closestDay < prevDay ? (prevMonth + interval) % 12 : prevMonth
-        const yearDiff = Math.floor((prevMonth + interval) / 12)
+        const closestDay = findNextDayInMonth(prevDay, pattern.repeat_each_day_of_month)
+        const newMonth = closestDay <= prevDay ? (prevMonth + interval) % 12 : prevMonth
+        const yearDiff = closestDay <= prevDay ? Math.floor((prevMonth + interval) / 12) : 0
         const newYear = prevYear + yearDiff
         const daysInNewMonth = daysInMonth(newMonth, newYear)
         const newDay = Math.min(closestDay, daysInNewMonth)
@@ -258,27 +274,48 @@ function calculateMonthly(prevDate, pattern) {
 }
 
 function calculateYearly(prevDate, pattern) {
-    const startDate = new Date(pattern.start_date)
-    const fixedDate = startDate.getDate()
-    const interval = prevDate ? parseInt(pattern.repeat_every) : 1
-    const firstDate = prevDate ? prevDate : new Date(pattern.start_date)
-    const prevMonth = firstDate.getMonth()
-    const prevYear = firstDate.getFullYear()
-    const newMonth = findClosestMonth(prevMonth, pattern.repeat_each_month)
-    let newYear = prevYear
-    if (newMonth <= prevMonth) {
-        newYear += interval
+    const interval = parseInt(pattern.repeat_every)
+    const nextDate = new Date(pattern.start_date)
+
+    if (prevDate) {
+        const startDate = new Date(pattern.start_date)
+        const fixedDate = startDate.getDate()
+        const prevMonth = prevDate.getMonth()
+        const prevYear = prevDate.getFullYear()
+        const nextMonth = findNextMonth(prevMonth, pattern.repeat_each_month)
+        const nextYear = nextMonth <= prevMonth ? prevYear + interval : prevYear
+        const daysInNextMonth = daysInMonth(nextMonth, nextYear)
+        let finalDate = Math.min(fixedDate, daysInNextMonth)
+        if (pattern.repeat_on_day_num) {
+            const dayNum = pattern.repeat_on_day_num
+            const dayType = pattern.repeat_on_weekday
+            finalDate = findDate(dayNum, dayType, nextMonth, nextYear)
+        }
+        nextDate.setFullYear(nextYear)
+        nextDate.setMonth(nextMonth, finalDate)
+    } else {
+        const startDate = new Date(pattern.start_date)
+        const fixedDate = startDate.getDate()
+        const prevMonth = startDate.getMonth()
+        const prevYear = startDate.getFullYear()
+        const nextMonth = findNextMonth(prevMonth, pattern.repeat_each_month)
+        const nextYear = nextMonth <= prevMonth ? prevYear + interval : prevYear
+        const daysInPrevMonth = daysInMonth(prevMonth, prevYear)
+        let finalDate = Math.min(fixedDate, daysInPrevMonth)
+        if (pattern.repeat_on_day_num) {
+            const dayNum = pattern.repeat_on_day_num
+            const dayType = pattern.repeat_on_weekday
+            finalDate = findDate(dayNum, dayType, prevMonth, prevYear)
+            if (finalDate < fixedDate) {
+                finalDate = findDate(dayNum, dayType, nextMonth, nextYear)
+                nextDate.setFullYear(nextYear)
+                nextDate.setMonth(nextMonth, finalDate)
+                return nextDate
+            }
+        }
+        nextDate.setFullYear(prevYear)
+        nextDate.setMonth(prevMonth, finalDate)
     }
-    const daysInNewMonth = daysInMonth(newMonth, newYear)
-    let newDate = Math.min(fixedDate, daysInNewMonth)
-    if (pattern.repeat_on_day_num) {
-        const dayNum = pattern.repeat_on_day_num
-        const dayType = pattern.repeat_on_weekday
-        newDate = findDate(dayNum, dayType, newMonth, newYear)
-    }
-    const nextDate = new Date(firstDate)
-    nextDate.setFullYear(newYear)
-    nextDate.setMonth(newMonth, newDate)
     return nextDate
 }
 
@@ -291,11 +328,9 @@ function calculateYearly(prevDate, pattern) {
  */
 function calculateNextDate(prevDate, pattern) {
     const now = new Date()
-    const startDate = new Date(pattern.start_date)
     const endDate = pattern.end_date ? new Date(pattern.end_date) : null
     const freq = pattern.repeat_interval
 
-    if (freq === 'daily' && (!prevDate || startDate > now)) return startDate
     if (endDate && now > endDate) return null
     if (prevDate && datesEqual(now, prevDate)) return prevDate
 
