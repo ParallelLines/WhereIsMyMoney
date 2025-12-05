@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {String} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
+ * @returns {String} a string in a dd/MM/YYYY format
+ */
 export function dateString(dateStr) {
     const date = new Date(dateStr)
     const year = date.getFullYear()
@@ -6,6 +11,11 @@ export function dateString(dateStr) {
     return `${day}/${month}/${year}`
 }
 
+/**
+ * 
+ * @param {String} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
+ * @returns {String} a string in a "dd.MM.YYYY hh:mm" format
+ */
 export function dateTimeString(dateStr) {
     const date = new Date(dateStr)
     const year = date.getFullYear()
@@ -17,13 +27,12 @@ export function dateTimeString(dateStr) {
 }
 
 /**
- * date should be a Date Object
- * 
  * it used to be dateStr of 2024-06-05T05:33:00.000Z format (just like in postgresql), 
  * and one could pass to the function date.toISOString()
  * but the method gives the wrong hours (UTC), so it is no use
  * 
- * return YYYY-MM-DDTHH:mm format
+ * @param {Date} date date should be a Date Object
+ * @returns {String} a string in the following format YYYY-MM-DDTHH:mm
  */
 export function formatDateForInput(date) {
     // const strArr = dateStr.split(':')

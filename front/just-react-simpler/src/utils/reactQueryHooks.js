@@ -93,7 +93,7 @@ export const useFetchRegulars = () => {
 
 export const useFetchNextDate = (pattern) => {
     return useQuery({
-        queryKey: ['nextDate'],
+        queryKey: ['nextDate', pattern],
         queryFn: () => getNextDate(pattern),
         retry: retryAfterError
     })

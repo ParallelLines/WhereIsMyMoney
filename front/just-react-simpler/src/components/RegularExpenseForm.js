@@ -6,6 +6,7 @@ import { prepareSum } from '../utils/useful'
 import ButtonsGrid from './ButtonsGrid'
 import { useErrorQueue } from '../utils/AppContext'
 import { useQueryClient } from '@tanstack/react-query'
+import { dateString } from '../utils/date'
 
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const queryClient = useQueryClient()
@@ -142,6 +143,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     }
 
     const nextDateQuery = useFetchNextDate(prepareData())
+    console.log('next date: ', nextDateQuery.data?.data.next_date)
 
     useMonitorErrors(currenciesQuery, onCancel)
     useMonitorErrors(categoriesQuery, onCancel)
@@ -394,7 +396,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 <div className='line'>will be executed:
                     {nextDateQuery.isLoading && <span>Loading...</span>}
                     {nextDateQuery.isError && <span>Error: {nextDateQuery.error.message}</span>}
-                    {nextDateQuery.data?.data.next_date ? nextDateQuery.data?.data.next_date : ' ...'}
+                    {nextDateQuery.data?.data.next_date ? dateString(nextDateQuery.data?.data.next_date) : ' ...'}
                 </div>
 
                 <div className='line btns'>
