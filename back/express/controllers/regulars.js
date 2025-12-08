@@ -1,8 +1,9 @@
 const db = require('../db')
 const HttpError = require('../utils/HttpError')
-const { datesEqual, calculateNextDate, addYears } = require('../utils/dateUtils')
+const { datesEqual, calculateNextDate } = require('../utils/dateUtils')
 const { arraysEqual } = require('../utils/arrayUtils')
 const { isCategoryValid } = require('./categories')
+const { createExpense } = require('./expenses')
 
 module.exports.getAll = async (req, res) => {
     const { userId } = req
@@ -137,6 +138,38 @@ module.exports.deleteMany = async (req, res) => {
     const placeholders = ids.map((val, i) => '$' + (i + offset)).join(', ')
     await db.query(db.regulars.deleteMany + '(' + placeholders + ')', [userId, ...ids])
     res.sendStatus(200)
+}
+
+module.exports.processRegulars = async () => {
+    const regulars = await getPendingRegulars()
+    for (let regular of regulars) {
+        await processPendingRegular(regular)
+    }
+}
+
+async function getPendingRegulars() {
+    const result = await db.query(db.regulars.getPending)
+    return result.rows
+}
+
+async function processPendingRegular(regular) {
+    let now = new Date()
+    let date = new Date(regular.next_date)
+    while (date && date !== -1 && (date < now || datesEqual(now, date))) {
+        const expense = {
+            user_id: regular.user_id,
+            category_id: regular.category_id,
+            name: regular.name,
+            sum: regular.sum,
+            currency: regular.currency,
+            reqular_id: regular.regular_id,
+            regular_name: regular.name,
+            date: date.toISOString()
+        }
+        await createExpense(expense)
+        date = calculateNextDate(date, regular)
+    }
+    await db.query(db.regulars.updateNextDate, [regular.user_id, regular.id, date.toISOString()])
 }
 
 async function createRegular(regularData, prevDate) {

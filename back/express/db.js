@@ -11,8 +11,10 @@ const expensesNamesByPrefix = readSql('./sql/expensesNamesByPrefix.sql')
 const regularsGetAll = readSql('./sql/regularsGetAll.sql')
 const regularsGetAllByCategory = readSql('./sql/regularsGetAllByCategory.sql')
 const regularsGetOne = readSql('./sql/regularsGetOne.sql')
+const regularsGetPending = readSql('./sql/regularsGetPending.sql')
 const regularsCreateOne = readSql('./sql/regularsCreateOne.sql')
 const regularsUpdateOne = readSql('./sql/regularsUpdateOne.sql')
+const regularsUpdateNextDate = readSql('./sql/regularsUpdateNextDate.sql')
 const regularsExecutions = readSql('./sql/regularsExecutions.sql')
 const currenciesGetAll = readSql('./sql/currenciesGetAll.sql')
 
@@ -58,8 +60,10 @@ const regulars = {
     getAll: regularsGetAll,
     getAllByCategory: regularsGetAllByCategory,
     getOne: regularsGetOne,
+    getPending: regularsGetPending,
     createOne: regularsCreateOne,
     updateOne: regularsUpdateOne,
+    updateNextDate: regularsUpdateNextDate,
     deleteOne: 'DELETE FROM regulars WHERE user_id = $1 AND id = $2',
     deleteMany: 'DELETE FROM regulars WHERE user_id = $1 AND id IN ',
     getExecutionTimes: regularsExecutions

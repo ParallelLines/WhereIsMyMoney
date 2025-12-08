@@ -38,9 +38,9 @@ module.exports.getOne = async (req, res) => {
 module.exports.create = async (req, res) => {
     const { userId } = req
     const newData = req.body
-    newData.userId = userId
+    newData.user_id = userId
     console.info('create expense: ', newData)
-    const result = await createExpense(newData)
+    const result = await this.createExpense(newData)
     res.json(result)
 }
 
@@ -105,16 +105,18 @@ module.exports.deleteMany = async (req, res) => {
     res.sendStatus(200)
 }
 
-async function createExpense(expenseData) {
+module.exports.createExpense = async (expenseData) => {
     expenseData.inUSD = await calculateUSD(expenseData.sum, expenseData.date, expenseData.currency)
-    expenseData.regular_name = null
-    expenseData.reqular_id = null
-    const isCatValid = await isCategoryValid(expenseData.category_id, expenseData.userId)
+    if (!expenseData.reqular_id) {
+        expenseData.reqular_id = null
+        expenseData.regular_name = null
+    }
+    const isCatValid = await isCategoryValid(expenseData.category_id, expenseData.user_id)
     if (!isCatValid) {
         throw new HttpError(400, 'cannot use this category')
     }
     const result = await db.query(db.expenses.createOne, [
-        expenseData.userId,
+        expenseData.user_id,
         expenseData.category_id,
         expenseData.name,
         expenseData.sum,
