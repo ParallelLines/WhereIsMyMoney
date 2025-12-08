@@ -65,7 +65,7 @@ module.exports.editOne = async (req, res) => {
         res.status(400).send('no such regular :(')
     }
     if (repeatPatternChanged(regular, req.body)) {
-        const prevDate = new Date()
+        const prevDate = await findLastExecution(id)
         const nextDate = calculateNextDate(prevDate, req.body)
         if (nextDate === -1) throw new Error('Error while calculating next date')
         if (nextDate) {
@@ -165,6 +165,12 @@ async function createRegular(regularData, prevDate) {
     return result.rows
 }
 
+async function findLastExecution(regularId) {
+    const dates = await db.query(db.regulars.getExecutionTimes, [regularId])
+    if (dates.rows.length) return dates.rows[0]
+    return null
+}
+
 function repeatPatternChanged(oldData, newData) {
     return !datesEqual(newData.start_date, oldData.start_date) ||
         !datesEqual(newData.end_date, oldData.end_date) ||
@@ -178,7 +184,7 @@ function repeatPatternChanged(oldData, newData) {
 }
 
 function isPatternValid(pattern) {
-    console.info('Validating the pattern for a regular: ', pattern)
+    // console.info('Validating the pattern for a regular: ', pattern)
 
     if (pattern.start_date === undefined ||
         pattern.repeat_interval === undefined ||
