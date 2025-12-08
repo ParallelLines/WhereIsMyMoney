@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies, useFetchNextDate, useMonitorErrors } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
@@ -57,7 +57,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const startDate = formatDateForInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
 
-    const prepareData = () => {
+    const prepareData = useCallback(() => {
         const preparedData = { ...regular }
         if (infinite) preparedData.end_date = null
         preparedData.sum = prepareSum(preparedData.sum)
@@ -70,7 +70,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
             preparedData.repeat_each_day_of_month = null
         }
         return preparedData
-    }
+    }, [regular, interval, repeatEach, repeatOn, infinite, currenciesQuery.data])
 
     const handleChange = (e) => {
         setRegular(currRegular => {
@@ -153,10 +153,9 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
     const preparedData = useMemo(() => {
         return prepareData()
-    }, [regular, interval, repeatEach, repeatOn, infinite, currenciesQuery.data])
+    }, [prepareData])
 
     const nextDateQuery = useFetchNextDate(preparedData)
-    console.log('next date: ', nextDateQuery.data?.data.next_date)
 
     useMonitorErrors(currenciesQuery, onCancel)
     useMonitorErrors(categoriesQuery, onCancel)
@@ -240,6 +239,12 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     ></input>
                     <label htmlFor='ifinite'>infinite</label>
                 </div>
+
+                {regularData &&
+                    <div className='line'>scheduled:
+                        {regularData.next_date ? ' ' + dateString(regularData.next_date) : ' never'}
+                    </div>
+                }
 
                 <label htmlFor='repeatInterval'>frequency: </label>
                 <select name='repeat_interval'
@@ -407,7 +412,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     </>
                 }
 
-                <div className='line'>will be executed:
+                <div className='line'>will be scheduled after saving:
                     {nextDateQuery.isLoading && ' Loading...'}
                     {nextDateQuery.isError && ' Could not calculate the date'}
                     {nextDateQuery.data?.data.next_date ? ' ' + dateString(nextDateQuery.data?.data.next_date) : ''}

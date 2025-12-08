@@ -35,8 +35,8 @@ export default function RegularExpensesList() {
             />}
             <div className='list-controls'>
                 <button onClick={() => setCreateMode(true)}>+</button>
-                {regularsToDelete.length > 0 && <button onClick={() => setDeleteMode(true)}>Delete Selected</button>}
-                {regularsToDelete.length > 0 && <button onClick={() => setRegularsToDelete([])}>Deselect all</button>}
+                {regularsToDelete.length > 0 && <button onClick={() => setDeleteMode(true)}>Delete selected</button>}
+                {regularsToDelete.length > 0 && <button onClick={() => setRegularsToDelete([])}>Cancel</button>}
             </div>
             <div className={regularsToDelete.length > 0 ? 'list-column visible-checkbox' : 'list-column'}>
                 {createMode && <RegularExpenseForm onCancel={() => setCreateMode(false)} onSubmit={() => setCreateMode(false)} />}
