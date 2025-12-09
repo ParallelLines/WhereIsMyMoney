@@ -66,6 +66,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         if (repeatEach && !repeatOn) {
             preparedData.repeat_on_day_num = null
             preparedData.repeat_on_weekday = null
+            preparedData.repeat_each_day_of_month = preparedData.repeat_each_day_of_month.map(Number)
         } else {
             preparedData.repeat_each_day_of_month = null
         }
