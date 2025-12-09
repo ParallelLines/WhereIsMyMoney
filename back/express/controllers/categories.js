@@ -1,19 +1,19 @@
-const db = require('../db')
+import db from '../db.js'
 
-module.exports.getAll = async (req, res) => {
+export async function getAll(req, res) {
     const { userId } = req
     const categories = await db.query(db.categories.getAllRecursive, [userId])
     res.json(categories.rows)
 }
 
-module.exports.getOne = async (req, res) => {
+export async function getOne(req, res) {
     const { userId } = req
     const { id } = req.params
     const category = await db.query(db.categories.getOne, [userId, id])
     res.json(category.rows)
 }
 
-module.exports.create = async (req, res) => {
+export async function create(req, res) {
     const newData = req.body
     const { userId } = req
     const result = await db.query(db.categories.createOne, [
@@ -25,7 +25,7 @@ module.exports.create = async (req, res) => {
     res.json(result.rows)
 }
 
-module.exports.editOne = async (req, res) => {
+export async function editOne(req, res) {
     const { userId } = req
     const { id } = req.params
     const { name, color } = req.body
@@ -45,7 +45,7 @@ module.exports.editOne = async (req, res) => {
     }
 }
 
-module.exports.deleteOne = async (req, res) => {
+export async function deleteOne(req, res) {
     const { userId } = req
     const { id } = req.params
     if (!id) {
@@ -55,7 +55,7 @@ module.exports.deleteOne = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.deleteMany = async (req, res) => {
+export async function deleteMany(req, res) {
     const { userId } = req
     const { ids } = req.body
     if (!ids || !ids.length) {
@@ -67,7 +67,7 @@ module.exports.deleteMany = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.isCategoryValid = async (categoryId, userId) => {
+export async function isCategoryValid(categoryId, userId) {
     try {
         const category = await db.query(db.categories.getOne, [userId, categoryId])
         return category.rows.length === 1

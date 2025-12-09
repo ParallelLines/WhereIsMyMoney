@@ -1,17 +1,18 @@
-const express = require('express')
+import express from 'express'
+import { create, getOne, editOne, deleteOne } from '../controllers/users.js'
+import catchAsync from '../utils/catchAsync.js'
+import verifyJWT from '../middleware.js'
+
 const router = express.Router()
-const users = require('../controllers/users')
-const catchAsync = require('../utils/catchAsync')
-const { verifyJWT } = require('../middleware')
 
 router.use(verifyJWT)
 
 router.route('/')
-    .post(catchAsync(users.create))
+    .post(catchAsync(create))
 
 router.route('/:id')
-    .get(catchAsync(users.getOne))
-    .put(catchAsync(users.editOne))
-    .delete(catchAsync(users.deleteOne))
+    .get(catchAsync(getOne))
+    .put(catchAsync(editOne))
+    .delete(catchAsync(deleteOne))
 
-module.exports = router
+export default router

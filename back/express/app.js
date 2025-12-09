@@ -1,18 +1,20 @@
+import dotenv from 'dotenv'
 if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
+    dotenv.config()
 }
+import './scheduler/regularExpensesScheduler.js'
+import express from 'express'
+import cors from 'cors'
+import usersRoutes from './routes/users.js'
+import currenciesRoutes from './routes/currencies.js'
+import categoriesRoutes from './routes/categories.js'
+import expensesRoutes from './routes/expenses.js'
+import regularsRoutes from './routes/regulars.js'
+import loginRoutes from './routes/login.js'
+import signupRoutes from './routes/signup.js'
 
 const PORT = process.env.PORT ?? 3000
-const express = require('express')
 const app = express()
-const usersRoutes = require('./routes/users')
-const currenciesRoutes = require('./routes/currencies')
-const categoriesRoutes = require('./routes/categories')
-const expensesRoutes = require('./routes/expenses')
-const regularsRoutes = require('./routes/regulars')
-const loginRoutes = require('./routes/login')
-const signupRoutes = require('./routes/signup')
-const cors = require('cors')
 
 app.use(express.json())
 app.use(cors())

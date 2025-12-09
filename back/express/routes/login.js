@@ -1,9 +1,10 @@
-const express = require('express')
+import express from 'express'
+import { logIn } from '../controllers/auth.js'
+import catchAsync from '../utils/catchAsync.js'
+
 const router = express.Router()
-const { logIn } = require('../controllers/auth')
-const catchAsync = require('../utils/catchAsync')
 
 router.route('/')
     .post(catchAsync(logIn))
 
-module.exports = router
+export default router

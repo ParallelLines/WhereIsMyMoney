@@ -1,22 +1,23 @@
-const express = require('express')
+import express from 'express'
+import { getAll, create, deleteMany, getOne, editOne, deleteOne, getNextDate } from '../controllers/regulars.js'
+import catchAsync from '../utils/catchAsync.js'
+import verifyJWT from '../middleware.js'
+
 const router = express.Router()
-const regulars = require('../controllers/regulars')
-const catchAsync = require('../utils/catchAsync')
-const { verifyJWT } = require('../middleware')
 
 router.use(verifyJWT)
 
 router.route('/')
-    .get(catchAsync(regulars.getAll))
-    .post(catchAsync(regulars.create))
-    .delete(catchAsync(regulars.deleteMany))
+    .get(catchAsync(getAll))
+    .post(catchAsync(create))
+    .delete(catchAsync(deleteMany))
 
 router.route('/nextDate')
-    .post(catchAsync(regulars.getNextDate))
+    .post(catchAsync(getNextDate))
 
 router.route('/:id')
-    .get(catchAsync(regulars.getOne))
-    .put(catchAsync(regulars.editOne))
-    .delete(catchAsync(regulars.deleteOne))
+    .get(catchAsync(getOne))
+    .put(catchAsync(editOne))
+    .delete(catchAsync(deleteOne))
 
-module.exports = router
+export default router

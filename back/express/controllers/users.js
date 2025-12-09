@@ -1,12 +1,12 @@
-const db = require('../db')
+import db from '../db.js'
 
-module.exports.getOne = async (req, res) => {
+export async function getOne(req, res) {
     const { id } = req.params
     const user = await db.query(db.users.getOne, [id])
     res.json(user.rows)
 }
 
-module.exports.create = async (req, res) => {
+export async function create(req, res) {
     const newData = req.body
     await db.query(db.users.createOne, [
         newData.name,
@@ -15,7 +15,7 @@ module.exports.create = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.editOne = async (req, res) => {
+export async function editOne(req, res) {
     const { id } = req.params
     const userRes = await db.query(db.users.getOne, [id])
     const user = userRes.rows[0]
@@ -33,7 +33,7 @@ module.exports.editOne = async (req, res) => {
     }
 }
 
-module.exports.deleteOne = async (req, res) => {
+export async function deleteOne(req, res) {
     const { id } = req.params
     await db.query(db.users.deleteOne, [id])
     res.sendStatus(200)

@@ -1,11 +1,11 @@
-const db = require('../db')
-const HttpError = require('../utils/HttpError')
-const { datesEqual, calculateNextDate } = require('../utils/dateUtils')
-const { arraysEqual } = require('../utils/arrayUtils')
-const { isCategoryValid } = require('./categories')
-const { createExpense } = require('./expenses')
+import db from '../db.js'
+import HttpError from '../utils/HttpError.js'
+import { datesEqual, calculateNextDate } from '../utils/dateUtils.js'
+import { arraysEqual } from '../utils/arrayUtils.js'
+import { isCategoryValid } from './categories.js'
+import { createExpense } from './expenses.js'
 
-module.exports.getAll = async (req, res) => {
+export async function getAll(req, res) {
     const { userId } = req
     const { category = null } = req.query
     if (category && category !== 'null') {
@@ -17,25 +17,25 @@ module.exports.getAll = async (req, res) => {
     }
 }
 
-module.exports.getOne = async (req, res) => {
+export async function getOne(req, res) {
     const { id } = req.params
     const { userId } = req
     const regular = await db.query(db.regulars.getOne, [userId, id])
     res.json(regular.rows)
 }
 
-module.exports.getNextDate = async (req, res) => {
+export async function getNextDate(req, res) {
     if (!isPatternValid(req.body)) {
         res.status(400).send('repeat pattern is invalid :(')
         return
     }
-    result = {}
+    const result = {}
     const prev_date = req.body.prev_date ? new Date(req.body.prev_date) : null
     result.next_date = calculateNextDate(prev_date, req.body)
     res.json(result)
 }
 
-module.exports.create = async (req, res) => {
+export async function create(req, res) {
     const { userId } = req
     const newData = req.body
     newData.userId = userId
@@ -51,7 +51,7 @@ module.exports.create = async (req, res) => {
     res.json(result)
 }
 
-module.exports.editOne = async (req, res) => {
+export async function editOne(req, res) {
     const { id } = req.params
     const { userId } = req
 
@@ -118,7 +118,7 @@ module.exports.editOne = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.deleteOne = async (req, res) => {
+export async function deleteOne(req, res) {
     const { userId } = req
     const { id } = req.params
     if (!id) {
@@ -128,7 +128,7 @@ module.exports.deleteOne = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.deleteMany = async (req, res) => {
+export async function deleteMany(req, res) {
     const { userId } = req
     const { ids } = req.body
     if (!ids || !ids.length) {
@@ -140,7 +140,7 @@ module.exports.deleteMany = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.processRegulars = async () => {
+export async function processRegulars() {
     const regulars = await getPendingRegulars()
     for (let regular of regulars) {
         await processPendingRegular(regular)
@@ -149,6 +149,9 @@ module.exports.processRegulars = async () => {
 
 async function getPendingRegulars() {
     const result = await db.query(db.regulars.getPending)
+    result.rows.forEach((regular) => {
+        console.log(`found pending regular: ${regular.name} ${regular.next_date}`)
+    })
     return result.rows
 }
 
@@ -167,6 +170,7 @@ async function processPendingRegular(regular) {
             date: date.toISOString()
         }
         await createExpense(expense)
+        console.log(`expense created: ${expense.name} ${expense.date}`)
         date = calculateNextDate(date, regular)
     }
     await db.query(db.regulars.updateNextDate, [regular.user_id, regular.id, date.toISOString()])

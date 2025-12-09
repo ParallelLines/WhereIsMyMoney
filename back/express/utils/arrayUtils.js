@@ -39,4 +39,4 @@ function parseArray(str) {
     return arr
 }
 
-module.exports = { arraysEqual }
+export { arraysEqual }

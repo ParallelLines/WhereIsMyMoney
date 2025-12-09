@@ -1,7 +1,11 @@
-// if (process.env.NODE_ENV !== 'production') {
-//     require('dotenv').config()
-// }
-const { readSql } = require('./utils/sqlReader')
+import dotenv from 'dotenv'
+import readSql from './utils/sqlReader.js'
+import postgres from 'pg'
+
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config()
+}
+
 const categoriesGetAllRecursive = readSql('./sql/categoriesGetAllRecursive.sql')
 const categoriesGetPopular = readSql('./sql/categoriesGetPopular.sql')
 const expensesGetAll = readSql('./sql/expensesGetAll.sql')
@@ -18,7 +22,8 @@ const regularsUpdateNextDate = readSql('./sql/regularsUpdateNextDate.sql')
 const regularsExecutions = readSql('./sql/regularsExecutions.sql')
 const currenciesGetAll = readSql('./sql/currenciesGetAll.sql')
 
-const { Pool } = require('pg')
+const { Pool } = postgres
+
 const pool = new Pool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -85,7 +90,7 @@ const rates = {
     getRateByDateAndCurrency: 'SELECT rate FROM rates WHERE date = $1 AND from_currency = $2'
 }
 
-module.exports = {
+export default {
     query: (text, params) => pool.query(text, params),
     users: users,
     currencies: currencies,

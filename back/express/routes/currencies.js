@@ -1,18 +1,19 @@
-const express = require('express')
+import express from 'express'
+import { getAll, create, getOne, editOne, deleteOne } from '../controllers/currencies.js'
+import catchAsync from '../utils/catchAsync.js'
+import verifyJWT from '../middleware.js'
+
 const router = express.Router()
-const currencies = require('../controllers/currencies')
-const catchAsync = require('../utils/catchAsync')
-const { verifyJWT } = require('../middleware')
 
 router.use(verifyJWT)
 
 router.route('/')
-    .get(catchAsync(currencies.getAll))
-    .post(catchAsync(currencies.create))
+    .get(catchAsync(getAll))
+    .post(catchAsync(create))
 
 router.route('/:name')
-    .get(catchAsync(currencies.getOne))
-    .put(catchAsync(currencies.editOne))
-    .delete(catchAsync(currencies.deleteOne))
+    .get(catchAsync(getOne))
+    .put(catchAsync(editOne))
+    .delete(catchAsync(deleteOne))
 
-module.exports = router
+export default router

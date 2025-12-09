@@ -1,13 +1,13 @@
-const db = require('../db')
-const HttpError = require('../utils/HttpError')
-const { datesEqual } = require('../utils/dateUtils')
-const { isCategoryValid } = require('./categories')
+import db from '../db.js'
+import HttpError from '../utils/HttpError.js'
+import { datesEqual } from '../utils/dateUtils.js'
+import { isCategoryValid } from './categories.js'
 
 const ratesURL = process.env.CURRENCY_RATES_URL
 const ratesVersion = process.env.CURRENCY_RATES_API_VERSION
 const ratesEndpoint1 = process.env.CURRENCY_RATES_ENPOINT_1
 
-module.exports.getAll = async (req, res) => {
+export async function getAll(req, res) {
     const { userId } = req
     let { page = 0, elementsPerPage = 10, category = null } = req.query
     const offset = elementsPerPage * page
@@ -20,7 +20,7 @@ module.exports.getAll = async (req, res) => {
     }
 }
 
-module.exports.getNamesByPrefix = async (req, res) => {
+export async function getNamesByPrefix(req, res) {
     let { prefix } = req.params
     const { userId } = req
     prefix += '%'
@@ -28,23 +28,23 @@ module.exports.getNamesByPrefix = async (req, res) => {
     res.json(names.rows)
 }
 
-module.exports.getOne = async (req, res) => {
+export async function getOne(req, res) {
     const { id } = req.params
     const { userId } = req
     const expense = await db.query(db.expenses.getOne, [userId, id])
     res.json(expense.rows)
 }
 
-module.exports.create = async (req, res) => {
+export async function create(req, res) {
     const { userId } = req
     const newData = req.body
     newData.user_id = userId
     console.info('create expense: ', newData)
-    const result = await this.createExpense(newData)
+    const result = await createExpense(newData)
     res.json(result)
 }
 
-module.exports.editOne = async (req, res) => {
+export async function editOne(req, res) {
     const { id } = req.params
     const { userId } = req
     const expenseRes = await db.query(db.expenses.getOne, [userId, id])
@@ -83,7 +83,7 @@ module.exports.editOne = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.deleteOne = async (req, res) => {
+export async function deleteOne(req, res) {
     const { userId } = req
     const { id } = req.params
     if (!id) {
@@ -93,7 +93,7 @@ module.exports.deleteOne = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.deleteMany = async (req, res) => {
+export async function deleteMany(req, res) {
     const { userId } = req
     const { ids } = req.body
     if (!ids || !ids.length) {
@@ -105,7 +105,7 @@ module.exports.deleteMany = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.createExpense = async (expenseData) => {
+export async function createExpense(expenseData) {
     expenseData.inUSD = await calculateUSD(expenseData.sum, expenseData.date, expenseData.currency)
     if (!expenseData.reqular_id) {
         expenseData.reqular_id = null

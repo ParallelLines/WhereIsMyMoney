@@ -1,18 +1,18 @@
-const db = require('../db')
+import db from '../db.js'
 
-module.exports.getAll = async (req, res) => {
+export async function getAll(req, res) {
     const { userId } = req
     const currencies = await db.query(db.currencies.getAllOrdered, [userId])
     res.json(currencies.rows)
 }
 
-module.exports.getOne = async (req, res) => {
+export async function getOne(req, res) {
     const { name } = req.params
     const currencies = await db.query(db.currencies.getOne, [name])
     res.json(currencies.rows)
 }
 
-module.exports.create = async (req, res) => {
+export async function create(req, res) {
     const newData = req.body
     await db.query(db.currencies.createOne, [
         newData.name,
@@ -21,7 +21,7 @@ module.exports.create = async (req, res) => {
     res.sendStatus(200)
 }
 
-module.exports.editOne = async (req, res) => {
+export async function editOne(req, res) {
     const { name } = req.params
     const currencyRes = await db.query(db.currencies.getOne, [name])
     const currency = currencyRes.rows[0]
@@ -39,7 +39,7 @@ module.exports.editOne = async (req, res) => {
     }
 }
 
-module.exports.deleteOne = async (req, res) => {
+export async function deleteOne(req, res) {
     const { name } = req.params
     await db.query(db.currencies.deleteOne, [name])
     res.sendStatus(200)

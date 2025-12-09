@@ -1,10 +1,10 @@
-const db = require('../db')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+import db from '../db.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 const SECRET_KEY = process.env.SECRET_KEY
 const COOKIE_EXPIRATION = '100 days'
 
-module.exports.signUp = async (req, res) => {
+export async function signUp(req, res) {
     const { username, password } = req.body
     const salt = bcrypt.genSaltSync(10)
     const hashedPassword = await bcrypt.hash(password, salt)
@@ -19,7 +19,7 @@ module.exports.signUp = async (req, res) => {
     res.json(token)
 }
 
-module.exports.logIn = async (req, res) => {
+export async function logIn(req, res) {
     const { username, password } = req.body
     const result = await db.query(db.users.getOneByName, [username])
     if (!result.rowCount) {

@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
+
 const SECRET_KEY = process.env.SECRET_KEY
 
-module.exports.verifyJWT = (req, res, next) => {
+export default function verifyJWT(req, res, next) {
     const token = req.headers.authorization?.split(' ')[1]
 
     if (!token) return res.sendStatus(401)

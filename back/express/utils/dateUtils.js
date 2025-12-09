@@ -366,4 +366,4 @@ function calculateNextDate(prevDate, pattern) {
     return nextDate < endDate || datesEqual(nextDate, endDate) ? nextDate : null
 }
 
-module.exports = { datesEqual, addYears, calculateNextDate }
+export { datesEqual, addYears, calculateNextDate }

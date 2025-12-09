@@ -1,22 +1,23 @@
-const express = require('express')
+import express from 'express'
+import { getAll, create, deleteMany, getOne, editOne, deleteOne, getNamesByPrefix } from '../controllers/expenses.js'
+import catchAsync from '../utils/catchAsync.js'
+import verifyJWT from '../middleware.js'
+
 const router = express.Router()
-const expenses = require('../controllers/expenses')
-const catchAsync = require('../utils/catchAsync')
-const { verifyJWT } = require('../middleware')
 
 router.use(verifyJWT)
 
 router.route('/')
-    .get(catchAsync(expenses.getAll))
-    .post(catchAsync(expenses.create))
-    .delete(catchAsync(expenses.deleteMany))
+    .get(catchAsync(getAll))
+    .post(catchAsync(create))
+    .delete(catchAsync(deleteMany))
 
 router.route('/names/:prefix')
-    .get(catchAsync(expenses.getNamesByPrefix))
+    .get(catchAsync(getNamesByPrefix))
 
 router.route('/:id')
-    .get(catchAsync(expenses.getOne))
-    .put(catchAsync(expenses.editOne))
-    .delete(catchAsync(expenses.deleteOne))
+    .get(catchAsync(getOne))
+    .put(catchAsync(editOne))
+    .delete(catchAsync(deleteOne))
 
-module.exports = router
+export default router
