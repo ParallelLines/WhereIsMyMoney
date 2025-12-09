@@ -149,9 +149,6 @@ export async function processRegulars() {
 
 async function getPendingRegulars() {
     const result = await db.query(db.regulars.getPending)
-    result.rows.forEach((regular) => {
-        console.log(`found pending regular: ${regular.name} ${regular.next_date}`)
-    })
     return result.rows
 }
 
@@ -173,7 +170,9 @@ async function processPendingRegular(regular) {
         console.log(`expense created: ${expense.name} ${expense.date}`)
         date = calculateNextDate(date, regular)
     }
-    await db.query(db.regulars.updateNextDate, [regular.user_id, regular.id, date.toISOString()])
+    const dateForDB = date && date instanceof Date ? date.toISOString() : null
+    await db.query(db.regulars.updateNextDate, [regular.user_id, regular.id, dateForDB])
+    console.log('new date was written into DB: ', dateForDB)
 }
 
 async function createRegular(regularData, prevDate) {
