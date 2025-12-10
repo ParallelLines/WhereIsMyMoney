@@ -331,7 +331,6 @@ function calculateYearly(prevDate, pattern) {
  * @returns {Date} a Date object containing next date according to the pattern, or null in case the end_date already happend, or -1 in case of an error
  */
 function calculateNextDate(prevDate, pattern) {
-    console.log('calculating next date for pattern: ', pattern)
     const now = new Date()
     const endDate = pattern.end_date ? new Date(pattern.end_date) : null
     const freq = pattern.repeat_interval
