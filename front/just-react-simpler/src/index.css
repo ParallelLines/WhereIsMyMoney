@@ -1,5 +1,6 @@
 :root {
     --background: #ffffff;
+    --text-muted: #606060;
 }
 
 html {
@@ -167,6 +168,10 @@ body {
     color: var(--text-muted);
     font-size: 0.7rem;
     line-height: 0.7rem;
+}
+
+.expense.finished * {
+    color: var(--text-muted);
 }
 
 .regulars-form-container {

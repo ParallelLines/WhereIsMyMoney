@@ -22,7 +22,7 @@ export default function RegularExpense({ data, onCheckboxChange, isChecked }) {
     return (
         <>
             {!editMode &&
-                <div className='list-item expense'>
+                <div className={`list-item expense ${data.next_date ? '' : ' finished'}`}>
                     {deleteMode && <ConfirmationPopup
                         message={`Are you sure you want to delete ${data.name}?`}
                         onConfirm={() => del.mutate(data.id)}
@@ -40,7 +40,7 @@ export default function RegularExpense({ data, onCheckboxChange, isChecked }) {
                         <span className='regular-expense-name'>{data.name}</span>
                         <span className='expense-sum'>{data.sum}</span>
                         <span className='expense-currency' title={data.currency}>{data.symbol}</span>
-                        <span className='regular-expense-date'>next: {dateString(data.next_date)}</span>
+                        <span className='regular-expense-date'>next: {data.next_date ? dateString(data.next_date) : 'never'}</span>
                         <ColorMarker name={data.category_name} color={data.color} />
                         <span className='invisible-ctrls'>
                             <button
