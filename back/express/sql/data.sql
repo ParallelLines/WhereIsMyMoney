@@ -64,8 +64,7 @@ CREATE TABLE expenses (
     inUSD NUMERIC(10, 2),
     currency VARCHAR(8) NOT NULL REFERENCES currencies(name) ON DELETE RESTRICT,
     date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    regular_id BIGINT REFERENCES regulars(id) ON DELETE SET NULL,
-    regular_name VARCHAR(100)
+    regular_id BIGINT REFERENCES regulars(id) ON DELETE SET NULL
 );
 
 CREATE INDEX expenses_name_index ON expenses(name varchar_pattern_ops);
