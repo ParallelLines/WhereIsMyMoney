@@ -153,8 +153,7 @@ async function processPendingRegular(regular) {
             name: regular.name,
             sum: regular.sum,
             currency: regular.currency,
-            reqular_id: regular.regular_id,
-            regular_name: regular.name,
+            reqular_id: regular.id,
             date: date.toISOString()
         }
         await createExpense(expense)

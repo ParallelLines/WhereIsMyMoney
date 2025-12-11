@@ -109,7 +109,6 @@ export async function createExpense(expenseData) {
     expenseData.inUSD = await calculateUSD(expenseData.sum, expenseData.date, expenseData.currency)
     if (!expenseData.reqular_id) {
         expenseData.reqular_id = null
-        expenseData.regular_name = null
     }
     const isCatValid = await isCategoryValid(expenseData.category_id, expenseData.user_id)
     if (!isCatValid) {
@@ -123,7 +122,6 @@ export async function createExpense(expenseData) {
         expenseData.inUSD,
         expenseData.currency,
         expenseData.reqular_id,
-        expenseData.regular_name,
         expenseData.date
     ])
     return result.rows
@@ -187,6 +185,19 @@ async function getRateFromDB(date, currency) {
 
 /**
  * Fetches rates and returns them as an Object.
+ * 
+ * failed with 
+ * SyntaxError: Unexpected token 'C', "Couldn't f"... is not valid JSON
+    at JSON.parse (<anonymous>)
+    at parseJSONFromBytes (node:internal/deps/undici/undici:5682:19)
+    at successSteps (node:internal/deps/undici/undici:5663:27)
+    at fullyReadBody (node:internal/deps/undici/undici:4561:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async consumeBody (node:internal/deps/undici/undici:5672:7)
+    at async getRatesFromOutside (file:///Users/parallellines/code/WhereIsMyMoney/back/express/controllers/expenses.js:201:19)
+    at async calculateUSD (file:///Users/parallellines/code/WhereIsMyMoney/back/express/controllers/expenses.js:144:32)
+    at async createExpense (file:///Users/parallellines/code/WhereIsMyMoney/back/express/controllers/expenses.js:109:25)
+    at async processPendingRegular (file:///Users/parallellines/code/WhereIsMyMoney/back/express/controllers/regulars.js:160:9)
  * 
  * @param {String} date     '2024-08-31', or 'latest' by default.
  * @param {String} currency 'USD', 'EUR', etc.
