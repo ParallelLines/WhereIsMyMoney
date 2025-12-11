@@ -208,6 +208,8 @@ async function getRatesFromOutside(date = 'latest', currency = 'USD') {
     //info: https://github.com/fawazahmed0/exchange-api/issues/90
     //https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@2024-10-16/v1/currencies/usd.json
     const url = `${ratesURL}@${date}/${ratesVersion}/${ratesEndpoint1}/${currency.toLowerCase()}.json`
+    console.log('[getRatesFromOutside] requesting new rates for ', date)
+    console.log('[getRatesFromOutside] url: ', url)
     const response = await fetch(url)
     const rates = await response.json()
     return rates
