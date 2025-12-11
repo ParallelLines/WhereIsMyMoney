@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies, useFetchNextDate, useMonitorErrors } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
-import { formatDateForInput } from '../utils/date'
+import { convertDateToDatetime, formatDateForDateInput } from '../utils/date'
 import { prepareSum } from '../utils/useful'
 import ButtonsGrid from './ButtonsGrid'
 import { useErrorQueue } from '../utils/AppContext'
@@ -25,8 +25,8 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
     const [infinite, setInfinite] = useState(regularData?.end_date ? false : true)
     const [interval, setInterval] = useState(regularData ? regularData.repeat_interval : repeatInterval[2])
-    const [repeatEach, setRepeatEach] = useState(true)
-    const [repeatOn, setRepeatOn] = useState(false)
+    const [repeatEach, setRepeatEach] = useState(regularData ? !regularData.repeat_on_day_num : true)
+    const [repeatOn, setRepeatOn] = useState(regularData ? regularData.repeat_on_day_num : false)
     const { addError } = useErrorQueue()
 
     const now = new Date()
@@ -54,11 +54,13 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         repeat_on_weekday: weekdays[0]
     })
 
-    const startDate = formatDateForInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
-    const endDate = formatDateForInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
+    const startDate = formatDateForDateInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
+    const endDate = formatDateForDateInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
 
     const prepareData = useCallback(() => {
         const preparedData = { ...regular }
+        preparedData.start_date = convertDateToDatetime(preparedData.start_date)
+        preparedData.end_date = convertDateToDatetime(preparedData.end_date)
         if (infinite) preparedData.end_date = null
         preparedData.sum = prepareSum(preparedData.sum)
         preparedData.currency = preparedData.currency ? preparedData.currency : currenciesQuery.data?.[0].name
@@ -66,7 +68,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         if (repeatEach && !repeatOn) {
             preparedData.repeat_on_day_num = null
             preparedData.repeat_on_weekday = null
-            preparedData.repeat_each_day_of_month = preparedData.repeat_each_day_of_month.map(Number)
+            preparedData.repeat_each_day_of_month = preparedData.repeat_each_day_of_month?.map(Number)
         } else {
             preparedData.repeat_each_day_of_month = null
         }
@@ -218,7 +220,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     <input name='start_date'
                         id='startDate'
                         aria-label='regular expense start date'
-                        type='datetime-local'
+                        type='date'
                         onChange={handleChange}
                         defaultValue={startDate}
                         required
@@ -228,7 +230,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     <input name='end_date'
                         id='endDate'
                         aria-label='regular expense start date'
-                        type='datetime-local'
+                        type='date'
                         onChange={handleChange}
                         defaultValue={endDate}
                         disabled={infinite}

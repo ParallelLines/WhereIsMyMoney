@@ -14,6 +14,19 @@ export function dateString(dateStr) {
 /**
  * 
  * @param {String} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
+ * @returns {String} a string in a yyyy-mm-dd format
+ */
+export function formatDateForDateInput(dateStr) {
+    const date = new Date(dateStr)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+}
+
+/**
+ * 
+ * @param {String} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
  * @returns {String} a string in a "dd.MM.YYYY hh:mm" format
  */
 export function dateTimeString(dateStr) {
@@ -43,4 +56,17 @@ export function formatDateForInput(date) {
     const hours = String(date.getHours()).padStart(2, '0')
     const minutes = String(date.getMinutes()).padStart(2, '0')
     return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
+/**
+ * 
+ * @param {String} dateStr a string in the 'yyyy-mm-dd' format
+ * @returns {Date} a Date object with current time, but with the Day, Month and Year from the dateStr
+ */
+export function convertDateToDatetime(dateStr) {
+    const now = new Date()
+    const date = new Date(dateStr)
+    now.setFullYear(date.getFullYear())
+    now.setMonth(date.getMonth(), date.getDate())
+    return now
 }
