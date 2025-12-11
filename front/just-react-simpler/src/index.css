@@ -165,7 +165,6 @@ body {
 .regular-expense-date {
     min-width: 4rem;
     width: 5rem;
-    color: var(--text-muted);
     font-size: 0.7rem;
     line-height: 0.7rem;
 }
