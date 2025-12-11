@@ -4,6 +4,7 @@ import { formatDateForInput } from '../utils/date'
 import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'
 import { prepareSum } from '../utils/useful'
 import { useErrorQueue } from '../utils/AppContext'
+import CategoriesSelect from './CategoriesSelect'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
@@ -96,18 +97,7 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                     onChange={handleChange}
                     defaultValue={date}
                 />
-                {categoriesQuery.isLoading && <span>Loading...</span>}
-                <select name='category_id'
-                    aria-label='category of the expense'
-                    onChange={handleChange}
-                    defaultValue={expense.category_id}
-                    required
-                >
-                    {categoriesQuery.data?.map(category =>
-                        <option key={category.id} value={category.id}>
-                            {category.name}
-                        </option>)}
-                </select>
+                <CategoriesSelect defaultValue={expense.category_id} onChange={handleChange} />
                 <div className='btns'>
                     <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
                         {expenseData ? 'Save' : 'Create'}

@@ -155,7 +155,7 @@ export function useMonitorErrors(query, onCancel) {
         if (query.isError) {
             const message = query.error.response && query.error.response.data ? query.error.response.data : query.error.message
             addError(`Unexpected error: ${message}`)
-            onCancel()
+            if (onCancel) onCancel()
         }
     }, [query.isError, query.error, addError, onCancel])
 }

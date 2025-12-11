@@ -7,6 +7,7 @@ import ButtonsGrid from './ButtonsGrid'
 import { useErrorQueue } from '../utils/AppContext'
 import { useQueryClient } from '@tanstack/react-query'
 import { dateString } from '../utils/date'
+import CategoriesSelect from './CategoriesSelect'
 
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const queryClient = useQueryClient()
@@ -201,18 +202,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 {currency.symbol} {currency.name}
                             </option>)}
                     </select>
-                    {categoriesQuery.isPending && <div>Loading...</div>}
-                    <select name='category_id'
-                        aria-label='category of the regular expense'
-                        onChange={handleChange}
-                        defaultValue={regular.category_id}
-                        required
-                    >
-                        {categoriesQuery.data?.map(category =>
-                            <option key={category.id} value={category.id}>
-                                {category.name}
-                            </option>)}
-                    </select>
+                    <CategoriesSelect defaultValue={regular.category_id} onChange={handleChange} />
                 </div>
 
                 <div className='line'>
