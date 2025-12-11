@@ -360,9 +360,7 @@ function calculateNextDate(prevDate, pattern) {
             return null
         }
     }
-
-    if (!endDate) return nextDate
-    return nextDate < endDate || datesEqual(nextDate, endDate) ? nextDate : null
+    return !endDate || nextDate < endDate || datesEqual(nextDate, endDate) ? nextDate : null
 }
 
 export { datesEqual, addYears, calculateNextDate }

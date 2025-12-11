@@ -66,16 +66,7 @@ export async function editOne(req, res) {
         res.status(400).send('no such regular :(')
     }
     if (repeatPatternChanged(regular, req.body)) {
-        const prevDate = await findLastExecution(id)
-        const nextDate = calculateNextDate(prevDate, req.body)
-        if (nextDate === -1) throw new Error('Error while calculating next date')
-        if (nextDate) {
-            regular.next_date = nextDate.toISOString()
-            console.log('next date re-calcuated: ', regular.next_date)
-        } else {
-            regular.next_date = null
-            console.info(`regular id ${id} is ended and won't be executed further`)
-        }
+        regular.next_date = await reCalculateNextDate(regular, req.body)
     }
     if (req.body.category_id) {
         const isCatValid = await isCategoryValid(req.body.category_id, userId)
@@ -220,7 +211,7 @@ function repeatPatternChanged(oldData, newData) {
 }
 
 function isPatternValid(pattern) {
-    // console.info('Validating the pattern for a regular: ', pattern)
+    console.info('Validating the pattern for a regular: ', pattern)
 
     if (pattern.start_date === undefined ||
         pattern.repeat_interval === undefined ||
@@ -298,4 +289,16 @@ function isPatternValid(pattern) {
             return false
         }
     }
+}
+
+async function reCalculateNextDate(currRegular, newRegular) {
+    const prevDate = await findLastExecution(currRegular.id)
+    const nextDate = calculateNextDate(prevDate, newRegular)
+    if (nextDate === -1) throw new Error('Error while calculating next date')
+    if (nextDate) {
+        console.log('next date re-calcuated: ', nextDate)
+        return nextDate.toISOString()
+    }
+    console.info(`regular id ${currRegular.id} is ended and won't be executed further`)
+    return null
 }
