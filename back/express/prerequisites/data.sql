@@ -67,4 +67,12 @@ CREATE TABLE expenses (
     regular_id BIGINT REFERENCES regulars(id) ON DELETE SET NULL
 );
 
-CREATE INDEX expenses_name_index ON expenses(name varchar_pattern_ops);
+CREATE TABLE suggestions (
+    name VARCHAR(100),
+    category_id BIGINT REFERENCES categories(id) ON DELETE CASCADE,
+    count INTEGER,
+    PRIMARY KEY (name, category_id)
+);
+
+CREATE INDEX idx_expenses_name ON expenses(name varchar_pattern_ops);
+CREATE INDEX idx_expenses_name_category ON expenses(name, category_id);

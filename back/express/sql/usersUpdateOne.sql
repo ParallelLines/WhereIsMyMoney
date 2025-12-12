@@ -1,0 +1,1 @@
+UPDATE users SET name = $2, password = $3 WHERE id = $1

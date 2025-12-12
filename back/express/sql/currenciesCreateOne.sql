@@ -1,0 +1,1 @@
+INSERT INTO currencies (name, symbol) VALUES ($1, $2)

@@ -1,0 +1,1 @@
+DELETE FROM regulars WHERE user_id = $1 AND id IN

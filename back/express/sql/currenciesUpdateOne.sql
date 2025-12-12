@@ -1,0 +1,1 @@
+UPDATE currencies SET name = $2, symbol = $3 WHERE name = $1

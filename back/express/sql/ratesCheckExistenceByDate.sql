@@ -1,0 +1,1 @@
+SELECT EXISTS (SELECT 1 FROM rates WHERE date = $1)

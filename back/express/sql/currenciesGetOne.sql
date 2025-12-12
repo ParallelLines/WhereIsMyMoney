@@ -1,0 +1,1 @@
+SELECT * FROM currencies WHERE name = $1

@@ -1,0 +1,1 @@
+SELECT rate FROM rates WHERE date = $1 AND from_currency = $2

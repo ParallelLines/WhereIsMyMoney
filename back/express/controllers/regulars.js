@@ -127,7 +127,7 @@ export async function deleteMany(req, res) {
     }
     const offset = 2
     const placeholders = ids.map((val, i) => '$' + (i + offset)).join(', ')
-    await db.query(db.regulars.deleteMany + '(' + placeholders + ')', [userId, ...ids])
+    await db.query(db.regulars.deleteMany + ' (' + placeholders + ')', [userId, ...ids])
     res.sendStatus(200)
 }
 
@@ -210,8 +210,6 @@ function repeatPatternChanged(oldData, newData) {
 }
 
 function isPatternValid(pattern) {
-    console.info('Validating the pattern for a regular: ', pattern)
-
     if (pattern.start_date === undefined ||
         pattern.repeat_interval === undefined ||
         pattern.repeat_every === undefined ||
@@ -220,16 +218,19 @@ function isPatternValid(pattern) {
         pattern.repeat_each_month === undefined ||
         pattern.repeat_on_day_num === undefined ||
         pattern.repeat_on_weekday === undefined) {
+        console.info('The pattern for a regular: ', pattern)
         console.error('One of the following params is undefined: start_date, end_date, repeat_interval, repeat_every, repeat_each_weekday, repeat_each_day_of_month, repeat_each_month, repeat_on_day_num, repeat_on_weekday. \nThey should all be present in the request, even tho they can be null.')
         return false
     }
 
     if (!pattern.start_date || !pattern.repeat_interval || !pattern.repeat_every) {
+        console.info('The pattern for a regular: ', pattern)
         console.error('start_date, repeat_interval or repeat_every should never be null.')
         return false
     }
 
     if (pattern.repeat_every <= 0) {
+        console.info('The pattern for a regular: ', pattern)
         console.error('repeat_every should be more than 0.')
     }
 
@@ -240,10 +241,12 @@ function isPatternValid(pattern) {
         }
         case 'weekly': {
             if (!pattern.repeat_each_weekday) {
+                console.info('The pattern for a regular: ', pattern)
                 console.error('when repeat interval is "weekly" repeat_each_weekday should not be null.')
                 return false
             }
             if (pattern.repeat_each_weekday.length < 1) {
+                console.info('The pattern for a regular: ', pattern)
                 console.error('when repeat interval is "weekly" repeat_each_weekday should contain at least one day of week.')
                 return false
             }
@@ -253,15 +256,18 @@ function isPatternValid(pattern) {
             // TODO: check here if pattern.repeat_each_day_of_month === undeined and return false if it is?
             if (pattern.repeat_each_day_of_month) {
                 if (pattern.repeat_each_day_of_month.length < 1) {
+                    console.info('The pattern for a regular: ', pattern)
                     console.error('when repeat interval is "monthly" repeat_each_day_of_month should contain at least one day of month.')
                     return false
                 }
                 if (pattern.repeat_on_day_num || pattern.repeat_on_weekday) {
+                    console.info('The pattern for a regular: ', pattern)
                     console.error('when repeat interval is "monthly" and repeat_each_day_of_month exists the following params should be null: repeat_on_day_num, repeat_on_weekday.')
                     return false
                 }
             } else {
                 if (!pattern.repeat_on_day_num || !pattern.repeat_on_weekday) {
+                    console.info('The pattern for a regular: ', pattern)
                     console.error('when repeat interval is "monthly" and repeat_each_day_of_month is null the following params should not be null: repeat_on_day_num, repeat_on_weekday.')
                     return false
                 }
@@ -270,20 +276,24 @@ function isPatternValid(pattern) {
         }
         case 'yearly': {
             if (!pattern.repeat_each_month) {
+                console.info('The pattern for a regular: ', pattern)
                 console.error('when repeat interval is "yearly" repeat_each_month should not be null.')
                 return false
             }
             if (pattern.repeat_each_month.length < 1) {
+                console.info('The pattern for a regular: ', pattern)
                 console.error('when repeat interval is "yearly" repeat_each_month should contain at least one month.')
                 return false
             }
             if (!pattern.repeat_on_day_num !== !pattern.repeat_on_weekday) {
+                console.info('The pattern for a regular: ', pattern)
                 console.error('when repeat interval is "yearly" repeat_on_day_num and repeat_on_weekday should both be null or not null.')
                 return false
             }
             return true
         }
         default: {
+            console.info('The pattern for a regular: ', pattern)
             console.error('Unknown repeat interval: ', freq)
             return false
         }

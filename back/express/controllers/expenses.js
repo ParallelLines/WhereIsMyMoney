@@ -101,7 +101,7 @@ export async function deleteMany(req, res) {
     }
     const offset = 2
     const placeholders = ids.map((val, i) => '$' + (i + offset)).join(', ')
-    await db.query(db.expenses.deleteMany + '(' + placeholders + ')', [userId, ...ids])
+    await db.query(db.expenses.deleteMany + ' (' + placeholders + ')', [userId, ...ids])
     res.sendStatus(200)
 }
 
@@ -175,7 +175,7 @@ async function checkIfRatesExist(date) {
  */
 async function getRateFromDB(date, currency) {
     try {
-        const rates = await db.query(db.rates.getRateByDateAndCurrency, [date, currency])
+        const rates = await db.query(db.rates.getByDateAndCurrency, [date, currency])
         return parseFloat(rates.rows[0].rate)
     } catch (e) {
         console.error(e)

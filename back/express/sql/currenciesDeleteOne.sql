@@ -1,0 +1,1 @@
+DELETE FROM currencies WHERE name = $1

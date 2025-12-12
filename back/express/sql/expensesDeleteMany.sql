@@ -1,0 +1,1 @@
+DELETE FROM expenses WHERE user_id = $1 AND id IN
