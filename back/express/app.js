@@ -12,6 +12,7 @@ import expensesRoutes from './routes/expenses.js'
 import regularsRoutes from './routes/regulars.js'
 import loginRoutes from './routes/login.js'
 import signupRoutes from './routes/signup.js'
+import suggestionsRoutes from './routes/suggestions.js'
 
 const PORT = process.env.PORT ?? 3000
 const app = express()
@@ -23,6 +24,7 @@ app.use('/currencies', currenciesRoutes)
 app.use('/categories', categoriesRoutes)
 app.use('/expenses', expensesRoutes)
 app.use('/regulars', regularsRoutes)
+app.use('/suggestions', suggestionsRoutes)
 app.use('/signup', signupRoutes)
 app.use('/login', loginRoutes)
 

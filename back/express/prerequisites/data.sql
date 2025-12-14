@@ -59,7 +59,7 @@ CREATE TABLE expenses (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     category_id BIGINT REFERENCES categories(id) ON DELETE SET NULL,
-    name VARCHAR(100),
+    name VARCHAR(100) NOT NULL,
     sum NUMERIC(10, 2) NOT NULL,
     inUSD NUMERIC(10, 2),
     currency VARCHAR(8) NOT NULL REFERENCES currencies(name) ON DELETE RESTRICT,
@@ -67,10 +67,11 @@ CREATE TABLE expenses (
     regular_id BIGINT REFERENCES regulars(id) ON DELETE SET NULL
 );
 
-CREATE TABLE suggestions (
-    name VARCHAR(100),
-    category_id BIGINT REFERENCES categories(id) ON DELETE CASCADE,
-    count INTEGER,
+CREATE TABLE category_suggestions (
+    name VARCHAR(100) NOT NULL,
+    category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+    count INTEGER NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (name, category_id)
 );
 
