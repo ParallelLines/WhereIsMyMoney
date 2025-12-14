@@ -219,6 +219,7 @@ select {
 }
 
 .color-marker {
+    display: inline-block;
     min-width: 1rem;
     width: 1rem;
     height: 1rem;

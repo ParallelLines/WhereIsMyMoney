@@ -5,6 +5,16 @@ import { useErrorQueue, useSelectedCategory } from '../utils/AppContext'
 import { getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
 import { useEffect } from 'react'
+import { getCategoriesSuggestion } from '../apiService/suggestions'
+
+export const useFetchCategoriesSuggestion = (expenseName) => {
+    return useQuery({
+        queryKey: ['categories_suggestion', expenseName],
+        queryFn: () => getCategoriesSuggestion(expenseName),
+        enabled: expenseName ? expenseName.trim().length > 0 : false,
+        retry: retryAfterError
+    })
+}
 
 export const useFetchExpenses = () => {
     const { selectedCategory } = useSelectedCategory()

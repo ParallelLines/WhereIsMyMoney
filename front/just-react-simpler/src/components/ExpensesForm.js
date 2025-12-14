@@ -5,6 +5,8 @@ import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencie
 import { prepareSum } from '../utils/useful'
 import { useErrorQueue } from '../utils/AppContext'
 import CategoriesSelect from './CategoriesSelect'
+import ColorMarker from './ColorMarker'
+import CategoriesSuggestion from './CategoriesSuggestion'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
@@ -17,8 +19,8 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         name: '',
         sum: '',
         category_id: categoriesQuery.data?.[0].id,
-        category_name: '',
-        color: '',
+        category_name: categoriesQuery.data?.[0].name,
+        color: categoriesQuery.data?.[0].color,
         date: new Date()
     })
     const date = formatDateForInput(expenseData ? new Date(expenseData.date) : new Date(expense.date))
@@ -28,6 +30,17 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
             return {
                 ...currExpense,
                 [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    const changeCategory = (category) => {
+        setExpense(currExpense => {
+            return {
+                ...currExpense,
+                category_id: category.category_id,
+                category_name: category.name,
+                color: category.color
             }
         })
     }
@@ -62,49 +75,62 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
             onClose={onCancel}
         >
             <form className='inline-form' onSubmit={handleSubmit}>
-                <input name='name'
-                    className='standart-input'
-                    aria-label='name of expense'
-                    value={expense.name}
-                    onChange={handleChange}
-                    placeholder='name'
-                    autoFocus
-                    required
-                />
-                <input name='sum'
-                    className='short-input'
-                    aria-label='expense amount'
-                    value={expense.sum}
-                    onChange={handleChange}
-                    placeholder='45.99'
-                    required
-                />
-                {currenciesQuery.isLoading && <span>Loading...</span>}
-                <select name='currency'
-                    aria-label='expense currency'
-                    onChange={handleChange}
-                    value={expense.currency}
-                    required
-                >
-                    {currenciesQuery.data?.map(currency =>
-                        <option key={currency.name} value={currency.name}>
-                            {currency.symbol} {currency.name}
-                        </option>)}
-                </select>
-                <input name='date'
-                    aria-label='expense date'
-                    type='datetime-local'
-                    onChange={handleChange}
-                    defaultValue={date}
-                />
-                <CategoriesSelect defaultValue={expense.category_id} onChange={handleChange} />
-                <div className='btns'>
-                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
-                        {expenseData ? 'Save' : 'Create'}
-                    </button>
-                    <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
-                        Cancel
-                    </button>
+                <div className='line'>
+                    <input name='name'
+                        className='standart-input'
+                        aria-label='name of expense'
+                        value={expense.name}
+                        onChange={handleChange}
+                        placeholder='name'
+                        autoFocus
+                        required
+                    />
+                    <input name='sum'
+                        className='short-input'
+                        aria-label='expense amount'
+                        value={expense.sum}
+                        onChange={handleChange}
+                        placeholder='45.99'
+                        required
+                    />
+                    {currenciesQuery.isLoading && <span>Loading...</span>}
+                    <select name='currency'
+                        aria-label='expense currency'
+                        onChange={handleChange}
+                        value={expense.currency}
+                        required
+                    >
+                        {currenciesQuery.data?.map(currency =>
+                            <option key={currency.name} value={currency.name}>
+                                {currency.symbol} {currency.name}
+                            </option>)}
+                    </select>
+                    <input name='date'
+                        aria-label='expense date'
+                        type='datetime-local'
+                        onChange={handleChange}
+                        defaultValue={date}
+                    />
+                    <CategoriesSelect
+                        expenseName={expense.name}
+                        selectedCategoryId={expense.category_id}
+                        onChange={changeCategory}
+                    />
+                    <ColorMarker name={expense.category_name} color={expense.color} />
+                </div>
+                <div className='line'>
+                    Suggested categories:<br />
+                    <CategoriesSuggestion searchStr={expense.name} onSelect={changeCategory} />
+                </div>
+                <div className='line'>
+                    <div className='btns'>
+                        <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
+                            {expenseData ? 'Save' : 'Create'}
+                        </button>
+                        <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </form>
 
