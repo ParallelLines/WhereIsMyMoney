@@ -3,7 +3,7 @@ SELECT
     SUM(s.count) AS count,
     ca.name,
     ca.color
-FROM category_suggestions s
+FROM suggestions s
 LEFT JOIN categories ca ON s.category_id = ca.id
 WHERE ca.user_id = $1
   AND s.name ILIKE '%' || $2 || '%'

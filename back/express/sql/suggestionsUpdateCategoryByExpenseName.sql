@@ -1,4 +1,4 @@
-INSERT INTO category_suggestions (name, category_id, count)
+INSERT INTO suggestions (name, category_id, count)
 SELECT 
   name, 
   category_id, 
