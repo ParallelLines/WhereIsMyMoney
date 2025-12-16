@@ -43,7 +43,7 @@ export default function ExpensesList() {
                 {expensesToDelete.length > 0 && <button onClick={() => setDeleteMode(true)}>Delete selected</button>}
                 {expensesToDelete.length > 0 && <button onClick={() => setExpensesToDelete([])}>Cancel</button>}
             </div>
-            <div className={expensesToDelete.length > 0 ? 'list-column visible-checkbox' : 'list-column'} ref={scrollContainer}>
+            <div className={`list-column ${expensesToDelete.length > 0 ? 'visible-checkbox' : ''}`} ref={scrollContainer}>
                 {createMode && <ExpensesForm onCancel={() => setCreateMode(false)} onSubmit={() => setCreateMode(false)} />}
                 {query.isLoading && <div>Loading...</div>}
                 {query.isError && <div>Error: {query.error.message}</div>}

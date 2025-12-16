@@ -2,7 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { createExpense, deleteExpense, deleteExpenses, editExpense, getExpenses } from '../apiService/expenses'
 import { createRegular, deleteRegular, deleteRegulars, editRegular, getNextDate, getRegulars } from '../apiService/regulars'
 import { useErrorQueue, useSelectedCategory } from '../utils/AppContext'
-import { getCategories } from '../apiService/categories'
+import { createCategory, deleteCategories, deleteCategory, editCategory, getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
 import { useEffect } from 'react'
 import { getCategoriesSuggestion, getExpenseNamesSuggestion } from '../apiService/suggestions'
@@ -156,6 +156,38 @@ export const useFetchCategories = () => {
         queryFn: getCategories,
         staleTime: Infinity,
         retry: retryAfterError
+    })
+}
+
+export const useCreateCategory = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: createCategory,
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
+    })
+}
+
+export const useEditCategory = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: editCategory,
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
+    })
+}
+
+export const useDeleteCategory = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: deleteCategory,
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
+    })
+}
+
+export const useDeleteCategories = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: deleteCategories,
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
     })
 }
 

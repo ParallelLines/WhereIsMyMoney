@@ -5,20 +5,14 @@ import IconDelete from './icons/IconDelete'
 import { useState } from 'react'
 import ExpensesForm from './ExpensesForm'
 import ConfirmationPopup from './ConfirmationPopup'
-import { useDeleteExpense, useEditExpense } from '../utils/reactQueryHooks'
+import { useDeleteExpense } from '../utils/reactQueryHooks'
 
 export default function Expense({ data, onCheckboxChange, isChecked }) {
     const [editMode, setEditMode] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
     const date = new Date(data.date)
 
-    const edit = useEditExpense()
     const del = useDeleteExpense()
-
-    const handleEdit = () => {
-        setEditMode(false)
-        edit.mutate()
-    }
 
     return (
         <>
@@ -63,7 +57,7 @@ export default function Expense({ data, onCheckboxChange, isChecked }) {
             {editMode && <ExpensesForm
                 expenseData={data}
                 onCancel={() => setEditMode(false)}
-                onSubmit={handleEdit}
+                onSubmit={() => setEditMode(false)}
             />}
         </>
     )

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { dateString } from '../utils/date'
-import { useEditRegular, useDeleteRegular } from '../utils/reactQueryHooks'
+import { useDeleteRegular } from '../utils/reactQueryHooks'
 import IconEdit from './icons/IconEdit'
 import IconDelete from './icons/IconDelete'
 import ConfirmationPopup from './ConfirmationPopup'
@@ -11,13 +11,7 @@ export default function RegularExpense({ data, onCheckboxChange, isChecked }) {
     const [editMode, setEditMode] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
 
-    const edit = useEditRegular()
     const del = useDeleteRegular()
-
-    const handleEdit = () => {
-        setEditMode(false)
-        edit.mutate()
-    }
 
     return (
         <>
@@ -61,7 +55,7 @@ export default function RegularExpense({ data, onCheckboxChange, isChecked }) {
             {editMode && <RegularExpenseForm
                 regularData={data}
                 onCancel={() => setEditMode(false)}
-                onSubmit={handleEdit}
+                onSubmit={() => setEditMode(false)}
             />}
         </>
     )

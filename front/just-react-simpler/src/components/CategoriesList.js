@@ -1,22 +1,32 @@
 import Category from './Category'
-import { useQuery } from '@tanstack/react-query'
-import { getCategories } from '../apiService/categories'
+import { useFetchCategories } from '../utils/reactQueryHooks'
+import { useState } from 'react'
+import CategoryForm from './CategoryForm'
 
 export default function CategoriesList() {
-    const query = useQuery({ queryKey: ['categories'], queryFn: getCategories })
+    const [createMode, setCreateMode] = useState(false)
+
+    const query = useFetchCategories()
 
     return (
-        <div className="categories-list">
-            <div className="list-controls">
-                <button>+</button>
+        <div className='categories-list'>
+            <div className='list-controls'>
+                <button onClick={() => setCreateMode(true)}>+</button>
             </div>
-            <div className="list-column">
+            <div className='list-column'>
+                {createMode &&
+                    <CategoryForm
+                        level="1"
+                        onCancel={() => setCreateMode(false)}
+                        onSubmit={() => setCreateMode(false)}
+                    />
+                }
                 {query.isLoading && <div>Loading...</div>}
                 {query.isError && <div>Error: {query.error.message}</div>}
                 {query.data?.map(categorie => {
                     return (
                         <Category
-                            data={categorie}
+                            categoryData={categorie}
                             key={categorie.id}
                         />
                     )
