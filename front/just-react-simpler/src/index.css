@@ -188,8 +188,6 @@ body {
 .inline-form input,
 select {
     height: 1rem;
-    margin-right: 0.4rem;
-    margin-bottom: 0.4rem;
 }
 
 .inline-form .short-input {
@@ -262,6 +260,12 @@ select {
 
 .category.level-5 {
     margin-left: 4rem;
+}
+
+.line {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 button {

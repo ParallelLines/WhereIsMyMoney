@@ -1,17 +1,18 @@
 import { useRef, useState, useCallback } from 'react'
-import { useCalculatePosition, useClickOnBg } from '../utils/hooks'
+import { useCalculatePosition, useCalculatePositionWithRef, useClickOnBg } from '../utils/hooks'
 
 /**
- * 
- * @param {String} background blur or just null 
+ * @param {String} anchorClassName if defined, a div with this className
+ * @param {String} background blur or just null
  * @returns 
  */
-export default function VanishingBlock({ children, anchorClassName, containerClassName, background, onClose }) {
+export default function VanishingBlock({ children, anchorClassName, anchorRef, containerClassName, background, onClose }) {
     const [open, setOpen] = useState(true)
     const backgroundRef = useRef(null)
     const blockRef = useRef(null)
 
-    const { ref, position } = useCalculatePosition()
+    const { ref, position: positionByClassName } = useCalculatePosition()
+    const positionByRef = useCalculatePositionWithRef(anchorRef)
 
     const bg = background ? ' ' + background : ' clear'
     const centered = !anchorClassName ? ' centered' : ''
@@ -25,9 +26,14 @@ export default function VanishingBlock({ children, anchorClassName, containerCla
     let style = {
         position: 'relative'
     }
-    if (position) {
-        style.left = position.x + 'px'
-        style.top = position.y + 'px'
+    if (positionByClassName) {
+        style.left = positionByClassName.x + 'px'
+        style.top = positionByClassName.y + 'px'
+    }
+    if (positionByRef) {
+        style.position = 'fixed'
+        style.left = positionByRef.x + 'px'
+        style.top = positionByRef.y + 'px'
     }
 
     useClickOnBg(backgroundRef, blockRef, close)
@@ -38,7 +44,7 @@ export default function VanishingBlock({ children, anchorClassName, containerCla
             {anchorClassName &&
                 <div className={anchorClassName} ref={ref}></div>
             }
-            {(position || !anchorClassName) &&
+            {(positionByClassName || !anchorClassName) &&
                 <div className={bgClass} ref={backgroundRef}>
                     <div className={containerClassName} ref={blockRef} style={style}>
                         {children}

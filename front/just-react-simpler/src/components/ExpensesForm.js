@@ -7,6 +7,7 @@ import { useErrorQueue } from '../utils/AppContext'
 import CategoriesSelect from './CategoriesSelect'
 import ColorMarker from './ColorMarker'
 import CategoriesSuggestion from './CategoriesSuggestion'
+import ExpenseNameSuggestion from './ExpenseNameSuggestion'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const categoriesQuery = useFetchCategories()
@@ -76,14 +77,14 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         >
             <form className='inline-form' onSubmit={handleSubmit}>
                 <div className='line'>
-                    <input name='name'
-                        className='standart-input'
-                        aria-label='name of expense'
-                        value={expense.name}
-                        onChange={handleChange}
-                        placeholder='name'
-                        autoFocus
-                        required
+                    <ExpenseNameSuggestion
+                        searchStr={expense.name}
+                        onChange={(expenseName) => setExpense(currExpense => {
+                            return {
+                                ...currExpense,
+                                name: expenseName
+                            }
+                        })}
                     />
                     <input name='sum'
                         className='short-input'
@@ -111,15 +112,15 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                         onChange={handleChange}
                         defaultValue={date}
                     />
+                </div>
+                <div className='line'>
                     <CategoriesSelect
                         expenseName={expense.name}
                         selectedCategoryId={expense.category_id}
                         onChange={changeCategory}
                     />
                     <ColorMarker name={expense.category_name} color={expense.color} />
-                </div>
-                <div className='line'>
-                    Suggested categories:<br />
+                    Suggested:
                     <CategoriesSuggestion searchStr={expense.name} onSelect={changeCategory} />
                 </div>
                 <div className='line'>

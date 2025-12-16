@@ -87,6 +87,33 @@ export function useInfiniteScroll(scrollContainer, infiniteQuery) {
     }, [infiniteQuery, scrollContainer])
 }
 
+export function useCalculatePositionWithRef(elementRef) {
+    const [position, setPosition] = useState(null)
+
+    const updatePosition = useCallback(() => {
+        if (elementRef?.current) {
+            const rect = elementRef.current.getBoundingClientRect()
+            setPosition({ x: rect.left, y: rect.bottom + 4 })
+        }
+    }, [elementRef])
+
+    useEffect(() => {
+        if (!elementRef?.current) return
+
+        updatePosition()
+
+        window.addEventListener('resize', updatePosition)
+        window.addEventListener('scroll', updatePosition)
+
+        return () => {
+            window.removeEventListener('resize', updatePosition)
+            window.removeEventListener('scroll', updatePosition)
+        }
+    }, [elementRef, updatePosition])
+
+    return position
+}
+
 export function useCalculatePosition() {
     const [position, setPosition] = useState(null)
     const [element, setElement] = useState(null)
