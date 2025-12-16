@@ -9,3 +9,4 @@ GROUP BY s.name
 ORDER BY 
     (s.name ILIKE $2 || '%') DESC, 
     count DESC
+LIMIT 10
