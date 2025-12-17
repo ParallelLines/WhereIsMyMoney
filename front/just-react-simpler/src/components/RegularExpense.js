@@ -36,21 +36,21 @@ export default function RegularExpense({ data, onCheckboxChange, isChecked }) {
                         <span className='expense-currency' title={data.currency}>{data.symbol}</span>
                         <span className='regular-expense-date'>next: {data.next_date ? dateString(data.next_date) : 'never'}</span>
                         <ColorMarker name={data.category_name} color={data.color} />
-                        <span className='invisible-ctrls'>
-                            <button
-                                className='icon-btn invisible-ctrl'
-                                title='Edit'
-                                onClick={() => setEditMode(true)}>
-                                <IconEdit />
-                            </button>
-                            <button
-                                className='icon-btn invisible-ctrl'
-                                title='Delete'
-                                onClick={() => setDeleteMode(true)}>
-                                <IconDelete />
-                            </button>
-                        </span>
                     </label>
+                    <div className='invisible-ctrls'>
+                        <button
+                            className='icon-btn invisible-ctrl'
+                            title='Edit'
+                            onClick={() => setEditMode(true)}>
+                            <IconEdit />
+                        </button>
+                        <button
+                            className='icon-btn invisible-ctrl'
+                            title='Delete'
+                            onClick={() => setDeleteMode(true)}>
+                            <IconDelete />
+                        </button>
+                    </div>
                 </div>}
             {editMode && <RegularExpenseForm
                 regularData={data}

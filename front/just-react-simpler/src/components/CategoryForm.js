@@ -36,7 +36,6 @@ export default function CategoryForm({ categoryData, parentId, level, onCancel, 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('category at submit: ', category)
         try {
             if (!categoryData) {
                 await create.mutateAsync(category)

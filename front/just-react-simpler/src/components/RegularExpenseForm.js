@@ -8,6 +8,7 @@ import { useErrorQueue } from '../utils/AppContext'
 import { useQueryClient } from '@tanstack/react-query'
 import { dateString } from '../utils/date'
 import CategoriesSelect from './CategoriesSelect'
+import ColorMarker from './ColorMarker'
 
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const queryClient = useQueryClient()
@@ -84,6 +85,17 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
             }
         })
         if (triggerDateChangeFields.has(e.target.name)) queryClient.invalidateQueries({ queryKey: ['nextDate'] })
+    }
+
+    const changeCategory = (category) => {
+        setRegular(currRegular => {
+            return {
+                ...currRegular,
+                category_id: category.category_id,
+                category_name: category.name,
+                color: category.color
+            }
+        })
     }
 
     const setWeekdays = (selectedWeekdays) => {
@@ -202,7 +214,8 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 {currency.symbol} {currency.name}
                             </option>)}
                     </select>
-                    <CategoriesSelect defaultValue={regular.category_id} onChange={handleChange} />
+                    <CategoriesSelect defaultValue={regular.category_id} onChange={changeCategory} />
+                    <ColorMarker name={regular.category_name} color={regular.color} />
                 </div>
 
                 <div className='line'>
@@ -312,6 +325,8 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 checked={repeatEach}
                             ></input>
                             <label htmlFor='repeatGroupEach'>each</label>
+                        </div>
+                        <div className='line'>
                             <ButtonsGrid width={7} values={daysOfMonth} defaultSelected={regular.repeat_each_day_of_month} onSelect={setDaysOfMonth} disabled={!repeatEach} />
                         </div>
 
@@ -405,10 +420,13 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     </>
                 }
 
-                <div className='line'>will be scheduled after saving:
-                    {nextDateQuery.isLoading && ' Loading...'}
-                    {nextDateQuery.isError && ' Could not calculate the date'}
-                    {nextDateQuery.data?.data.next_date ? ' ' + dateString(nextDateQuery.data?.data.next_date) : ''}
+                <div className='line'>
+                    <span className='text-muted'>
+                        will be scheduled after saving on:
+                        {nextDateQuery.isLoading && ' Loading...'}
+                        {nextDateQuery.isError && ' Could not calculate the date'}
+                        {nextDateQuery.data?.data.next_date ? ' ' + dateString(nextDateQuery.data?.data.next_date) : ''}
+                    </span>
                 </div>
 
                 <div className='line btns'>

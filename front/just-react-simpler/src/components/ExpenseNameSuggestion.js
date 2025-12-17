@@ -6,8 +6,9 @@ export default function ExpenseNameSuggestion({ searchStr, onChange }) {
     const [selectedIndex, setSelectedIndex] = useState(-1)
     const [isOpen, setIsOpen] = useState(false)
     const inputRef = useRef(null)
+    const [nameChanged, setNameChanged] = useState(false)
 
-    const namesSuggestionQuery = useFetchExpenseNamesSuggestion(searchStr)
+    const namesSuggestionQuery = useFetchExpenseNamesSuggestion(searchStr, nameChanged)
     const suggestions = useMemo(
         () => namesSuggestionQuery.data || [],
         [namesSuggestionQuery.data]
@@ -57,6 +58,7 @@ export default function ExpenseNameSuggestion({ searchStr, onChange }) {
 
 
     const handleInputChange = (e) => {
+        setNameChanged(true)
         onChange(e.target.value)
         setIsOpen(true)
         setSelectedIndex(-1)
@@ -95,6 +97,7 @@ export default function ExpenseNameSuggestion({ searchStr, onChange }) {
                             <li key={idx}
                                 className={`suggestion-item ${idx === selectedIndex ? 'active' : ''}`}
                                 onMouseEnter={() => setSelectedIndex(idx)}
+                                onClick={() => selectSuggestion(row.name)}
                             >
                                 {row.name}
                             </li>

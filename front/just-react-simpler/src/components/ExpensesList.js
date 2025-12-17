@@ -38,7 +38,7 @@ export default function ExpensesList() {
                 }}
                 onCancel={() => setDeleteMode(false)}
             />}
-            <div className='list-controls'>
+            <div className='list-ctrls'>
                 <button onClick={() => setCreateMode(true)}>+</button>
                 {expensesToDelete.length > 0 && <button onClick={() => setDeleteMode(true)}>Delete selected</button>}
                 {expensesToDelete.length > 0 && <button onClick={() => setExpensesToDelete([])}>Cancel</button>}

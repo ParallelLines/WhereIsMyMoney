@@ -37,21 +37,21 @@ export default function Expense({ data, onCheckboxChange, isChecked }) {
                         <span className='expense-currency'>{data.symbol}</span>
                         <span className='expense-date' title={dateTimeString(date)}>{dateString(date)}</span>
                         <ColorMarker name={data.category_name} color={data.color} />
-                        <div className='invisible-ctrls'>
-                            <button
-                                className='icon-btn invisible-ctrl'
-                                title='Edit'
-                                onClick={() => setEditMode(true)}>
-                                <IconEdit />
-                            </button>
-                            <button
-                                className='icon-btn invisible-ctrl'
-                                title='Delete'
-                                onClick={() => setDeleteMode(true)}>
-                                <IconDelete />
-                            </button>
-                        </div>
                     </label>
+                    <div className='invisible-ctrls'>
+                        <button
+                            className='icon-btn invisible-ctrl'
+                            title='Edit'
+                            onClick={() => setEditMode(true)}>
+                            <IconEdit />
+                        </button>
+                        <button
+                            className='icon-btn invisible-ctrl'
+                            title='Delete'
+                            onClick={() => setDeleteMode(true)}>
+                            <IconDelete />
+                        </button>
+                    </div>
                 </div>
             }
             {editMode && <ExpensesForm

@@ -33,7 +33,7 @@ export default function RegularExpensesList() {
                 }}
                 onCancel={() => setDeleteMode(false)}
             />}
-            <div className='list-controls'>
+            <div className='list-ctrls'>
                 <button onClick={() => setCreateMode(true)}>+</button>
                 {regularsToDelete.length > 0 && <button onClick={() => setDeleteMode(true)}>Delete selected</button>}
                 {regularsToDelete.length > 0 && <button onClick={() => setRegularsToDelete([])}>Cancel</button>}

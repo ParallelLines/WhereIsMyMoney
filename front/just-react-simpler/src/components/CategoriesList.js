@@ -10,7 +10,7 @@ export default function CategoriesList() {
 
     return (
         <div className='categories-list'>
-            <div className='list-controls'>
+            <div className='list-ctrls'>
                 <button onClick={() => setCreateMode(true)}>+</button>
             </div>
             <div className='list-column'>

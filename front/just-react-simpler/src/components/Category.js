@@ -17,6 +17,7 @@ export default function Category({ categoryData }) {
     const selected = selectedCategory === categoryData.id
 
     const del = useDeleteCategory()
+    const deleteWarning = `Are you sure you want to delete ${categoryData.name} category? If it has child categories, they will be deleted too.`
 
     const handleSelect = () => {
         if (selectedCategory === categoryData.id) {
@@ -31,7 +32,7 @@ export default function Category({ categoryData }) {
             {!editMode &&
                 < div className={`list-item category level-${categoryData.level} ${selected ? 'selected' : ''}`}>
                     {deleteMode && <ConfirmationPopup
-                        message={`Are you sure you want to delete ${categoryData.name} category?`}
+                        message={deleteWarning}
                         onConfirm={() => {
                             del.mutate(categoryData.id)
                             setDeleteMode(false)

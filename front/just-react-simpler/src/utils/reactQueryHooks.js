@@ -16,11 +16,11 @@ export const useFetchCategoriesSuggestion = (expenseName) => {
     })
 }
 
-export const useFetchExpenseNamesSuggestion = (expenseName) => {
+export const useFetchExpenseNamesSuggestion = (expenseName, isEnabled = true) => {
     return useQuery({
         queryKey: ['expense_names_suggestion', expenseName],
         queryFn: () => getExpenseNamesSuggestion(expenseName),
-        enabled: expenseName ? expenseName.trim().length > 0 : false,
+        enabled: expenseName && isEnabled ? expenseName.trim().length > 0 : false,
         retry: retryAfterError
     })
 }

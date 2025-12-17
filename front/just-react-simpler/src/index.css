@@ -1,5 +1,7 @@
 :root {
     --background: #ffffff;
+    --background-selected: #d1d1d1;
+    --text-main: #323232;
     --text-muted: #606060;
 }
 
@@ -14,6 +16,7 @@ body {
     overflow-y: hidden;
     font-family: "Verdana", sans-serif;
     background-color: var(--background);
+    color: var(--text-main);
 }
 
 #root {
@@ -78,8 +81,10 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.list-controls {
+.list-ctrls {
     height: 7%;
+    display: flex;
+    justify-content: center;
 }
 
 .list-column {
@@ -173,12 +178,36 @@ body {
     color: var(--text-muted);
 }
 
+.expenses-form-container,
 .regulars-form-container {
     width: 25rem;
+    padding: 0.5rem;
+    border: 2px solid var(--text-muted);
+    border-radius: 10px;
 }
 
+.expenses-form-container .line,
 .regulars-form-container .line {
     width: 100%;
+}
+
+.suggestions-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--background);
+    padding: 0.2rem;
+    border: 2px solid var(--text-muted);
+    border-radius: 5px;
+}
+
+.suggestion-item {
+    color: var(--text-muted);
+}
+
+.suggestion-item.active {
+    color: var(--text-main);
+    background-color: var(--background-selected);
 }
 
 .inline-form {
@@ -268,12 +297,22 @@ select {
     gap: 0.4rem;
 }
 
+.text-muted {
+    color: var(--text-muted)
+}
+
+label {
+    cursor: pointer;
+}
+
 button {
+    cursor: pointer;
     background: none;
-    border: 2px solid #808080;
+    background-color: #b4b4b4;
     border-radius: 5px;
-    padding: 0.2rem 0.2rem;
+    padding: 0.2rem 0.3rem;
     margin-right: 0.4rem;
+    height: 1.5rem;
 }
 
 button.positive {
@@ -288,7 +327,7 @@ button.negative {
     background: none;
     border: none;
     border-radius: 0;
-    fill: var(--text-main);
+    fill: var(--text-muted);
     /* stroke: var(--text-main); */
     width: 1rem;
     min-height: 1rem;
