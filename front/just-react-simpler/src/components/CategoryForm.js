@@ -59,23 +59,25 @@ export default function CategoryForm({ categoryData, parentId, level, onCancel, 
             onClose={onCancel}
         >
             <form className='inline-form' onSubmit={handleSubmit}>
-                <input name='name'
-                    className='standart-input'
-                    aria-label='name of the category'
-                    value={category.name}
-                    onChange={handleChange}
-                    placeholder='name'
-                    autoFocus
-                    required
-                />
-                <PopoverPicker color={category.color} onChange={handleColorChange} />
-                <div className='btns'>
-                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
-                        {categoryData ? 'Save' : 'Create'}
-                    </button>
-                    <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
-                        Cancel
-                    </button>
+                <div className='line'>
+                    <input name='name'
+                        className='standart-input'
+                        aria-label='name of the category'
+                        value={category.name}
+                        onChange={handleChange}
+                        placeholder='name'
+                        autoFocus
+                        required
+                    />
+                    <PopoverPicker color={category.color} onChange={handleColorChange} />
+                    <div className='btns'>
+                        <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
+                            {categoryData ? 'Save' : 'Create'}
+                        </button>
+                        <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </form>
 

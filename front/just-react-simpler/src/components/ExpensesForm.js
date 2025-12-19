@@ -36,10 +36,11 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     }
 
     const changeCategory = (category) => {
+        console.log('changing category: ', category)
         setExpense(currExpense => {
             return {
                 ...currExpense,
-                category_id: category.category_id,
+                category_id: category.id,
                 category_name: category.name,
                 color: category.color
             }
@@ -123,15 +124,13 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                     Suggested:
                     <CategoriesSuggestion searchStr={expense.name} onSelect={changeCategory} />
                 </div>
-                <div className='line'>
-                    <div className='btns'>
-                        <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
-                            {expenseData ? 'Save' : 'Create'}
-                        </button>
-                        <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
-                            Cancel
-                        </button>
-                    </div>
+                <div className='line btns'>
+                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
+                        {expenseData ? 'Save' : 'Create'}
+                    </button>
+                    <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
+                        Cancel
+                    </button>
                 </div>
             </form>
 

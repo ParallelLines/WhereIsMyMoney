@@ -58,6 +58,12 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
     const startDate = formatDateForDateInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForDateInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
+    let repeatEveryUnit = 'day'
+    if (regular.repeat_interval === 'weekly') repeatEveryUnit = 'week'
+    if (regular.repeat_interval === 'monthly') repeatEveryUnit = 'month'
+    if (regular.repeat_interval === 'yearly') repeatEveryUnit = 'year'
+    const repeatEveryText = `${repeatEveryUnit}${regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}`
+
 
     const prepareData = useCallback(() => {
         const preparedData = { ...regular }
@@ -252,70 +258,42 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     </div>
                 }
 
-                <label htmlFor='repeatInterval'>frequency: </label>
-                <select name='repeat_interval'
-                    id='repeatInterval'
-                    aria-label='repeat interval of the regular expense'
-                    onChange={(e) => setInterval(e.target.value)}
-                    defaultValue={regular.repeat_interval}
-                    required
-                >
-                    {repeatInterval.map(str =>
-                        <option key={str} value={str}>
-                            {str}
-                        </option>)}
-                </select>
-
-                {interval === 'daily' &&
-                    <>
-                        <label htmlFor='repeatEvery'>every: </label>
-                        <input name='repeat_every'
-                            id='repeatEvery'
-                            className='short-input'
-                            type='number'
-                            value={regular.repeat_every}
-                            onChange={handleChange}
-                            min='1'
-                            required
-                        ></input>
-                        <span> day{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
-                    </>
-                }
+                <div className='line'>
+                    <label htmlFor='repeatInterval'>frequency: </label>
+                    <select name='repeat_interval'
+                        id='repeatInterval'
+                        aria-label='repeat interval of the regular expense'
+                        onChange={(e) => setInterval(e.target.value)}
+                        defaultValue={regular.repeat_interval}
+                        required
+                    >
+                        {repeatInterval.map(str =>
+                            <option key={str} value={str}>
+                                {str}
+                            </option>)}
+                    </select>
+                    <label htmlFor='repeatEvery'>every: </label>
+                    <input name='repeat_every'
+                        id='repeatEvery'
+                        className='short-input'
+                        type='number'
+                        value={regular.repeat_every}
+                        onChange={handleChange}
+                        min='1'
+                        required
+                    ></input>
+                    <span> {repeatEveryText}</span>
+                </div>
 
                 {interval === 'weekly' &&
-                    <>
-                        <label htmlFor='repeatEvery'>every: </label>
-                        <input name='repeat_every'
-                            id='repeatEvery'
-                            className='short-input'
-                            type='number'
-                            value={regular.repeat_every}
-                            onChange={handleChange}
-                            min='1'
-                            required
-                        ></input>
-                        <span> week{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
-                        <div className='line'>
-                            <span>on: </span>
-                            <ButtonsGrid width={7} values={weekdays} defaultSelected={regular.repeat_each_weekday} onSelect={setWeekdays} />
-                        </div>
-                    </>
+                    <div className='line'>
+                        <span>on: </span>
+                        <ButtonsGrid width={7} values={weekdays} defaultSelected={regular.repeat_each_weekday} onSelect={setWeekdays} />
+                    </div>
                 }
 
                 {interval === 'monthly' &&
                     <>
-                        <label htmlFor='repeatEvery'>every: </label>
-                        <input name='repeat_every'
-                            id='repeatEvery'
-                            className='short-input'
-                            type='number'
-                            value={regular.repeat_every}
-                            onChange={handleChange}
-                            min='1'
-                            required
-                        ></input>
-                        <span> month{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
-
                         <div className='line'>
                             <input name='repeatGroup'
                                 id='repeatGroupEach'
@@ -369,18 +347,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
                 {interval === 'yearly' &&
                     <>
-                        <label htmlFor='repeatEvery'>every: </label>
-                        <input name='repeat_every'
-                            id='repeatEvery'
-                            className='short-input'
-                            type='number'
-                            value={regular.repeat_every}
-                            onChange={handleChange}
-                            min='1'
-                            required
-                        ></input>
-                        <span> year{regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}</span>
-
                         <div className='line'>
                             <span>in: </span>
                             <ButtonsGrid width={4} values={months} defaultSelected={regular.repeat_each_month} onSelect={setMonths} />
