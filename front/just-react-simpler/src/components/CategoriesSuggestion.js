@@ -12,7 +12,7 @@ export default function CategoriesSuggestion({ searchStr, onSelect }) {
                     color={category.color}
                     onClick={(e) => {
                         e.preventDefault()
-                        onSelect(category)
+                        onSelect({ ...category, id: category.category_id })
                     }}
                 />
             ))}

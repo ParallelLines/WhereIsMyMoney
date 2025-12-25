@@ -36,7 +36,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     }
 
     const changeCategory = (category) => {
-        console.log('changing category: ', category)
         setExpense(currExpense => {
             return {
                 ...currExpense,
@@ -121,7 +120,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                         onChange={changeCategory}
                     />
                     <ColorMarker name={expense.category_name} color={expense.color} />
-                    Suggested:
                     <CategoriesSuggestion searchStr={expense.name} onSelect={changeCategory} />
                 </div>
                 <div className='line btns'>
