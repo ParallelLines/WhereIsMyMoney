@@ -13,3 +13,7 @@ export async function getExpenseNames(req, res) {
     const categories = await db.query(db.suggestions.getExpenseNames, [userId, name])
     res.json(categories.rows)
 }
+
+export async function updateSuggestionsTable() {
+    await db.query(db.suggestions.updateCategoryByExpenseName)
+}

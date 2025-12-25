@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== 'production') {
     dotenv.config()
 }
 import './scheduler/regularExpensesScheduler.js'
+import './scheduler/suggestionsUpdateScheduler.js'
 import express from 'express'
 import cors from 'cors'
 import usersRoutes from './routes/users.js'
