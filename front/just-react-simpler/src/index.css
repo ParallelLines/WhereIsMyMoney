@@ -67,10 +67,14 @@ body {
     width: 100%;
 }
 
-.vanishing-bg.centered {
+/* .vanishing-bg.centered {
     display: flex;
     justify-content: center;
     align-items: center;
+} */
+.vanishing-bg.centered>div {
+    top: 30%;
+    margin: auto;
 }
 
 .vanishing-bg.clear {
@@ -200,6 +204,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 0.5rem;
     background-color: var(--background);
     padding: 0.2rem;
     border: 2px solid var(--text-muted);
@@ -319,7 +324,7 @@ button {
     background: none;
     background-color: #b4b4b4;
     border-radius: 5px;
-    padding: 0.2rem 0.3rem;
+    padding: 0 0.3rem;
     margin-right: 0.4rem;
     height: 1.5rem;
 }
@@ -348,6 +353,13 @@ button.negative {
 button.icon-btn:hover {
     background: none;
     fill: var(--border-color);
+}
+
+.confirmation-popup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20rem;
 }
 
 .errors-container {
@@ -435,5 +447,83 @@ button.icon-btn:hover {
 
     .regular-expenses-list {
         display: none;
+    }
+}
+
+@media (max-width: 565px) {
+    html {
+        font-size: 15px;
+    }
+
+    .inline-form input,
+    .inline-form select,
+    .inline-form input.short-input,
+    .inline-form input.standart-input {
+        width: 14rem;
+        height: 2rem;
+        padding: 0.2rem 0.2rem;
+        font-size: 1.2rem;
+    }
+
+    button {
+        height: 2rem;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .line {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .line.btns {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .expenses-list {
+        min-width: 10rem;
+        width: 100%;
+    }
+
+    .expense {
+        gap: 0.7rem;
+    }
+
+    .expense-name {
+        min-width: 0;
+        width: 3rem;
+    }
+
+    .expense-sum {
+        min-width: 2rem;
+        width: 3rem;
+    }
+
+    .expense-currency {
+        width: 1rem;
+    }
+
+    .expense-date {
+        min-width: 2rem;
+        width: 4rem;
+    }
+
+    .invisible-ctrl {
+        display: inline;
+    }
+
+    .expenses-form-container,
+    .regulars-form-container {
+        width: 15rem;
+        padding: 1rem;
+        border: 2px solid var(--text-muted);
+        border-radius: 10px;
+    }
+
+    .suggestions-list {
+        width: 15rem;
+        font-size: 1.5rem;
+        overflow-x: hidden;
     }
 }
