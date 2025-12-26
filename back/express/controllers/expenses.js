@@ -124,6 +124,7 @@ export async function createExpense(expenseData) {
         expenseData.reqular_id,
         expenseData.date
     ])
+    await db.query(db.suggestions.addOneExpense, [expenseData.name, expenseData.category_id])
     return result.rows
 }
 
