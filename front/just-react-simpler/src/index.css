@@ -3,6 +3,15 @@
     --background-selected: #d1d1d1;
     --text-main: #323232;
     --text-muted: #a1a1a1;
+    --button-color: rgb(234, 155, 19);
+    --button-color-hover: rgb(243, 195, 113);
+    --button-positive-color: rgb(19, 234, 205);
+    --button-positive-color-hover: rgb(117, 234, 240);
+    --button-negative-color: rgb(221, 107, 124);
+    --button-negative-color-hover: rgb(228, 161, 171);
+    --button-calender-color: rgb(170, 170, 170);
+    --button-calender-color-hover: rgb(221, 221, 221);
+    --button-calender-color-selected: var(--button-positive-color);
 }
 
 html {
@@ -57,6 +66,7 @@ body {
 
 .categories-list {
     grid-area: column-3;
+    padding-bottom: 3rem;
 }
 
 .vanishing-bg {
@@ -191,8 +201,11 @@ body {
 .regulars-form-container {
     width: 25rem;
     padding: 0.5rem;
-    border: 2px solid var(--text-muted);
+    /* border: 2px solid var(--text-muted); */
+    background-color: #ffffff;
     border-radius: 10px;
+    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15);
+    ;
 }
 
 .expenses-form-container .line,
@@ -250,13 +263,17 @@ select {
 .calendar button {
     border: 1px solid white;
     border-radius: 0;
-    background-color: #a9a9a9;
+    background-color: var(--button-calender-color);
     padding: 0;
     margin: 0;
 }
 
+.calendar button:hover {
+    background-color: var(--button-calender-color-hover);
+}
+
 .calendar button[aria-pressed="true"] {
-    background-color: #a2ebb6;
+    background-color: var(--button-calender-color-selected);
 }
 
 .color-marker {
@@ -322,24 +339,50 @@ label {
 button {
     cursor: pointer;
     background: none;
-    background-color: #b4b4b4;
+    background-color: var(--button-color);
     border-radius: 5px;
     padding: 0 0.3rem;
     margin-right: 0.4rem;
     height: 1.5rem;
 }
 
+button:hover {
+    background-color: var(--button-color-hover);
+}
+
+button:active {
+    background-color: var(--button-color-hover);
+    box-shadow: inset 0.2rem 0.2rem 0.3rem rgba(0, 0, 0, 0.15);
+}
+
 button.positive {
-    background-color: #a2ebb6;
+    background-color: var(--button-positive-color);
+}
+
+button.positive:hover {
+    background-color: var(--button-positive-color-hover);
+}
+
+button.positive:active {
+    background-color: var(--button-positive-color-hover);
 }
 
 button.negative {
-    background-color: #eba9a2;
+    background-color: var(--button-negative-color);
+}
+
+button.negative:hover {
+    background-color: var(--button-negative-color-hover);
+}
+
+button.negative:active {
+    background-color: var(--button-negative-color-hover);
 }
 
 .icon-btn {
     background: none;
     border: none;
+    box-shadow: none;
     border-radius: 0;
     fill: var(--text-muted);
     /* stroke: var(--text-main); */
@@ -353,6 +396,12 @@ button.negative {
 button.icon-btn:hover {
     background: none;
     fill: var(--border-color);
+}
+
+button.icon-btn:active {
+    background: none;
+    fill: var(--border-color);
+    box-shadow: none;
 }
 
 .confirmation-popup-container {
@@ -517,8 +566,6 @@ button.icon-btn:hover {
     .regulars-form-container {
         width: 15rem;
         padding: 1rem;
-        border: 2px solid var(--text-muted);
-        border-radius: 10px;
     }
 
     .suggestions-list {
