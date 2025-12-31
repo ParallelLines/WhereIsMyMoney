@@ -115,7 +115,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                 </div>
                 <div className='line'>
                     <CategoriesSelect
-                        expenseName={expense.name}
                         selectedCategoryId={expense.category_id}
                         onChange={changeCategory}
                     />

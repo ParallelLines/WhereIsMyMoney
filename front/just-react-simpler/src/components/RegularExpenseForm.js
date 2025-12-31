@@ -222,7 +222,10 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 {currency.symbol} {currency.name}
                             </option>)}
                     </select>
-                    <CategoriesSelect defaultValue={regular.category_id} onChange={changeCategory} />
+                    <CategoriesSelect
+                        selectedCategoryId={regular.category_id}
+                        onChange={changeCategory}
+                    />
                     <ColorMarker name={regular.category_name} color={regular.color} />
                 </div>
 
