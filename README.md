@@ -11,6 +11,7 @@ run the back/express/prerequisites/**data.sql** to create a 'budget' DB with all
 ⚙️ **DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME** for DB connection  
 ⚙️ **SECRET_KEY** for encryption  
 ⚙️ **CURRENCY_RATES_URL, CURRENCY_RATES_API_VERSION, CURRENCY_RATES_ENPOINT_1** for requesting currencies  
+
 go to back/**express**
 run
 ```
