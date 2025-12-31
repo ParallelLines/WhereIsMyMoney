@@ -31,6 +31,7 @@ to start the app
 go to front/**just-react-simpler**
 run 
 ```
+npm install
 npm run build
 ```
 the 'build' folder will appear with the current build
