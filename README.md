@@ -20,6 +20,10 @@ npm run deploy
 to start the app
 
 ## FRONTEND
+⚙️ the app will need all the env params from front/just-react-simpler/**.env**  
+⚙️ **REACT_APP_BACKEND_URL** to know where backend is  
+⚙️ **REACT_APP_COOKIE_AUTH_NAME** how the auth cookie should be called  
+
 go to front/**just-react-simpler**
 run 
 ```
