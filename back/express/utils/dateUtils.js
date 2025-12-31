@@ -305,7 +305,9 @@ function calculateYearly(prevDate, pattern) {
         const nextMonth = findNextMonth(prevMonth, pattern.repeat_each_month)
         const nextYear = nextMonth <= prevMonth ? prevYear + interval : prevYear
         const daysInPrevMonth = daysInMonth(prevMonth, prevYear)
+        const daysInNextMonth = daysInMonth(nextMonth, nextYear)
         let finalDate = Math.min(fixedDate, daysInPrevMonth)
+        const finalDateNext = Math.min(fixedDate, daysInNextMonth)
         if (pattern.repeat_on_day_num) {
             const dayNum = pattern.repeat_on_day_num
             const dayType = pattern.repeat_on_weekday
@@ -317,8 +319,13 @@ function calculateYearly(prevDate, pattern) {
                 return nextDate
             }
         }
-        nextDate.setFullYear(prevYear)
-        nextDate.setMonth(prevMonth, finalDate)
+        const shouldJumpToNextDate = !isMonthInArray(prevMonth, pattern.repeat_each_month)
+        nextDate.setFullYear(shouldJumpToNextDate ? nextYear : prevYear)
+        if (shouldJumpToNextDate) {
+            nextDate.setMonth(nextMonth, finalDateNext)
+        } else {
+            nextDate.setMonth(prevMonth, finalDate)
+        }
     }
     return nextDate
 }
