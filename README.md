@@ -17,6 +17,10 @@ run the back/express/prerequisites/**data.sql** to create a 'budget' DB with all
 go to back/**express**
 run
 ```
+npm install
+```
+and then
+```
 npm run deploy
 ```
 to start the app
