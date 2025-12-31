@@ -32,6 +32,9 @@ go to front/**just-react-simpler**
 run 
 ```
 npm install
+```
+and then run
+```
 npm run build
 ```
 the 'build' folder will appear with the current build
