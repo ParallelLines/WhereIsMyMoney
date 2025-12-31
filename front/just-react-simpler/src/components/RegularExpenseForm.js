@@ -18,15 +18,22 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const edit = useEditRegular()
 
     const repeatInterval = ['daily', 'weekly', 'monthly', 'yearly']
+    const repeatIntervalText = ['day', 'week', 'month', 'year']
     const daysOfMonth = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
     const dayNums = ['first', 'second', 'third', 'forth', 'fifth', 'last']
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const weekdaysExtended = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'day', 'weekday', 'weekend day']
     const triggerDateChangeFields = new Set(['start_date', 'end_date', 'repeat_interval', 'repeat_every'])
+    const prepareRepeatEveryText = (intervalStr, repeatEveryNum) => {
+        const idx = repeatInterval.indexOf(intervalStr)
+        const text = repeatIntervalText[idx]
+        return Number.parseInt(repeatEveryNum) === 1 ? text : text + 's'
+    }
 
     const [infinite, setInfinite] = useState(regularData?.end_date ? false : true)
     const [interval, setInterval] = useState(regularData ? regularData.repeat_interval : repeatInterval[2])
+    const [repeatEveryText, setRepeatEveryText] = useState(regularData ? prepareRepeatEveryText(regularData.repeat_interval, regularData.repeat_every) : repeatIntervalText[2])
     const [repeatEach, setRepeatEach] = useState(regularData ? !regularData.repeat_on_day_num : true)
     const [repeatOn, setRepeatOn] = useState(regularData ? regularData.repeat_on_day_num : false)
     const { addError } = useErrorQueue()
@@ -58,12 +65,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
 
     const startDate = formatDateForDateInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForDateInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
-    let repeatEveryUnit = 'day'
-    if (regular.repeat_interval === 'weekly') repeatEveryUnit = 'week'
-    if (regular.repeat_interval === 'monthly') repeatEveryUnit = 'month'
-    if (regular.repeat_interval === 'yearly') repeatEveryUnit = 'year'
-    const repeatEveryText = `${repeatEveryUnit}${regular.repeat_every === '1' || regular.repeat_every === 1 ? '' : 's'}`
-
 
     const prepareData = useCallback(() => {
         const preparedData = { ...regular }
@@ -90,6 +91,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 [e.target.name]: e.target.value
             }
         })
+        if (e.target.name === 'repeat_every') setRepeatEveryText(prepareRepeatEveryText(interval, e.target.value))
         if (triggerDateChangeFields.has(e.target.name)) queryClient.invalidateQueries({ queryKey: ['nextDate'] })
     }
 
@@ -263,7 +265,10 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     <select name='repeat_interval'
                         id='repeatInterval'
                         aria-label='repeat interval of the regular expense'
-                        onChange={(e) => setInterval(e.target.value)}
+                        onChange={(e) => {
+                            setInterval(e.target.value)
+                            setRepeatEveryText(prepareRepeatEveryText(e.target.value, regular.repeat_every))
+                        }}
                         defaultValue={regular.repeat_interval}
                         required
                     >
