@@ -1,0 +1,36 @@
+version: '3.3'
+services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:?error}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?error}
+      POSTGRES_DB: ${DB_NAME:-budget}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./back/express/prerequisites/data.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  back:
+    build: ./back/express
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=production
+      - DB_USER=${DB_USER:?error}
+      - DB_PASSWORD=${DB_PASSWORD:?error}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-budget}
+      - SECRET_KEY=${SECRET_KEY:?error}
+      - CURRENCY_RATES_URL=${CURRENCY_RATES_URL:-https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api}
+      - CURRENCY_RATES_API_VERSION=${CURRENCY_RATES_API_VERSION:-v1}
+      - CURRENCY_RATES_ENPOINT_1=${CURRENCY_RATES_ENPOINT_1:-currencies}
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  postgres_data:

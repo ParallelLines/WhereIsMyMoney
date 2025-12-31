@@ -1,4 +1,4 @@
-CREATE DATABASE budget;
+-- CREATE DATABASE budget;
 
 DROP TABLE IF EXISTS users, categories, rates, currencies, expenses, regulars, suggestions;
 DROP TYPE IF EXISTS recurrence, weekday, month, day_num, weekday_extended;

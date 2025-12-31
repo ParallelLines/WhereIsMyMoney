@@ -42,3 +42,22 @@ and then run
 npm run build
 ```
 the 'build' folder will appear with the current build
+
+## DOCKER SETUP 
+
+This project includes a Dockerized setup for the backend and database.
+
+### Prerequisites
+- Docker and Docker Compose installed.
+- Host Nginx configured to serve static files and proxy API requests.
+
+### Steps
+1. Copy the environment variables example or create a `.env` file in the root:
+   ```bash
+   cp .env.example .env
+   ```
+2. Build and start the backend and database:
+   ```bash
+   # Use 'docker compose' (V2) or 'docker-compose' (V1)
+   docker compose up --build
+   ```
