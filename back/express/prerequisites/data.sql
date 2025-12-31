@@ -1,6 +1,6 @@
 CREATE DATABASE budget;
 
-DROP TABLE IF EXISTS users, categories, inusd, currencies, expenses, regulars;
+DROP TABLE IF EXISTS users, categories, rates, currencies, expenses, regulars, suggestions;
 DROP TYPE IF EXISTS recurrence, weekday, month, day_num, weekday_extended;
 
 CREATE TYPE recurrence AS ENUM ('daily', 'weekly', 'monthly', 'yearly');
@@ -67,7 +67,7 @@ CREATE TABLE expenses (
     regular_id BIGINT REFERENCES regulars(id) ON DELETE SET NULL
 );
 
-CREATE TABLE category_suggestions (
+CREATE TABLE suggestions (
     name VARCHAR(100) NOT NULL,
     category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
     count INTEGER NOT NULL DEFAULT 0,
@@ -77,3 +77,13 @@ CREATE TABLE category_suggestions (
 
 CREATE INDEX idx_expenses_name ON expenses(name varchar_pattern_ops);
 CREATE INDEX idx_expenses_name_category ON expenses(name, category_id);
+
+INSERT INTO currencies(name, symbol) VALUES
+    ('RUB', '₽'),
+    ('BYN', 'Br'),
+    ('PLN', 'zł'),
+    ('TRY', '₺'),
+    ('JPY', '¥'),
+    ('KRW', '₩'),
+    ('USD', '$'),
+    ('EUR', '€');
