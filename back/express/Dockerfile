@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -12,4 +12,4 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD ["npm", "run", "deploy"]
+CMD ["node", "app.js"]
