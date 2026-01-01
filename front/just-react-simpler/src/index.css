@@ -81,11 +81,6 @@ body {
     width: 100%;
 }
 
-/* .vanishing-bg.centered {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} */
 .vanishing-bg.centered>div {
     top: 30%;
     margin: auto;
@@ -580,5 +575,9 @@ button.icon-btn:active {
         width: 15rem;
         font-size: 1.5rem;
         overflow-x: hidden;
+    }
+
+    .vanishing-bg.centered>div {
+        top: 10%;
     }
 }
