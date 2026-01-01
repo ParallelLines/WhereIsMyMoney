@@ -1,7 +1,7 @@
 import cron from 'node-cron'
 import { processRegulars } from '../controllers/regulars.js'
 
-cron.schedule('0 */6 * * *', async () => {
+cron.schedule('0 */1 * * *', async () => {
     try {
         let timeNow = new Date()
         console.log(`[${timeNow.toISOString()}][Scheduler - Regular Expenses]: started`)
