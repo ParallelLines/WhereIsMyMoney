@@ -51,6 +51,10 @@ body {
     gap: 1rem 1rem;
 }
 
+.logout {
+    grid-area: logo;
+}
+
 .pie-chart {
     grid-area: graph-3;
 }
