@@ -1,3 +1,6 @@
+# env files
+.env
+
 # vite build dir
 dist/
 
@@ -405,6 +408,9 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# JetBrains IDEs
+.idea
 
 # JetBrains Rider
 *.sln.iml
