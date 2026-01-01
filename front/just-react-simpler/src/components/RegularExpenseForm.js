@@ -62,7 +62,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         repeat_on_day_num: dayNums[0],
         repeat_on_weekday: weekdays[0]
     })
-
     const startDate = formatDateForDateInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForDateInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
 
@@ -99,7 +98,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         setRegular(currRegular => {
             return {
                 ...currRegular,
-                category_id: category.category_id,
+                category_id: category.id,
                 category_name: category.name,
                 color: category.color
             }
