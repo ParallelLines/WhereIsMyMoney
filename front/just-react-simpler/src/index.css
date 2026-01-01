@@ -498,6 +498,10 @@ button.icon-btn:active {
             "column-2";
     }
 
+    .logout {
+        grid-area: graph-2;
+    }
+
     .regular-expenses-list {
         display: none;
     }
