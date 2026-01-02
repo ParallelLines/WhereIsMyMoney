@@ -10,7 +10,6 @@ import CategoriesSuggestion from './CategoriesSuggestion'
 import ExpenseNameSuggestion from './ExpenseNameSuggestion'
 
 export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
-    const categoriesQuery = useFetchCategories()
     const currenciesQuery = useFetchCurrencies()
     const create = useCreateExpense()
     const edit = useEditExpense()
@@ -19,9 +18,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     const [expense, setExpense] = useState(expenseData ? expenseData : {
         name: '',
         sum: '',
-        category_id: categoriesQuery.data?.[0].id,
-        category_name: categoriesQuery.data?.[0].name,
-        color: categoriesQuery.data?.[0].color,
         date: new Date()
     })
     const date = formatDateForInput(expenseData ? new Date(expenseData.date) : new Date(expense.date))
@@ -67,7 +63,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
     }
 
     useMonitorErrors(currenciesQuery, onCancel)
-    useMonitorErrors(categoriesQuery, onCancel)
 
     return (
         <VanishingBlock

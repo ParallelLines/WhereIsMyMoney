@@ -12,7 +12,6 @@ import ColorMarker from './ColorMarker'
 
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const queryClient = useQueryClient()
-    const categoriesQuery = useFetchCategories()
     const currenciesQuery = useFetchCurrencies()
     const create = useCreateRegular()
     const edit = useEditRegular()
@@ -49,9 +48,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const [regular, setRegular] = useState(regularData ? regularData : {
         name: '',
         sum: '',
-        category_id: categoriesQuery.data?.[0].id,
-        category_name: '',
-        color: '',
         start_date: now,
         end_date: yearLater,
         repeat_interval: repeatInterval[2],
@@ -181,7 +177,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const nextDateQuery = useFetchNextDate(preparedData)
 
     useMonitorErrors(currenciesQuery, onCancel)
-    useMonitorErrors(categoriesQuery, onCancel)
     useMonitorErrors(nextDateQuery, onCancel)
 
     return (

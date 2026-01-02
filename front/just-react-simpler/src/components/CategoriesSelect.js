@@ -17,6 +17,7 @@ export default function CategoriesSelect({ selectedCategoryId, onChange }) {
                 }}
                 required
             >
+                <option value=''>-- Please select --</option>
                 {categoriesQuery.data?.map(category =>
                     <option key={category.id} value={category.id}>
                         {category.path.length > 1 ? category.path.map(_ => '-') : ''}
