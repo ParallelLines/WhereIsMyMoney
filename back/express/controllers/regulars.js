@@ -30,8 +30,13 @@ export async function getNextDate(req, res) {
         return
     }
     const result = {}
-    const prev_date = req.body.prev_date ? new Date(req.body.prev_date) : null
-    result.next_date = calculateNextDate(prev_date, req.body)
+    let prevDate
+    if (req.body.prev_date) {
+        prevDate = new Date(req.body.prevDate)
+    } else {
+        prevDate = await findLastExecution(req.body.id)
+    }
+    result.next_date = calculateNextDate(prevDate, req.body)
     res.json(result)
 }
 
@@ -193,7 +198,7 @@ async function createRegular(regularData, prevDate) {
 
 async function findLastExecution(regularId) {
     const dates = await db.query(db.regulars.getExecutionTimes, [regularId])
-    if (dates.rows.length) return dates.rows[0]
+    if (dates.rows.length) return dates.rows[0].date
     return null
 }
 

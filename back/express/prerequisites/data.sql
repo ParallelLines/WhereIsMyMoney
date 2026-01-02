@@ -86,4 +86,5 @@ INSERT INTO currencies(name, symbol) VALUES
     ('JPY', '¥'),
     ('KRW', '₩'),
     ('USD', '$'),
-    ('EUR', '€');
+    ('EUR', '€'),
+    ('SEK', 'kr');
