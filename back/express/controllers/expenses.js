@@ -5,7 +5,7 @@ import { isCategoryValid } from './categories.js'
 
 const ratesURL = process.env.CURRENCY_RATES_URL
 const ratesVersion = process.env.CURRENCY_RATES_API_VERSION
-const ratesEndpoint1 = process.env.CURRENCY_RATES_ENPOINT_1
+const ratesEndpoint1 = process.env.CURRENCY_RATES_ENDPOINT_1
 
 export async function getAll(req, res) {
     const { userId } = req
