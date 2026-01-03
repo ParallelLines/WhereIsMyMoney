@@ -472,7 +472,6 @@ button.icon-btn:active {
     flex-direction: column;
     gap: 0.5rem;
     pointer-events: none;
-    /* Allows clicks to pass through to elements below */
 }
 
 .error-message {
@@ -484,7 +483,6 @@ button.icon-btn:active {
     max-width: 20rem;
     word-wrap: break-word;
     pointer-events: auto;
-    /* Re-enable pointer events on the message itself */
     animation: slideIn 0.3s ease-out;
 }
 

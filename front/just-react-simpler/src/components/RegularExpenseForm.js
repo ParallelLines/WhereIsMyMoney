@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useCreateRegular, useEditRegular, useFetchCategories, useFetchCurrencies, useFetchNextDate, useMonitorErrors } from '../utils/reactQueryHooks'
+import { useCreateRegular, useEditRegular, useFetchCurrencies, useFetchNextDate, useMonitorErrors } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
 import { convertDateToDatetime, formatDateForDateInput } from '../utils/date'
 import { prepareSum } from '../utils/useful'

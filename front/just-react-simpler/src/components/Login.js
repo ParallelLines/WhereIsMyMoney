@@ -39,7 +39,7 @@ export default function Login() {
             })
             .catch(e => {
                 if (e.response) {
-                    addError(e.response.data)
+                    addError(e.response.statusText)
                 } else
                     console.log(e)
             })

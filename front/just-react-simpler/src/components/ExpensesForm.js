@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
-import { useCreateExpense, useEditExpense, useFetchCategories, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'
+import { useCreateExpense, useEditExpense, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'
 import { prepareSum } from '../utils/useful'
 import { useErrorQueue } from '../utils/AppContext'
 import CategoriesSelect from './CategoriesSelect'
