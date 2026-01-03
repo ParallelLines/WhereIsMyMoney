@@ -1,4 +1,4 @@
-version: '3.3'
+version: "3.3"
 services:
   db:
     image: postgres:17-alpine
@@ -28,7 +28,7 @@ services:
       - SECRET_KEY=${SECRET_KEY:?error}
       - CURRENCY_RATES_URL=${CURRENCY_RATES_URL:-https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api}
       - CURRENCY_RATES_API_VERSION=${CURRENCY_RATES_API_VERSION:-v1}
-      - CURRENCY_RATES_ENPOINT_1=${CURRENCY_RATES_ENPOINT_1:-currencies}
+      - CURRENCY_RATES_ENDPOINT_1=${CURRENCY_RATES_ENDPOINT_1:-currencies}
     ports:
       - "127.0.0.1:3000:3000"
 
