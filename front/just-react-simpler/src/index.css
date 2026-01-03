@@ -203,7 +203,6 @@ body {
 .regulars-form-container {
     width: 25rem;
     padding: 0.5rem;
-    /* border: 2px solid var(--text-muted); */
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15);
@@ -224,10 +223,14 @@ body {
     padding: 0.2rem;
     border: 2px solid var(--text-muted);
     border-radius: 5px;
+    width: 17rem;
+    overflow-x: hidden;
 }
 
 .suggestion-item {
     color: var(--text-muted);
+    overflow-x: hidden;
+    white-space: nowrap;
 }
 
 .suggestion-item.active {
@@ -623,9 +626,8 @@ button.icon-btn:active {
     }
 
     .suggestions-list {
-        width: 15rem;
-        font-size: 1.5rem;
-        overflow-x: hidden;
+        font-size: 1.8rem;
+        gap: 0.8rem;
     }
 
     .vanishing-bg.centered>div {

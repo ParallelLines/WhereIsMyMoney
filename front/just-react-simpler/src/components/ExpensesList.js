@@ -58,8 +58,8 @@ export default function ExpensesList() {
 
                     ))
                 })}
-                {query.isFetchingNextPage && <span>Loading more...</span>}
-                {!query.hasNextPage && <span>Nothing more to load</span>}
+                {query.isFetchingNextPage && <span className='text-muted'>Loading more...</span>}
+                {!query.hasNextPage && <span className='text-muted'>Nothing more to load</span>}
             </div>
 
         </div >

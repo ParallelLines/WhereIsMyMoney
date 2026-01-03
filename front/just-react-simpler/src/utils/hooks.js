@@ -87,15 +87,21 @@ export function useInfiniteScroll(scrollContainer, infiniteQuery) {
     }, [infiniteQuery, scrollContainer])
 }
 
-export function useCalculatePositionWithRef(elementRef) {
+export function useCalculatePositionWithRef(elementRef, popoverWidth, popoverHeight) {
     const [position, setPosition] = useState(null)
 
     const updatePosition = useCallback(() => {
         if (elementRef?.current) {
             const rect = elementRef.current.getBoundingClientRect()
-            setPosition({ x: rect.left, y: rect.bottom + 4 })
+            const windowWidth = window.innerWidth
+            const windowHeight = window.innerHeight
+            let calcX = rect.left
+            let calcY = rect.bottom + 4
+            if (calcX + popoverWidth > windowWidth) calcX = windowWidth - popoverWidth
+            if (calcY + popoverHeight > windowHeight) calcY = rect.top - 4 - popoverHeight
+            setPosition({ x: calcX, y: calcY })
         }
-    }, [elementRef])
+    }, [elementRef, popoverWidth, popoverHeight])
 
     useEffect(() => {
         if (!elementRef?.current) return

@@ -9,8 +9,12 @@ export default function PopoverPicker({ color, onChange }) {
 
     return (
         <>
-            <ColorMarker color={color} name="choose color" onClick={() => setPickerOpen(true)} ref={ref} />
-            {pickerOpen && <VanishingBlock anchorRef={ref} containerClassName="color-picker" onClose={() => setPickerOpen(false)}>
+            <ColorMarker color={color} name='choose color' onClick={() => setPickerOpen(true)} ref={ref} />
+            {pickerOpen && <VanishingBlock
+                anchorRef={ref}
+                containerClassName='color-picker'
+                onClose={() => setPickerOpen(false)}
+            >
                 <HexColorPicker color={color} onChange={onChange} />
             </VanishingBlock>}
         </>

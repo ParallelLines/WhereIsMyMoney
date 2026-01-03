@@ -6,16 +6,16 @@ import { useCalculatePosition, useCalculatePositionWithRef, useClickOnBg } from 
  * @param {String} background blur or just null
  * @returns 
  */
-export default function VanishingBlock({ children, anchorClassName, anchorRef, containerClassName, background, onClose }) {
+export default function VanishingBlock({ children, anchorClassName, anchorRef, popoverWidth = 200, popoverHeight = 200, containerClassName, background, onClose }) {
     const [open, setOpen] = useState(true)
     const backgroundRef = useRef(null)
     const blockRef = useRef(null)
 
     const { ref, position: positionByClassName } = useCalculatePosition()
-    const positionByRef = useCalculatePositionWithRef(anchorRef)
+    const positionByRef = useCalculatePositionWithRef(anchorRef, popoverWidth, popoverHeight)
 
     const bg = background ? ' ' + background : ' clear'
-    const centered = !anchorClassName ? ' centered' : ''
+    const centered = !anchorClassName && !anchorRef ? ' centered' : ''
     const bgClass = 'vanishing-bg' + bg + centered
 
     const close = useCallback(() => {

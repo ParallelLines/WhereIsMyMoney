@@ -87,6 +87,7 @@ export default function ExpenseNameSuggestion({ searchStr, onChange }) {
             {isOpen && suggestions.length > 0 &&
                 <VanishingBlock
                     anchorRef={inputRef}
+                    popoverWidth={340} //17rem * 20px
                     onClose={() => {
                         setIsOpen(false)
                         setSelectedIndex(-1)
