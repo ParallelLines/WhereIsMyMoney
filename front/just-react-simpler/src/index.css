@@ -6,7 +6,7 @@
     --button-color: rgb(234, 155, 19);
     --button-color-hover: rgb(243, 195, 113);
     --button-positive-color: rgb(19, 234, 205);
-    --button-positive-color-hover: rgb(117, 234, 240);
+    --button-positive-color-hover: rgb(130, 245, 230);
     --button-negative-color: rgb(221, 107, 124);
     --button-negative-color-hover: rgb(228, 161, 171);
     --button-dull-color: rgb(164, 149, 124);
@@ -218,7 +218,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: 0.3rem;
     background-color: var(--background);
     padding: 0.2rem;
     border: 2px solid var(--text-muted);
@@ -231,6 +231,7 @@ body {
     color: var(--text-muted);
     overflow-x: hidden;
     white-space: nowrap;
+    line-height: 1.3rem;
 }
 
 .suggestion-item.active {
@@ -628,6 +629,10 @@ button.icon-btn:active {
     .suggestions-list {
         font-size: 1.8rem;
         gap: 0.8rem;
+    }
+
+    .suggestion-item {
+        height: 2rem;
     }
 
     .vanishing-bg.centered>div {
