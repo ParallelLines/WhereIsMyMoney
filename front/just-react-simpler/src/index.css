@@ -131,8 +131,8 @@ body {
 }
 
 .invisible-ctrls {
-    min-width: 3rem;
-    width: 3rem;
+    min-width: 2.6rem;
+    width: 2.6rem;
 }
 
 .invisible-ctrl {
@@ -190,7 +190,7 @@ body {
 
 .regular-expense-date {
     min-width: 4rem;
-    width: 5rem;
+    width: 4.5rem;
     font-size: 0.7rem;
     line-height: 0.7rem;
 }
@@ -304,7 +304,13 @@ select {
     border-radius: var(--input-radius);
 }
 
-.category.selected {
+.category-name {
+    padding: 0 0.2rem;
+    line-height: 1.5rem;
+    border-radius: 5px;
+}
+
+.category.selected .category-name {
     background-color: #c4c4c4;
 }
 

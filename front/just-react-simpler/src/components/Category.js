@@ -39,7 +39,7 @@ export default function Category({ categoryData }) {
                         }}
                         onCancel={() => setDeleteMode(false)}
                     />}
-                    <span onClick={handleSelect}>{categoryData.name}</span>
+                    <span className='category-name' onClick={handleSelect}>{categoryData.name}</span>
                     <ColorMarker name={categoryData.name} color={categoryData.color} />
                     <div className='invisible-ctrls'>
                         <button
