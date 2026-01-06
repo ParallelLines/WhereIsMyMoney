@@ -177,7 +177,6 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
     const nextDateQuery = useFetchNextDate(preparedData)
 
     useMonitorErrors(currenciesQuery, onCancel)
-    useMonitorErrors(nextDateQuery, onCancel)
 
     return (
         <VanishingBlock
