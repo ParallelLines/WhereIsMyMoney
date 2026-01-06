@@ -150,8 +150,8 @@ async function getPendingRegulars() {
 
 async function processPendingRegular(regular) {
     let now = new Date()
-    let date = new Date(regular.next_date)
-    while (date && date !== -1 && (date < now || datesEqual(now, date))) {
+    let currNextDate = new Date(regular.next_date)
+    while (currNextDate && currNextDate !== -1 && (currNextDate < now || datesEqual(now, currNextDate))) {
         const expense = {
             user_id: regular.user_id,
             category_id: regular.category_id,
@@ -159,13 +159,23 @@ async function processPendingRegular(regular) {
             sum: regular.sum,
             currency: regular.currency,
             reqular_id: regular.id,
-            date: date.toISOString()
+            date: currNextDate.toISOString()
         }
         await createExpense(expense)
         console.log(`expense created: ${expense.name} ${expense.date}`)
-        date = calculateNextDate(date, regular)
+        const newNextDate = calculateNextDate(currNextDate, regular)
+        if (datesEqual(currNextDate, newNextDate)) {
+            console.log(`LOOKS LIKE A CYCLE! - the dates look equal: prev next date ${currNextDate.toISOString()} and new next date ${newNextDate.toISOString()}`)
+            console.log('this is because the calculateNextDate returned the same date as before')
+            console.log('prevDate: ', currNextDate)
+            console.log('pattern: ', regular)
+            console.log('the regular expense will be stopped to prevent endless execution')
+            currNextDate = null
+            break
+        }
+        currNextDate = newNextDate
     }
-    const dateForDB = date && date instanceof Date ? date.toISOString() : null
+    const dateForDB = currNextDate && currNextDate instanceof Date ? currNextDate.toISOString() : null
     await db.query(db.regulars.updateNextDate, [regular.user_id, regular.id, dateForDB])
     console.log('new date was written into DB: ', dateForDB)
 }
