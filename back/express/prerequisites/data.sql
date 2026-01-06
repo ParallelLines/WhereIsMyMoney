@@ -77,6 +77,9 @@ CREATE TABLE suggestions (
 
 CREATE INDEX idx_expenses_name ON expenses(name varchar_pattern_ops);
 CREATE INDEX idx_expenses_name_category ON expenses(name, category_id);
+CREATE INDEX idx_expenses_user_id ON expenses(user_id);
+CREATE INDEX idx_expenses_date ON expenses(date);
+CREATE INDEX idx_expenses_date_category ON expenses(date, category_id);
 
 INSERT INTO currencies(name, symbol) VALUES
     ('RUB', '₽'),
