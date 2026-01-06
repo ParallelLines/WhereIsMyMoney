@@ -199,6 +199,10 @@ body {
     color: var(--text-muted);
 }
 
+.expense.finished .confirmation-popup-container * {
+    color: var(--text-main);
+}
+
 .expenses-form-container,
 .regulars-form-container {
     width: 25rem;
