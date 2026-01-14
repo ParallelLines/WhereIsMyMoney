@@ -358,7 +358,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 onChange={() => setRepeatOn(!repeatOn)}
                                 checked={repeatOn}
                             ></input>
-                            <label htmlFor='repeatOn'>on the:</label>
+                            <label htmlFor='repeatOn'>on:</label>
                             <select name='repeat_on_day_num'
                                 aria-label='on which day by number to repeat'
                                 onChange={handleChange}
@@ -397,11 +397,11 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 </div>
 
                 <div className='line btns'>
-                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
-                        {regularData ? 'Save' : 'Create'}
-                    </button>
                     <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
                         Cancel
+                    </button>
+                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
+                        {regularData ? 'Save' : 'Create'}
                     </button>
                 </div>
             </form>

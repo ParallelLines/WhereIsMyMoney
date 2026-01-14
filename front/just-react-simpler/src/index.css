@@ -55,7 +55,9 @@ body {
 }
 
 .logout {
-    grid-area: logo;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
 
 .pie-chart {
@@ -85,7 +87,7 @@ body {
 }
 
 .vanishing-bg.centered>div {
-    top: 30%;
+    top: 20%;
     margin: auto;
 }
 
@@ -98,15 +100,16 @@ body {
 }
 
 .list-ctrls {
-    height: 7%;
+    height: 10%;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .list-column {
     min-width: 0;
     width: 100%;
-    height: 93%;
+    height: 90%;
     overflow-y: scroll;
     overflow-x: hidden;
     display: flex;
@@ -165,6 +168,7 @@ body {
 }
 
 .regular-expense-name {
+    flex-grow: 1;
     min-width: 4rem;
     width: 6rem;
     overflow: hidden;
@@ -207,11 +211,10 @@ body {
 .expenses-form-container,
 .regulars-form-container {
     width: 25rem;
-    padding: 0.5rem;
+    padding: 1rem;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15);
-    ;
 }
 
 .expenses-form-container .line,
@@ -266,9 +269,21 @@ select {
     width: 7rem;
 }
 
-.inline-form .btns {
-    display: inline-block;
-    margin: 0.4rem 0rem;
+.inline-form .btns,
+.confirmation-popup-container .btns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.1rem;
+}
+
+.calendar .line {
+    gap: 0.1rem;
 }
 
 .calendar button {
@@ -277,6 +292,8 @@ select {
     background-color: var(--button-calender-color);
     padding: 0;
     margin: 0;
+    width: 2rem;
+    height: 2rem;
 }
 
 .calendar button:hover {
@@ -374,6 +391,68 @@ select {
 .auth-form-input {
     height: 1.5rem;
     width: 10rem;
+}
+
+.menu-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: end;
+}
+
+.menu-list-container {
+    width: 12rem;
+    padding: 1rem 1rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15);
+}
+
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.3rem;
+    align-items: end;
+}
+
+.menu-list-item {
+    cursor: pointer;
+    line-height: 2rem;
+    padding: 0 0.4rem 0 0.4rem;
+    border-radius: 5px;
+}
+
+.menu-list-item:hover {
+    background-color: var(--background-selected);
+}
+
+.menu-list-item.disabled {
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.menu-list-item.disabled:hover {
+    background-color: unset;
+}
+
+.confirmation-popup-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+    background-color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.15);
+}
+
+.confirmation-popup-container .line {
+    width: 100%;
 }
 
 label {
@@ -532,39 +611,28 @@ button.icon-btn:active {
 
 @media (max-width: 1400px) {
     .grid-container {
-        grid-template-columns: 2fr 3fr;
+        grid-template-columns: 1fr 3fr 1fr;
         grid-template-rows: 1fr 2fr minmax(0, 6fr);
         grid-template-areas:
-            "logo     graph-2"
-            "graph-1  graph-2"
-            "column-1 column-2";
-    }
-
-    .categories-list {
-        display: none;
-    }
-
-    .pie-chart {
-        display: none;
-    }
-}
-
-@media (max-width: 930px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 2fr minmax(0, 6fr);
-        grid-template-areas:
-            "graph-2"
-            "graph-2"
-            "column-2";
-    }
-
-    .logout {
-        grid-area: graph-2;
+            "logo      graph-2   graph-2"
+            "menu      graph-2   graph-2"
+            "column-1  column-2  column-3";
     }
 
     .regular-expenses-list {
-        display: none;
+        grid-area: column-2;
+    }
+
+    .categories-list {
+        grid-area: column-2;
+    }
+
+    .categories-list .list-column {
+        padding-left: 15%;
+    }
+
+    .pie-chart {
+        grid-area: graph-2;
     }
 }
 
@@ -573,8 +641,15 @@ button.icon-btn:active {
         font-size: 15px;
     }
 
-    .inline-form input,
-    .inline-form select,
+    .grid-container {
+        grid-template-columns: 1fr 3fr;
+        grid-template-rows: 1fr 2fr minmax(0, 6fr);
+        grid-template-areas:
+            "logo      graph-2"
+            "menu      graph-2"
+            "column-2  column-2";
+    }
+
     .inline-form input.short-input,
     .inline-form input.standart-input {
         width: 14rem;
@@ -583,20 +658,30 @@ button.icon-btn:active {
         font-size: 1.2rem;
     }
 
+    .inline-form select {
+        height: 2rem;
+        padding: 0.2rem 0.2rem;
+        font-size: 1.3rem;
+    }
+
     button {
         height: 2rem;
         padding: 0.2rem 0.6rem;
+        font-size: 1.2rem;
     }
 
-    .line {
-        flex-direction: column;
-        align-items: center;
+    .list-ctrls {
+        height: 20%;
     }
 
-    .line.btns {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+    .list-ctrls button {
+        height: 3rem;
+        padding: 0.2rem 1rem;
+        font-size: 1.2rem;
+    }
+
+    .list-column {
+        height: 80%;
     }
 
     .expenses-list {
@@ -631,10 +716,55 @@ button.icon-btn:active {
         display: inline;
     }
 
-    .expenses-form-container,
-    .regulars-form-container {
+    .expenses-form-container {
         width: 15rem;
         padding: 1rem;
+    }
+
+    .regulars-form-container {
+        width: 17rem;
+        padding: 1rem;
+    }
+
+    .vanishing-bg.centered>div {
+        top: 20%;
+    }
+
+    .vanishing-bg.centered>div.regulars-form-container {
+        top: 2%;
+    }
+
+    .line {
+        flex-wrap: wrap;
+    }
+
+    .regulars-form-container label,
+    .regulars-form-container span {
+        font-size: 1.3rem;
+    }
+
+    .expenses-form-container input.short-input {
+        width: 4rem;
+    }
+
+    .regulars-form-container input.standart-input {
+        width: 15rem;
+    }
+
+    .regulars-form-container input.short-input {
+        width: 6rem;
+    }
+
+    input:is([type="date"], [type="datetime-local"]) {
+        width: 12rem;
+        height: 1.5rem;
+        font-size: 1.3rem;
+    }
+
+    .expenses-form-container input:is([type="date"], [type="datetime-local"]) {
+        width: 14rem;
+        height: 1.5rem;
+        font-size: 1.2rem;
     }
 
     .suggestions-list {
@@ -646,7 +776,91 @@ button.icon-btn:active {
         height: 2rem;
     }
 
-    .vanishing-bg.centered>div {
-        top: 10%;
+    .calendar {
+        gap: 0.1rem;
+    }
+
+    .calendar .line {
+        gap: 0.1rem;
+    }
+
+    .calendar button {
+        font-size: 0.9rem;
+        width: 2.3rem;
+        height: 2.3rem;
+    }
+
+    .categories-list .list-column {
+        gap: 1rem;
+        padding-left: 5%;
+    }
+
+    .categories-list .invisible-ctrls {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.7rem;
+        width: 6rem;
+        min-width: 6rem;
+    }
+
+    .categories-list .icon-btn {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .category {
+        font-size: 20px;
+        gap: 1rem;
+    }
+
+    .category-name {
+        padding: 0.2rem 0.5rem;
+        line-height: 1.5rem;
+        border-radius: 5px;
+    }
+
+    .color-marker {
+        width: 1.5rem;
+        min-width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .category-form-container .btns {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .category-form-container .line {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .category-form-container input.standart-input {
+        width: 10rem;
+        height: 1.5rem;
+        padding: 0.2rem 0.2rem;
+        font-size: 1.2rem;
+    }
+
+    .menu.icon-btn {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .menu-list-container {
+        width: 15rem;
+        padding: 1rem 1rem;
+    }
+
+    .menu-list-item {
+        font-size: 1.4rem;
     }
 }
+
+/*
+    
+
+    
+} */

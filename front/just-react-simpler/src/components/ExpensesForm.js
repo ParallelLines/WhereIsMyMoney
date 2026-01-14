@@ -117,11 +117,11 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                     <CategoriesSuggestion searchStr={expense.name} onSelect={changeCategory} />
                 </div>
                 <div className='line btns'>
-                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
-                        {expenseData ? 'Save' : 'Create'}
-                    </button>
                     <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
                         Cancel
+                    </button>
+                    <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
+                        {expenseData ? 'Save' : 'Create'}
                     </button>
                 </div>
             </form>

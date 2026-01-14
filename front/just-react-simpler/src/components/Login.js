@@ -81,7 +81,7 @@ export default function Login() {
                     />}
                 <button type='submit'
                     onClick={(e) => handleSubmit(e, isLogIn ? 'login' : 'signup')}>
-                    {isLogIn ? 'enter' : 'create'}
+                    {isLogIn ? 'Enter' : 'Create'}
                 </button>
             </form>
         </div>

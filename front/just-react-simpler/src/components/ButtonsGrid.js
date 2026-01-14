@@ -2,18 +2,11 @@ import { useState } from 'react'
 
 export default function ButtonsGrid({ width, values, defaultSelected, onSelect, disabled }) {
     const [selectedButtons, setSelectedButtons] = useState(prepareDefaultSet(defaultSelected))
-    const buttonWidth = 2
-    const gridWidth = buttonWidth * width
-    const gridStyle = {
-        minWidth: gridWidth + 'rem',
-        width: gridWidth + 'rem',
-        maxWidth: gridWidth + 'rem',
-    }
 
-    const buttonStyle = {
-        width: buttonWidth + 'rem',
-        height: buttonWidth + 'rem'
-    }
+    const valuesGrid = Array.from(
+        Array(Math.ceil(values.length / width)),
+        (_, rowIndex) => values.slice(rowIndex * width, rowIndex * width + width)
+    )
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -29,18 +22,21 @@ export default function ButtonsGrid({ width, values, defaultSelected, onSelect, 
     }
 
     return (
-        <div className={`calendar ${disabled ? 'disabled' : ''}`} style={gridStyle}>
-            {values.map(value =>
-                <button
-                    name={value}
-                    key={value}
-                    aria-pressed={selectedButtons.has(value)}
-                    onClick={handleClick}
-                    style={buttonStyle}
-                    disabled={disabled}
-                >
-                    {value}
-                </button>
+        <div className={`calendar ${disabled ? 'disabled' : ''}`} >
+            {valuesGrid.map(row =>
+                <div className='line'>
+                    {row.map(value =>
+                        <button
+                            name={value}
+                            key={value}
+                            aria-pressed={selectedButtons.has(value)}
+                            onClick={handleClick}
+                            disabled={disabled}
+                        >
+                            {value}
+                        </button>)
+                    }
+                </div>
             )}
         </div>
     )

@@ -3,8 +3,12 @@ import { useCreateCategory, useEditCategory } from '../utils/reactQueryHooks'
 import { useErrorQueue } from '../utils/AppContext'
 import VanishingBlock from './VanishingBlock'
 import PopoverPicker from './PopoverPicker'
+import { useMediaQuery } from 'react-responsive'
+import IconSave from './icons/IconSave'
+import IconCancel from './icons/IconCancel'
 
 export default function CategoryForm({ categoryData, parentId, level, onCancel, onSubmit }) {
+    const isSmallScreen = useMediaQuery({ query: '(max-width: 565px)' })
     const create = useCreateCategory()
     const edit = useEditCategory()
     const { addError } = useErrorQueue()
@@ -71,12 +75,32 @@ export default function CategoryForm({ categoryData, parentId, level, onCancel, 
                     />
                     <PopoverPicker color={category.color} onChange={handleColorChange} />
                     <div className='btns'>
-                        <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
-                            {categoryData ? 'Save' : 'Create'}
-                        </button>
-                        <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
-                            Cancel
-                        </button>
+                        {isSmallScreen && <>
+                            <button
+                                className='icon-btn'
+                                title={categoryData ? 'save changes' : 'create category'}
+                                disabled={create.isPending || edit.isPending}
+                                type='submit'
+                            >
+                                <IconSave />
+                            </button>
+                            <button
+                                className='icon-btn'
+                                title='cancel'
+                                disabled={create.isPending || edit.isPending}
+                                onClick={onCancel}
+                            >
+                                <IconCancel />
+                            </button>
+                        </>}
+                        {!isSmallScreen && <>
+                            <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
+                                {categoryData ? 'Save' : 'Create'}
+                            </button>
+                            <button className='negative' onClick={onCancel} disabled={create.isPending || edit.isPending}>
+                                Cancel
+                            </button>
+                        </>}
                     </div>
                 </div>
             </form>
