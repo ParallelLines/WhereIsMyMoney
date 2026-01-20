@@ -87,6 +87,7 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                         value={expense.sum}
                         onChange={handleChange}
                         placeholder='45.99'
+                        inputMode='decimal'
                         required
                     />
                     {currenciesQuery.isLoading && <span>Loading...</span>}

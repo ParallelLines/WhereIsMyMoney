@@ -201,6 +201,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                         value={regular.sum}
                         onChange={handleChange}
                         placeholder='45.99'
+                        inputMode='decimal'
                         required
                     />
                     {currenciesQuery.isPending && <div>Loading...</div>}
