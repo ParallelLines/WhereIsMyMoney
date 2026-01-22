@@ -62,6 +62,10 @@ body {
 
 .pie-chart {
     grid-area: graph-3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
 }
 
 .regular-expenses-list {
@@ -97,6 +101,18 @@ body {
 
 .vanishing-bg.blur {
     backdrop-filter: blur(10px);
+}
+
+.pie-chart-tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.5em;
+    pointer-events: none;
+    max-width: 250px;
+    white-space: nowrap;
 }
 
 .list-ctrls {
@@ -614,8 +630,8 @@ button.icon-btn:active {
         grid-template-columns: 1fr 3fr 1fr;
         grid-template-rows: 1fr 2fr minmax(0, 6fr);
         grid-template-areas:
-            "logo      graph-2   graph-2"
-            "menu      graph-2   graph-2"
+            "logo      graph-2   column-3"
+            "menu      graph-2   column-3"
             "column-1  column-2  column-3";
     }
 
@@ -645,8 +661,8 @@ button.icon-btn:active {
         grid-template-columns: 1fr 3fr;
         grid-template-rows: 1fr 2fr minmax(0, 6fr);
         grid-template-areas:
-            "logo      graph-2"
-            "menu      graph-2"
+            "graph-2   graph-2"
+            "graph-2   graph-2"
             "column-2  column-2";
     }
 
@@ -858,9 +874,3 @@ button.icon-btn:active {
         font-size: 1.4rem;
     }
 }
-
-/*
-    
-
-    
-} */

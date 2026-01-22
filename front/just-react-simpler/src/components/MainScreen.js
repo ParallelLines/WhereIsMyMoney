@@ -9,7 +9,10 @@ import Menu from './Menu'
 
 export default function MainScreen() {
     const isFullScreen = useMediaQuery({ query: '(min-width: 1400px)' })
+    const isSmallScreen = useMediaQuery({ query: '(max-width: 565px)' })
     const [screenName, setScreenName] = useState('expenses')
+    const pieChartWidth = isSmallScreen ? 230 : 320
+    const pieChartHeight = isSmallScreen ? 230 : 320
     const menuItems = [
         {
             name: 'regulars',
@@ -37,7 +40,7 @@ export default function MainScreen() {
 
             {(isFullScreen || screenName === 'expenses') && <ExpensesList />}
 
-            {(isFullScreen || screenName === 'categories') && <PieChart />}
+            {(isFullScreen || screenName === 'categories') && <PieChart width={pieChartWidth} height={pieChartHeight} />}
             {(isFullScreen || screenName === 'categories') && <CategoriesList />}
         </div>
     )

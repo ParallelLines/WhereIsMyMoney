@@ -6,6 +6,15 @@ import { createCategory, deleteCategories, deleteCategory, editCategory, getCate
 import { getCurrencies } from '../apiService/currencies'
 import { useEffect } from 'react'
 import { getCategoriesSuggestion, getExpenseNamesSuggestion } from '../apiService/suggestions'
+import { getPieStats } from '../apiService/stats'
+
+export const useFetchPieStats = () => {
+    return useQuery({
+        queryKey: ['nextDate'],
+        queryFn: () => getPieStats(),
+        retry: retryAfterError
+    })
+}
 
 export const useFetchCategoriesSuggestion = (expenseName) => {
     return useQuery({
