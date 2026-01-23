@@ -4,6 +4,7 @@ import { Group } from '@visx/group'
 import { localPoint } from '@visx/event'
 import { useRef, useState } from 'react'
 import { useFetchPieStats } from '../utils/reactQueryHooks'
+import AnimatedArcs from './AnimatedArcs'
 
 export default function PieChart({ width = 300, height = 300 }) {
     const { selectedCategory, setSelectedCategory } = useSelectedCategory()
@@ -35,7 +36,8 @@ export default function PieChart({ width = 300, height = 300 }) {
         if (children.length) {
             setSelectedCategory(id)
         } else {
-            setSelectedCategory(null)
+            const parent = query.data?.filter(d => d.id === parentId)[0]
+            setSelectedCategory(parent.parent_id)
         }
     }
 
@@ -77,54 +79,13 @@ export default function PieChart({ width = 300, height = 300 }) {
                         cornerRadius={3}
                     >
                         {pie => (
-                            <>
-                                {pie.arcs.map((arc, i) => {
-                                    const [centroidX, centroidY] = pie.path.centroid(arc)
-                                    const isHovered = hoveredSegment?.id === arc.data.id
-                                    const dimOthers = hoveredSegment && !isHovered
-                                    const scale = isHovered ? 1.1 : 1
-                                    const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.55
-                                    return (
-                                        <g
-                                            key={`arc-${arc.data.id}-${i}`}
-                                            onClick={() => handleClick(arc.data.id, arc.data.parent_id)}
-                                            onMouseMove={e => handleMouseMove(e, arc.data)}
-                                            onMouseLeave={() => setHoveredSegment(null)}
-                                        >
-                                            <path
-                                                key={`arc-${arc.data.id}`}
-                                                d={pie.path(arc)}
-                                                fill={`#${arc.data.color}`}
-                                                fillOpacity={dimOthers ? 0.35 : 1}
-                                                stroke='white'
-                                                strokeWidth={1}
-                                                style={{
-                                                    transform: `scale(${scale})`,
-                                                    transformOrigin: '0 0',
-                                                    transition: 'all 0.2s ease',
-                                                    filter: isHovered
-                                                        ? 'drop-shadow(0 0 6px rgba(0,0,0,0.25)) drop-shadow(0 0 14px rgba(0,0,0,0.12))'
-                                                        : 'none'
-                                                }}
-                                            />
-                                            {hasSpaceForLabel &&
-                                                <text
-                                                    x={centroidX}
-                                                    y={centroidY}
-                                                    dy='.33em'
-                                                    fill='white'
-                                                    fontSize={12}
-                                                    fontWeight='600'
-                                                    textAnchor='middle'
-                                                    pointerEvents='none'
-                                                    style={{ textShadow: '0 1px 3px rgba(0,0,0,0.7)' }}
-                                                >
-                                                    {arc.data.name}
-                                                </text>}
-                                        </g>
-                                    )
-                                })}
-                            </>
+                            <AnimatedArcs
+                                pie={pie}
+                                hoveredSegment={hoveredSegment}
+                                handleClick={handleClick}
+                                handleMouseMove={handleMouseMove}
+                                setHoveredSegment={setHoveredSegment}
+                            />
                         )}
                     </Pie>
                 </Group>
@@ -141,11 +102,16 @@ export default function PieChart({ width = 300, height = 300 }) {
                     <div style={{ fontWeight: '600', marginBottom: '5px' }}>
                         {hoveredSegment.name}
                     </div>
-                    {hoveredSegment.sum_total_with_children.map(sum => (
-                        <div>{sum.sum} {sum.symbol}</div>
-                    ))}
+                    {hoveredSegment.id === selectedCategory ?
+                        hoveredSegment.sum_total.map((sum, id) => (
+                            <div key={`tooltip-${id}`}>{sum.sum} {sum.symbol}</div>
+                        )) :
+                        hoveredSegment.sum_total_with_children.map((sum, id) => (
+                            <div key={`tooltip-${id}`}>{sum.sum} {sum.symbol}</div>
+                        ))}
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     )
 }
