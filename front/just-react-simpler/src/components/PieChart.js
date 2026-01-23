@@ -44,7 +44,10 @@ export default function PieChart({ width = 300, height = 300 }) {
             const filteredData = data?.filter(d => d.parent_id === null && d.sum_total_with_children.length)
             return filteredData
         }
-        const filteredData = data?.filter(d => d.id === selectedCategory || d.parent_id === selectedCategory)
+        const filteredData = data?.filter(d =>
+            (d.id === selectedCategory && d.sum_total.length) ||
+            (d.parent_id === selectedCategory && d.sum_total_with_children.length)
+        )
         return filteredData
     }
 
