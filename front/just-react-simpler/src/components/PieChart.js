@@ -34,6 +34,8 @@ export default function PieChart({ width = 300, height = 300 }) {
         const children = query.data?.filter(d => d.parent_id === id)
         if (children.length) {
             setSelectedCategory(id)
+        } else {
+            setSelectedCategory(null)
         }
     }
 
@@ -46,6 +48,14 @@ export default function PieChart({ width = 300, height = 300 }) {
         return filteredData
     }
 
+    const calculateSum = (data) => {
+        let sumArr = data.sum_total_with_children
+        if (data.id === selectedCategory) {
+            sumArr = data.sum_total
+        }
+        return sumArr.reduce((acc, curr) => acc += curr.sum_inUSD, 0)
+    }
+
     const displayData = prepareStatsData(query.data)
 
     return (
@@ -56,7 +66,7 @@ export default function PieChart({ width = 300, height = 300 }) {
                 <Group left={centerX} top={centerY}>
                     <Pie
                         data={displayData}
-                        pieValue={data => data.sum_total_with_children.reduce((acc, curr) => acc += curr.sum_inUSD, 0)}
+                        pieValue={data => calculateSum(data)}
                         startAngle={0}
                         endAngle={2 * Math.PI}
                         innerRadius={0}
@@ -100,7 +110,7 @@ export default function PieChart({ width = 300, height = 300 }) {
                                                     y={centroidY}
                                                     dy='.33em'
                                                     fill='white'
-                                                    fontSize={14}
+                                                    fontSize={12}
                                                     fontWeight='600'
                                                     textAnchor='middle'
                                                     pointerEvents='none'
