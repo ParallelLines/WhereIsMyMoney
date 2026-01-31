@@ -10,9 +10,10 @@ import { getPieStats } from '../apiService/stats'
 
 export const useFetchPieStats = () => {
     return useQuery({
-        queryKey: ['nextDate'],
+        queryKey: ['pie'],
         queryFn: () => getPieStats(),
-        retry: retryAfterError
+        retry: retryAfterError,
+        staleTime: Infinity
     })
 }
 

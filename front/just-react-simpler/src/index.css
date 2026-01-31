@@ -66,6 +66,7 @@ body {
     justify-content: center;
     align-items: center;
     padding-top: 1rem;
+    position: relative;
 }
 
 .regular-expenses-list {
@@ -103,6 +104,43 @@ body {
     backdrop-filter: blur(10px);
 }
 
+.pie-chart .top-left {
+    position: absolute;
+    top: 1rem;
+    left: 0.5rem;
+}
+
+.pie-chart .top-right {
+    position: absolute;
+    top: 1rem;
+    right: 0.5rem;
+}
+
+.pie-chart .bottom-left {
+    position: absolute;
+    bottom: 0;
+    left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.pie-chart .middle-left {
+    position: absolute;
+    top: 50%;
+    left: 0.5rem;
+}
+
+.pie-chart .middle-right {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+}
+
+.pie-chart .side-btn {
+    height: 4rem;
+}
+
 .pie-chart-tooltip {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.8);
@@ -113,6 +151,10 @@ body {
     pointer-events: none;
     max-width: 250px;
     white-space: nowrap;
+}
+
+.pie-chart-info {
+    font-size: 15px;
 }
 
 .list-ctrls {
@@ -533,6 +575,7 @@ button.dull:active {
 button.dull:disabled:hover {
     background-color: var(--button-dull-color);
     box-shadow: none;
+    cursor: not-allowed;
 }
 
 button.auth-option:not(.dull):hover,
@@ -599,6 +642,10 @@ button.icon-btn:active {
 .error-message.fade-out {
     animation: slideOut 0.3s ease-out;
     opacity: 0;
+}
+
+.highlighted {
+    font-weight: bold;
 }
 
 @keyframes slideIn {
@@ -872,5 +919,9 @@ button.icon-btn:active {
 
     .menu-list-item {
         font-size: 1.4rem;
+    }
+
+    .pie-chart .side-btn {
+        height: 5rem;
     }
 }

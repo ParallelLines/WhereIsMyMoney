@@ -2,10 +2,10 @@ import { useState } from 'react'
 import CategoriesList from './CategoriesList'
 import ExpensesList from './ExpensesList'
 import LogOut from './LogOut'
-import PieChart from './PieChart'
 import RegularExpensesList from './RegularExpensesList'
 import { useMediaQuery } from 'react-responsive'
 import Menu from './Menu'
+import PieChartScreen from './PieChartScreen'
 
 export default function MainScreen() {
     const isFullScreen = useMediaQuery({ query: '(min-width: 1400px)' })
@@ -29,19 +29,19 @@ export default function MainScreen() {
     ]
     return (
         <div className='grid-container'>
+            {(isFullScreen || screenName === 'regulars') && <RegularExpensesList />}
+
+            {(isFullScreen || screenName === 'expenses') && <ExpensesList />}
+
+            {(isFullScreen || screenName === 'categories') && <PieChartScreen width={pieChartWidth} height={pieChartHeight} />}
+            {(isFullScreen || screenName === 'categories') && <CategoriesList />}
+
             {isFullScreen && <LogOut />}
             {!isFullScreen && <Menu
                 menuItems={menuItems}
                 onSelect={(name) => setScreenName(name)}
                 selectedItem={screenName}
             />}
-
-            {(isFullScreen || screenName === 'regulars') && <RegularExpensesList />}
-
-            {(isFullScreen || screenName === 'expenses') && <ExpensesList />}
-
-            {(isFullScreen || screenName === 'categories') && <PieChart width={pieChartWidth} height={pieChartHeight} />}
-            {(isFullScreen || screenName === 'categories') && <CategoriesList />}
         </div>
     )
 }

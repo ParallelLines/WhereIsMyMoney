@@ -48,10 +48,7 @@ export default function AnimatedArcs({ pie, hoveredSegment, handleClick, handleM
                     style={{
                         transform: `scale(${scale})`,
                         transformOrigin: '0 0',
-                        transition: 'all 0.2s ease',
-                        filter: isHovered
-                            ? 'drop-shadow(0 0 6px rgba(0,0,0,0.25)) drop-shadow(0 0 14px rgba(0,0,0,0.12))'
-                            : 'none'
+                        transition: 'all 0.2s ease'
                     }}
                 />
                 {hasSpaceForLabel &&

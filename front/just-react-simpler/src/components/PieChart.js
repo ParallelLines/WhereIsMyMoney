@@ -2,15 +2,14 @@ import { useSelectedCategory } from '../utils/AppContext'
 import { Pie } from '@visx/shape'
 import { Group } from '@visx/group'
 import { localPoint } from '@visx/event'
-import { useRef, useState } from 'react'
-import { useFetchPieStats } from '../utils/reactQueryHooks'
+import { useState } from 'react'
 import AnimatedArcs from './AnimatedArcs'
+import { useFetchPieStats } from '../utils/reactQueryHooks'
 
-export default function PieChart({ width = 300, height = 300 }) {
+export default function PieChart({ width = 300, height = 300, data = [] }) {
     const { selectedCategory, setSelectedCategory } = useSelectedCategory()
     const [hoveredSegment, setHoveredSegment] = useState(null)
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
-    const svgRef = useRef(null)
     const query = useFetchPieStats()
 
     const centerX = width / 2
@@ -19,10 +18,9 @@ export default function PieChart({ width = 300, height = 300 }) {
 
     const handleMouseMove = (e, segmentData) => {
         const coords = localPoint(e)
-        const svgRect = svgRef.current.getBoundingClientRect()
         setTooltipPos({
-            x: coords.x + svgRect.left,
-            y: coords.y + svgRect.top
+            x: coords.x + 5,
+            y: coords.y + 20
         })
         setHoveredSegment(segmentData)
     }
@@ -37,59 +35,45 @@ export default function PieChart({ width = 300, height = 300 }) {
             setSelectedCategory(id)
         } else {
             const parent = query.data?.filter(d => d.id === parentId)[0]
-            setSelectedCategory(parent.parent_id)
+            setSelectedCategory(parent ? parent.parent_id : null)
         }
     }
 
-    const prepareStatsData = (data) => {
-        if (!selectedCategory) {
-            const filteredData = data?.filter(d => d.parent_id === null && d.sum_total_with_children.length)
-            return filteredData
+    const chooseSumToShow = (segmentId, currency) => {
+        if (segmentId === selectedCategory) {
+            return currency.sum
         }
-        const filteredData = data?.filter(d =>
-            (d.id === selectedCategory && d.sum_total.length) ||
-            (d.parent_id === selectedCategory && d.sum_total_with_children.length)
-        )
-        return filteredData
+        return currency.sum_with_children ? currency.sum_with_children : currency.sum
     }
-
-    const calculateSum = (data) => {
-        let sumArr = data.sum_total_with_children
-        if (data.id === selectedCategory) {
-            sumArr = data.sum_total
-        }
-        return sumArr.reduce((acc, curr) => acc += curr.sum_inUSD, 0)
-    }
-
-    const displayData = prepareStatsData(query.data)
 
     return (
         <div className='pie-chart'>
-            {query.isLoading && <div>Loading...</div>}
-            {query.isError && <div>Error: {query.error.message}</div>}
-            <svg width={width} height={height} ref={svgRef}>
-                <Group left={centerX} top={centerY}>
-                    <Pie
-                        data={displayData}
-                        pieValue={data => calculateSum(data)}
-                        startAngle={0}
-                        endAngle={2 * Math.PI}
-                        innerRadius={0}
-                        outerRadius={radius}
-                        cornerRadius={3}
-                    >
-                        {pie => (
-                            <AnimatedArcs
-                                pie={pie}
-                                hoveredSegment={hoveredSegment}
-                                handleClick={handleClick}
-                                handleMouseMove={handleMouseMove}
-                                setHoveredSegment={setHoveredSegment}
-                            />
-                        )}
-                    </Pie>
-                </Group>
-            </svg>
+            {!data.length && <div>No data for this period</div>}
+            {data.length > 0 && (
+                <svg width={width} height={height}>
+                    <Group left={centerX} top={centerY}>
+                        <Pie
+                            data={data}
+                            pieValue={data => data.sumUSD}
+                            startAngle={0}
+                            endAngle={2 * Math.PI}
+                            innerRadius={0}
+                            outerRadius={radius}
+                            cornerRadius={3}
+                        >
+                            {pie => (
+                                <AnimatedArcs
+                                    pie={pie}
+                                    hoveredSegment={hoveredSegment}
+                                    handleClick={handleClick}
+                                    handleMouseMove={handleMouseMove}
+                                    setHoveredSegment={setHoveredSegment}
+                                />
+                            )}
+                        </Pie>
+                    </Group>
+                </svg>
+            )}
 
             {hoveredSegment && (
                 <div
@@ -102,16 +86,12 @@ export default function PieChart({ width = 300, height = 300 }) {
                     <div style={{ fontWeight: '600', marginBottom: '5px' }}>
                         {hoveredSegment.name}
                     </div>
-                    {hoveredSegment.id === selectedCategory ?
-                        hoveredSegment.sum_total.map((sum, id) => (
-                            <div key={`tooltip-${id}`}>{sum.sum} {sum.symbol}</div>
-                        )) :
-                        hoveredSegment.sum_total_with_children.map((sum, id) => (
-                            <div key={`tooltip-${id}`}>{sum.sum} {sum.symbol}</div>
-                        ))}
+                    {hoveredSegment.sums?.map((currency, id) => (
+                        chooseSumToShow(hoveredSegment.id, currency) > 0 &&
+                        <div key={`tooltip-${id}`}>{chooseSumToShow(hoveredSegment.id, currency)} {currency.symbol}</div>
+                    ))}
                 </div>
-            )
-            }
+            )}
         </div >
     )
 }
