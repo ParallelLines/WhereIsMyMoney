@@ -72,15 +72,6 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         >
             <form className='inline-form' onSubmit={handleSubmit}>
                 <div className='line'>
-                    <ExpenseNameSuggestion
-                        searchStr={expense.name}
-                        onChange={(expenseName) => setExpense(currExpense => {
-                            return {
-                                ...currExpense,
-                                name: expenseName
-                            }
-                        })}
-                    />
                     <input name='sum'
                         className='short-input'
                         aria-label='expense amount'
@@ -88,6 +79,7 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                         onChange={handleChange}
                         placeholder='45.99'
                         inputMode='decimal'
+                        autoFocus
                         required
                     />
                     {currenciesQuery.isLoading && <span>Loading...</span>}
@@ -102,6 +94,15 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
                                 {currency.symbol} {currency.name}
                             </option>)}
                     </select>
+                    <ExpenseNameSuggestion
+                        searchStr={expense.name}
+                        onChange={(expenseName) => setExpense(currExpense => {
+                            return {
+                                ...currExpense,
+                                name: expenseName
+                            }
+                        })}
+                    />
                     <input name='date'
                         aria-label='expense date'
                         type='datetime-local'

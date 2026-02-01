@@ -81,7 +81,6 @@ export default function ExpenseNameSuggestion({ searchStr, onChange }) {
                 onFocus={handleInputFocus}
                 placeholder='name'
                 ref={inputRef}
-                autoFocus
                 required
             />
             {isOpen && suggestions.length > 0 &&
