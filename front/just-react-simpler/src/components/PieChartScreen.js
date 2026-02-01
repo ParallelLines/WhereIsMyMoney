@@ -184,16 +184,16 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
             </div>
             <div className='bottom-left'>
                 <div className='pie-chart-info'>
-                    Category: <span className='highlighted'>{getSelectedCategoryName()}</span>
+                    Category: <span className='bold'>{getSelectedCategoryName()}</span>
                 </div>
                 {currentMonthOffset !== null &&
                     <div className='pie-chart-info'>
-                        {calculateMonth()} {calculateYear()}: <span className='highlighted'>{displayTotal(displayData)}</span>
+                        <span className='highlighted'>{calculateMonth()} {calculateYear()}</span>: <span className='bold'>{displayTotal(displayData)}</span>
                     </div>
                 }
                 {currentMonthOffset === null &&
                     <div className='pie-chart-info'>
-                        All time: <span className='highlighted'>{displayTotal(displayData)}</span>
+                        <span className='highlighted'>All time</span>: <span className='bold'>{displayTotal(displayData)}</span>
                     </div>
                 }
             </div>

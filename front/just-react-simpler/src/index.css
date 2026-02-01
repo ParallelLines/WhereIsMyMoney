@@ -3,6 +3,7 @@
     --background-selected: #d1d1d1;
     --text-main: #323232;
     --text-muted: #a1a1a1;
+    --text-highlight: #ffcea0;
     --button-color: rgb(234, 155, 19);
     --button-color-hover: rgb(243, 195, 113);
     --button-positive-color: rgb(19, 234, 205);
@@ -644,8 +645,12 @@ button.icon-btn:active {
     opacity: 0;
 }
 
-.highlighted {
+.bold {
     font-weight: bold;
+}
+
+.highlighted {
+    background-color: var(--text-highlight);
 }
 
 @keyframes slideIn {
