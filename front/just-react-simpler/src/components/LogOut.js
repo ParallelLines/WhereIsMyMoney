@@ -1,5 +1,5 @@
 import { useCookies } from 'react-cookie'
-import IconCancel from './icons/IconCancel'
+import IconLogOut from './icons/IconLogOut'
 
 const COOKIE_AUTH_NAME = process.env.REACT_APP_COOKIE_AUTH_NAME
 
@@ -10,7 +10,7 @@ export default function LogOut() {
             className='logout icon-btn'
             onClick={() => removeCookie(COOKIE_AUTH_NAME)}
         >
-            <IconCancel />
+            <IconLogOut />
         </button>
     )
 }
