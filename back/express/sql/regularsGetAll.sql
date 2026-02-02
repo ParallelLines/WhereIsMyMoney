@@ -6,4 +6,4 @@ FROM regulars r
 LEFT JOIN categories ca ON r.category_id = ca.id 
 JOIN currencies cu ON r.currency = cu.name 
 WHERE r.user_id = $1 
-ORDER BY r.start_date DESC
+ORDER BY r.next_date ASC
