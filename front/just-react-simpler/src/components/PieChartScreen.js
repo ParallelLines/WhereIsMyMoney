@@ -1,5 +1,5 @@
 import { useSelectedCategory } from '../utils/AppContext'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useFetchPieStats } from '../utils/reactQueryHooks'
 import PieChart from './PieChart'
 
@@ -129,9 +129,9 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
         return 'all'
     }
 
-    const filteredData = filterAccordingToLevel()
-    const preparedData = prepareData(filteredData)
-    const displayData = sortOutZeroes(preparedData)
+    const filteredData = useMemo(() => filterAccordingToLevel(), [filterAccordingToLevel, query.data, selectedCategory])
+    const preparedData = useMemo(() => prepareData(filteredData), [prepareData, filteredData, selectedCategory, currentMonthOffset])
+    const displayData = useMemo(() => sortOutZeroes(preparedData), [preparedData])
 
     return (
         <div className='pie-chart'>

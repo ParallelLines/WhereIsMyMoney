@@ -80,6 +80,7 @@ export const useCreateExpense = () => {
         onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] }),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['currencies'] })
+            await queryClient.invalidateQueries({ queryKey: ['pie'] })
         }
     })
 }
@@ -91,6 +92,7 @@ export const useEditExpense = () => {
         onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] }),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['currencies'] })
+            await queryClient.invalidateQueries({ queryKey: ['pie'] })
         }
     })
 }
@@ -99,7 +101,10 @@ export const useDeleteExpense = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: deleteExpense,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] })
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['pie'] })
+        }
     })
 }
 
@@ -107,7 +112,10 @@ export const useDeleteExpenses = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: deleteExpenses,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] })
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['expenses'] }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['pie'] })
+        }
     })
 }
 
