@@ -4,7 +4,7 @@ import { createRegular, deleteRegular, deleteRegulars, editRegular, getNextDate,
 import { useErrorQueue, useSelectedCategory } from '../utils/AppContext'
 import { createCategory, deleteCategories, deleteCategory, editCategory, getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { getCategoriesSuggestion, getExpenseNamesSuggestion } from '../apiService/suggestions'
 import { getPieStats } from '../apiService/stats'
 
@@ -18,10 +18,18 @@ export const useFetchPieStats = () => {
 }
 
 export const useFetchCategoriesSuggestion = (expenseName) => {
+    const lastNonEmptyRef = useRef(null)
     return useQuery({
         queryKey: ['categories_suggestion', expenseName],
         queryFn: () => getCategoriesSuggestion(expenseName),
         enabled: expenseName ? expenseName.trim().length > 0 : false,
+        select: (data) => {
+            if (Array.isArray(data) && data.length > 0) {
+                lastNonEmptyRef.current = data
+                return data
+            }
+            return lastNonEmptyRef.current ?? data
+        },
         retry: retryAfterError
     })
 }
