@@ -129,7 +129,9 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
         return 'all'
     }
 
+    // eslint-disable-next-line
     const filteredData = useMemo(() => filterAccordingToLevel(), [filterAccordingToLevel, query.data, selectedCategory])
+    // eslint-disable-next-line
     const preparedData = useMemo(() => prepareData(filteredData), [prepareData, filteredData, selectedCategory, currentMonthOffset])
     const displayData = useMemo(() => sortOutZeroes(preparedData), [preparedData])
 
@@ -137,11 +139,6 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
         <div className='pie-chart'>
             {query.isLoading && <div>Loading...</div>}
             {query.isError && <div>Error: {query.error.message}</div>}
-            <PieChart
-                width={width}
-                height={height}
-                data={displayData}
-            />
             <div className='top-left'>
                 {currentMonthOffset !== null &&
                     <button
@@ -197,7 +194,11 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                     </div>
                 }
             </div>
-
+            <PieChart
+                width={width}
+                height={height}
+                data={displayData}
+            />
         </div >
     )
 }
