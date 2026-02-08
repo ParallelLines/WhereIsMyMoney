@@ -126,7 +126,7 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                 return '?'
             }
         }
-        return 'all'
+        return 'All categories'
     }
 
     // eslint-disable-next-line
@@ -179,26 +179,26 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                     </button>
                 }
             </div>
-            <div className='bottom-left'>
-                <div className='pie-chart-info'>
-                    Category: <span className='bold'>{getSelectedCategoryName()}</span>
-                </div>
-                {currentMonthOffset !== null &&
-                    <div className='pie-chart-info'>
-                        <span className='highlighted'>{calculateMonth()} {calculateYear()}</span>: <span className='bold'>{displayTotal(displayData)}</span>
-                    </div>
-                }
-                {currentMonthOffset === null &&
-                    <div className='pie-chart-info'>
-                        <span className='highlighted'>All time</span>: <span className='bold'>{displayTotal(displayData)}</span>
-                    </div>
-                }
-            </div>
             <PieChart
                 width={width}
                 height={height}
                 data={displayData}
             />
+            <div className='bottom-left'>
+                <div className='pie-chart-info'>
+                    <span className='bold highlighted'>{getSelectedCategoryName()}</span>
+                </div>
+                {currentMonthOffset !== null &&
+                    <div className='pie-chart-info'>
+                        <span className='bold highlighted'>{calculateMonth()} {calculateYear()}</span>: <span className=''>{displayTotal(displayData)}</span>
+                    </div>
+                }
+                {currentMonthOffset === null &&
+                    <div className='pie-chart-info'>
+                        <span className='bold highlighted'>All time</span>: <span className=''>{displayTotal(displayData)}</span>
+                    </div>
+                }
+            </div>
         </div >
     )
 }
