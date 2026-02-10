@@ -1,31 +1,17 @@
-import { useSelectedCategory } from '../utils/AppContext'
-import { useMemo, useState } from 'react'
+import { useMonthOffset, useSelectedCategory } from '../utils/AppContext'
+import { useMemo } from 'react'
 import { useFetchPieStats } from '../utils/reactQueryHooks'
+import { getMonthYearByOffset } from '../utils/date'
 import PieChart from './PieChart'
 
 export default function PieChartScreen({ width = 300, height = 300 }) {
     const { selectedCategory } = useSelectedCategory()
-    const [currentMonthOffset, setCurrentMonthOffset] = useState(0)
+    const { monthOffset, setMonthOffset } = useMonthOffset()
     const query = useFetchPieStats()
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
-    const now = new Date()
-    const currentMonth = now.getMonth()
-    const currentYear = now.getFullYear()
-
-    const calculateMonth = (k = 0) => {
-        const offset = currentMonthOffset + k
-        if (offset > currentMonth) {
-            return months[12 - Math.abs(currentMonth - offset)]
-        }
-        return months[currentMonth - offset]
-    }
-
-    const calculateYear = (k = 0) => {
-        const offsetBeforePrevYear = currentMonth + 1
-        if (currentMonthOffset + k >= offsetBeforePrevYear) return currentYear - 1
-        return currentYear
-    }
+    const prevMonthYear = getMonthYearByOffset(monthOffset + 1)
+    const currMonthYear = getMonthYearByOffset(monthOffset)
+    const nextMonthYear = getMonthYearByOffset(monthOffset - 1)
 
     const sortOutZeroes = (data) => {
         return data?.filter(d => d.sumUSD > 0)
@@ -46,25 +32,25 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
             const newData = JSON.parse(JSON.stringify(category))
             if (category.id === selectedCategory) {
                 // without children
-                if (currentMonthOffset === null) {
+                if (monthOffset === null) {
                     // using all_time_sums
                     newData.sumUSD = newData.all_time_sum_inUSD
                     newData.sums = [...newData.all_time_sums]
                 } else {
                     // using last_months_sums
-                    const monthSums = newData.last_months_sums[currentMonthOffset]
+                    const monthSums = newData.last_months_sums[monthOffset]
                     newData.sumUSD = monthSums ? monthSums.sum_inUSD : 0
                     newData.sums = monthSums ? monthSums.currencies : []
                 }
             } else {
                 // with children
-                if (currentMonthOffset === null) {
+                if (monthOffset === null) {
                     // using all_time_sums
                     newData.sumUSD = newData.all_time_sum_with_children_inUSD
                     newData.sums = [...newData.all_time_sums]
                 } else {
                     // using last_months_sums
-                    const monthSums = newData.last_months_sums[currentMonthOffset]
+                    const monthSums = newData.last_months_sums[monthOffset]
                     newData.sumUSD = monthSums ? monthSums.sum_with_children_inUSD : 0
                     newData.sums = monthSums ? monthSums.currencies : []
                 }
@@ -132,7 +118,7 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
     // eslint-disable-next-line
     const filteredData = useMemo(() => filterAccordingToLevel(), [filterAccordingToLevel, query.data, selectedCategory])
     // eslint-disable-next-line
-    const preparedData = useMemo(() => prepareData(filteredData), [prepareData, filteredData, selectedCategory, currentMonthOffset])
+    const preparedData = useMemo(() => prepareData(filteredData), [prepareData, filteredData, selectedCategory, monthOffset])
     const displayData = useMemo(() => sortOutZeroes(preparedData), [preparedData])
 
     return (
@@ -140,42 +126,42 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
             {query.isLoading && <div>Loading...</div>}
             {query.isError && <div>Error: {query.error.message}</div>}
             <div className='top-left'>
-                {currentMonthOffset !== null &&
+                {monthOffset !== null &&
                     <button
                         className='pie-chart-btn'
-                        onClick={() => setCurrentMonthOffset(null)}
+                        onClick={() => setMonthOffset(null)}
                     >
                         All Time Total
                     </button>
                 }
-                {currentMonthOffset === null &&
+                {monthOffset === null &&
                     <button
                         className='pie-chart-btn'
-                        onClick={() => setCurrentMonthOffset(0)}
+                        onClick={() => setMonthOffset(0)}
                     >
                         Current Month
                     </button>
                 }
             </div>
             <div className='middle-left'>
-                {currentMonthOffset !== null &&
+                {monthOffset !== null &&
                     <button
-                        className={`pie-chart-btn side-btn ${currentMonthOffset === 11 ? ' dull' : ''}`}
-                        onClick={() => setCurrentMonthOffset(prev => Math.min(prev + 1, 11))}
-                        disabled={currentMonthOffset === 11}
+                        className={`pie-chart-btn side-btn ${monthOffset === 11 ? ' dull' : ''}`}
+                        onClick={() => setMonthOffset(prev => Math.min(prev + 1, 11))}
+                        disabled={monthOffset === 11}
                     >
-                        ←<br />{calculateMonth(1)}<br />{calculateYear(1)}
+                        ←<br />{prevMonthYear.name}<br />{prevMonthYear.year}
                     </button>
                 }
             </div>
             <div className='middle-right'>
-                {currentMonthOffset !== null &&
+                {monthOffset !== null &&
                     <button
-                        className={`pie-chart-btn side-btn ${currentMonthOffset === 0 ? ' dull' : ''}`}
-                        onClick={() => setCurrentMonthOffset(prev => Math.max(prev - 1, 0))}
-                        disabled={currentMonthOffset === 0}
+                        className={`pie-chart-btn side-btn ${monthOffset === 0 ? ' dull' : ''}`}
+                        onClick={() => setMonthOffset(prev => Math.max(prev - 1, 0))}
+                        disabled={monthOffset === 0}
                     >
-                        →<br />{calculateMonth(-1)}<br />{calculateYear(-1)}
+                        →<br />{nextMonthYear.name}<br />{nextMonthYear.year}
                     </button>
                 }
             </div>
@@ -188,12 +174,12 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                 <div className='pie-chart-info'>
                     <span className='bold highlighted'>{getSelectedCategoryName()}</span>
                 </div>
-                {currentMonthOffset !== null &&
+                {monthOffset !== null &&
                     <div className='pie-chart-info'>
-                        <span className='bold highlighted'>{calculateMonth()} {calculateYear()}</span>: <span className=''>{displayTotal(displayData)}</span>
+                        <span className='bold highlighted'>{currMonthYear.name} {currMonthYear.year}</span>: <span className=''>{displayTotal(displayData)}</span>
                     </div>
                 }
-                {currentMonthOffset === null &&
+                {monthOffset === null &&
                     <div className='pie-chart-info'>
                         <span className='bold highlighted'>All time</span>: <span className=''>{displayTotal(displayData)}</span>
                     </div>

@@ -1,12 +1,13 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createExpense, deleteExpense, deleteExpenses, editExpense, getExpenses } from '../apiService/expenses'
 import { createRegular, deleteRegular, deleteRegulars, editRegular, getNextDate, getRegulars } from '../apiService/regulars'
-import { useErrorQueue, useSelectedCategory } from '../utils/AppContext'
+import { useErrorQueue, useMonthOffset, useSelectedCategory, useSelectedRegular } from '../utils/AppContext'
 import { createCategory, deleteCategories, deleteCategory, editCategory, getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
 import { useEffect, useRef } from 'react'
 import { getCategoriesSuggestion, getExpenseNamesSuggestion } from '../apiService/suggestions'
 import { getPieStats } from '../apiService/stats'
+import { getMonthYearByOffset } from './date'
 
 export const useFetchPieStats = () => {
     return useQuery({
@@ -45,10 +46,20 @@ export const useFetchExpenseNamesSuggestion = (expenseName, isEnabled = true) =>
 
 export const useFetchExpenses = () => {
     const { selectedCategory } = useSelectedCategory()
+    const { selectedRegular } = useSelectedRegular()
+    const { monthOffset } = useMonthOffset()
+    const monthYear = getMonthYearByOffset(monthOffset)
+    const params = {
+        selectedCategory,
+        selectedRegular,
+        month: monthYear.month,
+        year: monthYear.year
+    }
+    console.log()
     return useInfiniteQuery({
-        queryKey: ['expenses', selectedCategory],
+        queryKey: ['expenses', selectedCategory, selectedRegular, monthOffset],
         queryFn: ({ pageParam = 0 }) =>
-            getExpenses({ pageParam, selectedCategory }),
+            getExpenses({ pageParam, ...params }),
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages, lastPageParam) => {
             if (lastPage.length === 0) {
@@ -64,10 +75,19 @@ export const useFetchExpenses = () => {
 export const usePrefetchExpenses = async () => {
     const queryClient = useQueryClient()
     const { selectedCategory } = useSelectedCategory()
+    const { selectedRegular } = useSelectedRegular()
+    const { monthOffset } = useMonthOffset()
+    const monthYear = getMonthYearByOffset(monthOffset)
+    const params = {
+        selectedCategory,
+        selectedRegular,
+        month: monthYear.month,
+        year: monthYear.year
+    }
     await queryClient.prefetchInfiniteQuery({
-        queryKey: ['expenses', selectedCategory],
+        queryKey: ['expenses', selectedCategory, selectedRegular, monthOffset],
         queryFn: ({ pageParam = 0 }) =>
-            getExpenses({ pageParam, selectedCategory }),
+            getExpenses({ pageParam, ...params }),
         pages: 5,
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages, lastPageParam) => {

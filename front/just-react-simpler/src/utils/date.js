@@ -70,3 +70,36 @@ export function convertDateToDatetime(dateStr) {
     now.setMonth(date.getMonth(), date.getDate())
     return now
 }
+
+/**
+ * 
+ * @param {Number} monthOffset 0-12, indicates an offset from the current month back in past (not in future!)
+ * @returns {Object} an object like {month: 3, year: 1995, name: 'Apr'}, where month = 0-11 for Jan-Dec
+ */
+export function getMonthYearByOffset(monthOffset) {
+    if (monthOffset === null || monthOffset === undefined) {
+        return {
+            month: null,
+            name: null,
+            year: null
+        }
+    }
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+    const now = new Date()
+    const currentMonth = now.getMonth()
+    const currentYear = now.getFullYear()
+    let month = currentMonth - monthOffset
+    if (monthOffset > currentMonth) {
+        month = 12 - Math.abs(currentMonth - monthOffset)
+    }
+    let year = currentYear
+    const offsetBeforePrevYear = currentMonth + 1
+    if (monthOffset >= offsetBeforePrevYear) {
+        year = currentYear - 1
+    }
+    return {
+        month: month,
+        name: months[month],
+        year: year
+    }
+}

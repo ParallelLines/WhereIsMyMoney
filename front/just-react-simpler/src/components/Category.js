@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSelectedCategory } from '../utils/AppContext'
+import { useSelectedCategory, useSelectedRegular } from '../utils/AppContext'
 import ColorMarker from './ColorMarker'
 import IconAdd from './icons/IconAdd'
 import IconEdit from './icons/IconEdit'
@@ -14,6 +14,7 @@ export default function Category({ categoryData }) {
     const [deleteMode, setDeleteMode] = useState(false)
 
     const { selectedCategory, setSelectedCategory } = useSelectedCategory()
+    const { setSelectedRegular } = useSelectedRegular()
     const selected = selectedCategory === categoryData.id
 
     const del = useDeleteCategory()
@@ -24,6 +25,7 @@ export default function Category({ categoryData }) {
             setSelectedCategory(null)
         } else {
             setSelectedCategory(categoryData.id)
+            setSelectedRegular(null)
         }
     }
 
