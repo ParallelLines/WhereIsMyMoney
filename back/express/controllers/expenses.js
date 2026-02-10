@@ -9,13 +9,22 @@ const ratesEndpoint1 = process.env.CURRENCY_RATES_ENDPOINT_1
 
 export async function getAll(req, res) {
     const { userId } = req
-    let { page = 0, elementsPerPage = 10, category = null } = req.query
+    let {
+        page = 0,
+        elementsPerPage = 10,
+        category = null,
+        regular = null,
+        day = null,
+        month = null,
+        year = null
+    } = req.query
+    month = Number.isInteger(Number.parseInt(month)) ? Number.parseInt(month) + 1 : null
     const offset = elementsPerPage * page
-    if (category && category !== 'null') {
-        const expenses = await db.query(db.expenses.getAllByCategory, [userId, category, elementsPerPage, offset])
+    if (category) {
+        const expenses = await db.query(db.expenses.getAllByCategory, [userId, category, year, month, day, elementsPerPage, offset])
         res.json(expenses.rows)
     } else {
-        const expenses = await db.query(db.expenses.getAll, [userId, elementsPerPage, offset])
+        const expenses = await db.query(db.expenses.getAllByRegular, [userId, regular, year, month, day, elementsPerPage, offset])
         res.json(expenses.rows)
     }
 }
@@ -100,7 +109,7 @@ export async function deleteMany(req, res) {
         throw new HttpError(400, 'empty request')
     }
     const offset = 2
-    const placeholders = ids.map((val, i) => '$' + (i + offset)).join(', ')
+    const placeholders = ids.map((_, i) => '$' + (i + offset)).join(', ')
     await db.query(db.expenses.deleteMany + ' (' + placeholders + ')', [userId, ...ids])
     res.sendStatus(200)
 }

@@ -75,7 +75,7 @@ exp_t AS (
   SELECT
     e.category_id,
     e.currency,
-    SUM(e.sum)     AS sum,
+    SUM(e.sum)   AS sum,
     SUM(e.inUSD) AS sum_inusd
   FROM expenses e
   WHERE e.user_id = $1
