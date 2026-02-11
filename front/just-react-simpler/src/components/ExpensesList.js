@@ -4,6 +4,8 @@ import ExpensesForm from './ExpensesForm'
 import ConfirmationPopup from './ConfirmationPopup'
 import { useInfiniteScroll } from '../utils/hooks'
 import { useDeleteExpenses, useFetchExpenses, usePrefetchExpenses } from '../utils/reactQueryHooks'
+import { useFilterContext } from '../utils/AppContext'
+import { getMonthYearByOffset } from '../utils/date'
 
 export default function ExpensesList() {
     const [createMode, setCreateMode] = useState(false)
@@ -13,6 +15,11 @@ export default function ExpensesList() {
 
     const query = useFetchExpenses()
     const deleteBulk = useDeleteExpenses()
+
+    const { monthOffset } = useFilterContext()
+    const monthYear = getMonthYearByOffset(monthOffset)
+    let loadPhrase = 'That\'s all for the '
+    loadPhrase += monthOffset === null ? '"all time" period' : `${monthYear.name} ${monthYear.year}`
 
     const handleCheckboxChange = (e) => {
         const expenseId = e.target.id
@@ -59,7 +66,7 @@ export default function ExpensesList() {
                     ))
                 })}
                 {query.isFetchingNextPage && <span className='text-muted'>Loading more...</span>}
-                {!query.hasNextPage && <span className='text-muted'>Nothing more to load</span>}
+                {!query.hasNextPage && <span className='text-muted'>{loadPhrase}</span>}
             </div>
 
         </div >
