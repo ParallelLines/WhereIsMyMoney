@@ -29,4 +29,4 @@ FROM regulars r
 INNER JOIN category_tree ct ON r.category_id = ct.id
 JOIN currencies cu ON r.currency = cu.name 
 WHERE r.user_id = $1
-ORDER BY r.start_date DESC
+ORDER BY r.next_date ASC
