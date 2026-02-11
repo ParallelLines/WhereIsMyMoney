@@ -152,37 +152,24 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                 data={displayData}
             />
             <div className='top-left'>
-                {monthOffset !== null &&
-                    <button
-                        className='pie-chart-btn'
-                        onClick={() => setMonthOffset(null)}
-                    >
-                        All Time Total
-                    </button>
-                }
-                {monthOffset === null &&
-                    <button
-                        className='pie-chart-btn'
-                        onClick={() => setMonthOffset(0)}
-                    >
-                        Current Month
-                    </button>
-                }
+                <div className='pie-chart-info'>
+                    <span className='title highlighted'>
+                        {monthOffset === null ? 'All time' : `${currMonthYear.name} ${currMonthYear.year}`}
+
+                    </span>
+                    <span className='title'>, {getSelectedCategoryName()}</span>
+                </div>
+                <button
+                    className='pie-chart-btn'
+                    onClick={() => setMonthOffset(monthOffset === null ? 0 : null)}
+                >
+                    {monthOffset === null ? 'Current Month' : 'All Time Total'}
+                </button>
             </div>
             <div className='bottom-left'>
                 <div className='pie-chart-info'>
-                    <span className='bold highlighted'>{getSelectedCategoryName()}</span>
+                    <span className='bold'>{displayTotal(displayData)}</span>
                 </div>
-                {monthOffset !== null &&
-                    <div className='pie-chart-info'>
-                        <span className='bold highlighted'>{currMonthYear.name} {currMonthYear.year}</span>: <span className=''>{displayTotal(displayData)}</span>
-                    </div>
-                }
-                {monthOffset === null &&
-                    <div className='pie-chart-info'>
-                        <span className='bold highlighted'>All time</span>: <span className=''>{displayTotal(displayData)}</span>
-                    </div>
-                }
             </div>
         </div >
     )
