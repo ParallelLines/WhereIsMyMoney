@@ -1,12 +1,11 @@
-import { useMonthOffset, useSelectedCategory } from '../utils/AppContext'
+import { useFilterContext } from '../utils/AppContext'
 import { useMemo } from 'react'
 import { useFetchPieStats } from '../utils/reactQueryHooks'
 import { getMonthYearByOffset } from '../utils/date'
 import PieChart from './PieChart'
 
 export default function PieChartScreen({ width = 300, height = 300 }) {
-    const { selectedCategory } = useSelectedCategory()
-    const { monthOffset, setMonthOffset } = useMonthOffset()
+    const { selectedCategory, monthOffset, setMonthOffset } = useFilterContext()
     const query = useFetchPieStats()
 
     const prevMonthYear = getMonthYearByOffset(monthOffset + 1)

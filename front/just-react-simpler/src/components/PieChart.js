@@ -1,4 +1,4 @@
-import { useSelectedCategory } from '../utils/AppContext'
+import { useFilterContext } from '../utils/AppContext'
 import { Pie } from '@visx/shape'
 import { Group } from '@visx/group'
 import { localPoint } from '@visx/event'
@@ -7,7 +7,7 @@ import AnimatedArcs from './AnimatedArcs'
 import { useFetchPieStats } from '../utils/reactQueryHooks'
 
 export default function PieChart({ width = 300, height = 300, data = [] }) {
-    const { selectedCategory, setSelectedCategory } = useSelectedCategory()
+    const { selectedCategory, setSelectedCategory } = useFilterContext()
     const [hoveredSegment, setHoveredSegment] = useState(null)
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
     const query = useFetchPieStats()

@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createExpense, deleteExpense, deleteExpenses, editExpense, getExpenses } from '../apiService/expenses'
 import { createRegular, deleteRegular, deleteRegulars, editRegular, getNextDate, getRegulars } from '../apiService/regulars'
-import { useErrorQueue, useMonthOffset, useSelectedCategory, useSelectedRegular } from '../utils/AppContext'
+import { useErrorQueue, useFilterContext } from '../utils/AppContext'
 import { createCategory, deleteCategories, deleteCategory, editCategory, getCategories } from '../apiService/categories'
 import { getCurrencies } from '../apiService/currencies'
 import { useEffect, useRef } from 'react'
@@ -45,9 +45,7 @@ export const useFetchExpenseNamesSuggestion = (expenseName, isEnabled = true) =>
 }
 
 export const useFetchExpenses = () => {
-    const { selectedCategory } = useSelectedCategory()
-    const { selectedRegular } = useSelectedRegular()
-    const { monthOffset } = useMonthOffset()
+    const { selectedCategory, selectedRegular, monthOffset } = useFilterContext()
     const monthYear = getMonthYearByOffset(monthOffset)
     const params = {
         selectedCategory,
@@ -74,9 +72,7 @@ export const useFetchExpenses = () => {
 
 export const usePrefetchExpenses = async () => {
     const queryClient = useQueryClient()
-    const { selectedCategory } = useSelectedCategory()
-    const { selectedRegular } = useSelectedRegular()
-    const { monthOffset } = useMonthOffset()
+    const { selectedCategory, selectedRegular, monthOffset } = useFilterContext()
     const monthYear = getMonthYearByOffset(monthOffset)
     const params = {
         selectedCategory,
@@ -148,7 +144,7 @@ export const useDeleteExpenses = () => {
 }
 
 export const useFetchRegulars = () => {
-    const { selectedCategory } = useSelectedCategory()
+    const { selectedCategory } = useFilterContext()
     return useQuery({
         queryKey: ['regulars', selectedCategory],
         queryFn: () => getRegulars(selectedCategory),

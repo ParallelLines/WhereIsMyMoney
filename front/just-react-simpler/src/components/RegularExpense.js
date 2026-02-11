@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { dateString } from '../utils/date'
-import { useSelectedCategory, useSelectedRegular } from '../utils/AppContext'
+import { useFilterContext } from '../utils/AppContext'
 import { useDeleteRegular } from '../utils/reactQueryHooks'
 import IconEdit from './icons/IconEdit'
 import IconDelete from './icons/IconDelete'
@@ -12,8 +12,7 @@ export default function RegularExpense({ data }) {
     const [editMode, setEditMode] = useState(false)
     const [deleteMode, setDeleteMode] = useState(false)
 
-    const { selectedRegular, setSelectedRegular } = useSelectedRegular()
-    const { setSelectedCategory } = useSelectedCategory()
+    const { setSelectedCategory, selectedRegular, setSelectedRegular } = useFilterContext()
     const selected = selectedRegular === data.id
 
     const del = useDeleteRegular()

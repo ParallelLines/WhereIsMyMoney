@@ -1,8 +1,6 @@
-import { createContext, useCallback, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 
-const SelectedCategoryContext = createContext(null)
-const SelectedRegularContext = createContext(null)
-const MonthOffsetContext = createContext(null)
+const FilterContext = createContext(null)
 const ErrorQueueContext = createContext(null)
 
 export function AppContext({ children }) {
@@ -19,29 +17,23 @@ export function AppContext({ children }) {
         setErrorQueue(prevQueue => prevQueue.filter(err => err.id !== id))
     }, [])
 
+    const value = useMemo(() => ({
+        selectedCategory, setSelectedCategory,
+        selectedRegular, setSelectedRegular,
+        monthOffset, setMonthOffset
+    }), [selectedCategory, selectedRegular, monthOffset])
+
     return (
-        <SelectedCategoryContext.Provider value={{ selectedCategory, setSelectedCategory }}>
-            <SelectedRegularContext.Provider value={{ selectedRegular, setSelectedRegular }}>
-                <MonthOffsetContext.Provider value={{ monthOffset, setMonthOffset }}>
-                    <ErrorQueueContext.Provider value={{ errorQueue, addError, removeError }}>
-                        {children}
-                    </ErrorQueueContext.Provider>
-                </MonthOffsetContext.Provider>
-            </SelectedRegularContext.Provider>
-        </SelectedCategoryContext.Provider>
+        <FilterContext.Provider value={value}>
+            <ErrorQueueContext.Provider value={{ errorQueue, addError, removeError }}>
+                {children}
+            </ErrorQueueContext.Provider>
+        </FilterContext.Provider>
     )
 }
 
-export function useSelectedCategory() {
-    return useContext(SelectedCategoryContext)
-}
-
-export function useSelectedRegular() {
-    return useContext(SelectedRegularContext)
-}
-
-export function useMonthOffset() {
-    return useContext(MonthOffsetContext)
+export function useFilterContext() {
+    return useContext(FilterContext)
 }
 
 export function useErrorQueue() {
