@@ -6,6 +6,10 @@
     --text-highlight: #ffcea0;
     --button-color: rgb(234, 155, 19);
     --button-color-hover: rgb(243, 195, 113);
+    --graphic-button-color: rgb(226, 198, 151);
+    --graphic-button-color-hover: rgb(241, 223, 192);
+    --graphic-button-color-active: rgb(254, 235, 202);
+    --graphic-button-dull-color: rgb(190, 188, 183);
     --button-positive-color: rgb(19, 234, 205);
     --button-positive-color-hover: rgb(130, 245, 230);
     --button-negative-color: rgb(221, 107, 124);
@@ -129,18 +133,40 @@ body {
 
 .pie-chart .middle-left {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 0.5rem;
 }
 
 .pie-chart .middle-right {
     position: absolute;
-    top: 50%;
+    top: 40%;
     right: 0.5rem;
 }
 
 .pie-chart .side-btn {
     height: 4rem;
+}
+
+.pie-chart-btn {
+    background-color: var(--graphic-button-color);
+    height: 1rem;
+    font-size: 15px;
+}
+
+.pie-chart-btn:hover {
+    background-color: var(--graphic-button-color-hover);
+}
+
+.pie-chart-btn:active {
+    background-color: var(--graphic-button-color-active);
+}
+
+.pie-chart-btn.dull:disabled {
+    background-color: var(--graphic-button-dull-color);
+}
+
+.pie-chart-btn.dull:disabled:hover {
+    background-color: var(--graphic-button-dull-color);
 }
 
 .pie-chart-tooltip {
@@ -721,7 +747,7 @@ button.icon-btn:active {
 
     .grid-container {
         grid-template-columns: 1fr 3fr;
-        grid-template-rows: 1fr 2fr minmax(0, 6fr);
+        grid-template-rows: 2fr 2fr minmax(0, 6fr);
         grid-template-areas:
             "graph-2   graph-2"
             "graph-2   graph-2"
@@ -938,5 +964,9 @@ button.icon-btn:active {
 
     .pie-chart .side-btn {
         height: 5rem;
+    }
+
+    .pie-chart-btn {
+        height: 1.5rem;
     }
 }

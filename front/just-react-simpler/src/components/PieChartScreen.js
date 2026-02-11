@@ -18,7 +18,7 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
 
     const filterAccordingToLevel = () => {
         if (!query.data) return
-        if (selectedCategory) {
+        if (selectedCategory !== null) {
             return query.data.filter(d => d.id === selectedCategory || d.parent_id === selectedCategory)
         }
         return query.data.filter(d => d.parent_id === null)
@@ -124,24 +124,6 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
         <div className='pie-chart'>
             {query.isLoading && <div>Loading...</div>}
             {query.isError && <div>Error: {query.error.message}</div>}
-            <div className='top-left'>
-                {monthOffset !== null &&
-                    <button
-                        className='pie-chart-btn'
-                        onClick={() => setMonthOffset(null)}
-                    >
-                        All Time Total
-                    </button>
-                }
-                {monthOffset === null &&
-                    <button
-                        className='pie-chart-btn'
-                        onClick={() => setMonthOffset(0)}
-                    >
-                        Current Month
-                    </button>
-                }
-            </div>
             <div className='middle-left'>
                 {monthOffset !== null &&
                     <button
@@ -169,6 +151,24 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                 height={height}
                 data={displayData}
             />
+            <div className='top-left'>
+                {monthOffset !== null &&
+                    <button
+                        className='pie-chart-btn'
+                        onClick={() => setMonthOffset(null)}
+                    >
+                        All Time Total
+                    </button>
+                }
+                {monthOffset === null &&
+                    <button
+                        className='pie-chart-btn'
+                        onClick={() => setMonthOffset(0)}
+                    >
+                        Current Month
+                    </button>
+                }
+            </div>
             <div className='bottom-left'>
                 <div className='pie-chart-info'>
                     <span className='bold highlighted'>{getSelectedCategoryName()}</span>
