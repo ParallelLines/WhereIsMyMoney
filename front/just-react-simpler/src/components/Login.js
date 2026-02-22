@@ -31,10 +31,12 @@ export default function Login() {
                 'Content-Type': 'application/json'
             }
         }
+        const expires = new Date()
+        expires.setDate(expires.getDate() + 100)
         await axios
             .post(url, reqBody, params)
             .then(res => {
-                setCookie(COOKIE_AUTH_NAME, res.data)
+                setCookie(COOKIE_AUTH_NAME, res.data, { expires })
                 window.location.reload() // do i need this??
             })
             .catch(e => {
