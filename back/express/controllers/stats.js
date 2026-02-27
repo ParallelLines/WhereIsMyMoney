@@ -1,4 +1,5 @@
 import db from '../db.js'
+import { calculateNextDate, getNextMonth } from '../utils/dateUtils.js'
 
 export async function getPieStats(req, res) {
     const { userId } = req
@@ -6,6 +7,27 @@ export async function getPieStats(req, res) {
     calculateSumsWithChildren(stats.rows)
     calculateAllTimeSum(stats.rows)
     res.json(stats.rows)
+}
+
+export async function getRegularsSumForNextMonth(req, res) {
+    const { userId } = req
+    const startOfNextMonth = getNextMonth()
+    const endOfNextMonth = getNextMonth(true)
+    const regulars = await db.query(db.regulars.getAll, [userId])
+    const sums = new Map()
+    for (let regular of regulars.rows) {
+        if (!regular.next_date) continue
+        let nextDate = new Date(regular.next_date)
+        while (nextDate < endOfNextMonth) {
+            if (nextDate >= endOfNextMonth) break
+            if (nextDate >= startOfNextMonth && nextDate < endOfNextMonth) {
+                const prevSum = sums.has(regular.currency) ? Number.parseFloat(sums.get(regular.currency)) : 0
+                sums.set(regular.currency, prevSum + Number.parseFloat(regular.sum))
+            }
+            nextDate = calculateNextDate(nextDate, regular)
+        }
+    }
+    res.json(Object.fromEntries(sums))
 }
 
 function calculateAllTimeSum(categories) {

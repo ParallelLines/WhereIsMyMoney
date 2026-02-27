@@ -9,6 +9,20 @@ const dayNums = {
 }
 
 /**
+ * @param {boolean} end if end, then the end of the start of the month next to the next month will be returned
+ *                      if !end, then the start of the next month will be returned 
+ * @returns {Date} if now is 2025-12-27T00:00:00.693Z then the result will be 2026-02-01T00:00:00.693Z
+ */
+function getNextMonth(end = false) {
+    const endOfNextMonth = new Date()
+    const k = end ? 2 : 1
+    endOfNextMonth.setMonth(endOfNextMonth.getMonth() + k)
+    endOfNextMonth.setDate(1)
+    endOfNextMonth.setHours(0, 0, 0)
+    return endOfNextMonth
+}
+
+/**
  * compares only day, month, year, without time.
  * 
  * @param {String} string1 a date string from which an object Date could be created (also it might be a Date object itself, anything the Date constructor accepts).
@@ -370,4 +384,4 @@ function calculateNextDate(prevDate, pattern) {
     return !endDate || nextDate < endDate || datesEqual(nextDate, endDate) ? nextDate : null
 }
 
-export { datesEqual, addYears, calculateNextDate }
+export { datesEqual, addYears, calculateNextDate, getNextMonth }
