@@ -65,8 +65,17 @@ body {
     right: 1rem;
 }
 
-.pie-chart {
+.pie-chart-screen {
     grid-area: graph-3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
+    position: relative;
+}
+
+.bar-chart-screen {
+    grid-area: graph-2;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -110,25 +119,25 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.pie-chart .top-left {
+.pie-chart-screen .top-left {
     position: absolute;
     top: 1rem;
     left: 0.5rem;
 }
 
-.pie-chart .top-middle {
+.pie-chart-screen .top-middle {
     position: absolute;
     top: 1rem;
     right: 30%;
 }
 
-.pie-chart .top-right {
+.pie-chart-screen .top-right {
     position: absolute;
     top: 1rem;
     right: 0.5rem;
 }
 
-.pie-chart .bottom-left {
+.pie-chart-screen .bottom-left {
     position: absolute;
     bottom: 0;
     left: 0.5rem;
@@ -137,19 +146,19 @@ body {
     justify-content: start;
 }
 
-.pie-chart .middle-left {
+.pie-chart-screen .middle-left {
     position: absolute;
     top: 40%;
     left: 0.5rem;
 }
 
-.pie-chart .middle-right {
+.pie-chart-screen .middle-right {
     position: absolute;
     top: 40%;
     right: 0.5rem;
 }
 
-.pie-chart .side-btn {
+.pie-chart-screen .side-btn {
     height: 4rem;
 }
 
@@ -748,7 +757,7 @@ button.icon-btn:active {
         padding-left: 15%;
     }
 
-    .pie-chart {
+    .pie-chart-screen {
         grid-area: graph-2;
     }
 }
@@ -981,7 +990,7 @@ button.icon-btn:active {
         font-size: 1.4rem;
     }
 
-    .pie-chart .side-btn {
+    .pie-chart-screen .side-btn {
         height: 5rem;
     }
 

@@ -6,13 +6,14 @@ import RegularExpensesList from './RegularExpensesList'
 import { useMediaQuery } from 'react-responsive'
 import Menu from './Menu'
 import PieChartScreen from './PieChartScreen'
+import BarChartScreen from './BarChartScreen'
 
 export default function MainScreen() {
     const isFullScreen = useMediaQuery({ query: '(min-width: 1400px)' })
     const isSmallScreen = useMediaQuery({ query: '(max-width: 565px)' })
     const [screenName, setScreenName] = useState('expenses')
-    const pieChartWidth = isSmallScreen ? 230 : 320
-    const pieChartHeight = isSmallScreen ? 230 : 320
+    const pieChartWidth = isSmallScreen ? 230 : 300
+    const pieChartHeight = isSmallScreen ? 230 : 300
     const menuItems = [
         {
             name: 'regulars',
@@ -31,6 +32,7 @@ export default function MainScreen() {
         <div className='grid-container'>
             {(isFullScreen || screenName === 'regulars') && <RegularExpensesList />}
 
+            {(isFullScreen || screenName === 'expenses') && <BarChartScreen />}
             {(isFullScreen || screenName === 'expenses') && <ExpensesList />}
 
             {(isFullScreen || screenName === 'categories') && <PieChartScreen width={pieChartWidth} height={pieChartHeight} />}

@@ -121,7 +121,7 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
     const displayData = useMemo(() => sortOutZeroes(preparedData), [preparedData])
 
     return (
-        <div className='pie-chart'>
+        <div className='pie-chart-screen'>
             {query.isLoading && <div>Loading...</div>}
             {query.isError && <div>Error: {query.error.message}</div>}
             <div className='middle-left'>

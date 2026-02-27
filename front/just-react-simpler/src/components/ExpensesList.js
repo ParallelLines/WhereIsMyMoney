@@ -18,7 +18,7 @@ export default function ExpensesList() {
 
     const { monthOffset } = useFilterContext()
     const monthYear = getMonthYearByOffset(monthOffset)
-    let loadPhrase = 'That\'s all for the '
+    let loadPhrase = 'That\'s all for '
     loadPhrase += monthOffset === null ? '"all time" period' : `${monthYear.name} ${monthYear.year}`
 
     const handleCheckboxChange = (e) => {
