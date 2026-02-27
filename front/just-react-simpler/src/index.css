@@ -89,6 +89,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .next-month-info-list {
@@ -765,10 +766,7 @@ button.icon-btn:active {
             "column-1  column-2  column-3";
     }
 
-    .regular-expenses-list {
-        grid-area: column-2;
-    }
-
+    .regular-expenses-list,
     .categories-list {
         grid-area: column-2;
     }
@@ -777,7 +775,8 @@ button.icon-btn:active {
         padding-left: 15%;
     }
 
-    .pie-chart-screen {
+    .pie-chart-screen,
+    .next-month-info {
         grid-area: graph-2;
     }
 }
