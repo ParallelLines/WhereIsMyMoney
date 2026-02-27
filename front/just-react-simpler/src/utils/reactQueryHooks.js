@@ -6,13 +6,22 @@ import { createCategory, deleteCategories, deleteCategory, editCategory, getCate
 import { getCurrencies } from '../apiService/currencies'
 import { useEffect, useRef } from 'react'
 import { getCategoriesSuggestion, getExpenseNamesSuggestion } from '../apiService/suggestions'
-import { getPieStats } from '../apiService/stats'
+import { getPieStats, getNextMonthRegularSums } from '../apiService/stats'
 import { getMonthYearByOffset } from './date'
 
 export const useFetchPieStats = () => {
     return useQuery({
         queryKey: ['pie'],
         queryFn: () => getPieStats(),
+        retry: retryAfterError,
+        staleTime: Infinity
+    })
+}
+
+export const useFetchNextMonthRegularStats = () => {
+    return useQuery({
+        queryKey: ['nextMonthRegularSums'],
+        queryFn: () => getNextMonthRegularSums(),
         retry: retryAfterError,
         staleTime: Infinity
     })

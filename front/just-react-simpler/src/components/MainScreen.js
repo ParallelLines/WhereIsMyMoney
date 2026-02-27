@@ -7,6 +7,7 @@ import { useMediaQuery } from 'react-responsive'
 import Menu from './Menu'
 import PieChartScreen from './PieChartScreen'
 import BarChartScreen from './BarChartScreen'
+import NextMonthInfo from './NextMonthInfo'
 
 export default function MainScreen() {
     const isFullScreen = useMediaQuery({ query: '(min-width: 1400px)' })
@@ -30,6 +31,7 @@ export default function MainScreen() {
     ]
     return (
         <div className='grid-container'>
+            {(isFullScreen || screenName === 'regulars') && <NextMonthInfo />}
             {(isFullScreen || screenName === 'regulars') && <RegularExpensesList />}
 
             {(isFullScreen || screenName === 'expenses') && <BarChartScreen />}

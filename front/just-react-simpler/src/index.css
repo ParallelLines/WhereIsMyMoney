@@ -83,6 +83,26 @@ body {
     position: relative;
 }
 
+.next-month-info {
+    grid-area: graph-1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.next-month-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 4rem;
+    min-height: 4rem;
+    overflow-y: scroll;
+    padding: 1.5rem;
+    background-color: var(--graphic-button-color);
+    border-radius: 50%;
+}
+
 .regular-expenses-list {
     grid-area: column-1;
 }
