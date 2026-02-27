@@ -23,8 +23,8 @@ export default function ButtonsGrid({ width, values, defaultSelected, onSelect, 
 
     return (
         <div className={`calendar ${disabled ? 'disabled' : ''}`} >
-            {valuesGrid.map(row =>
-                <div className='line'>
+            {valuesGrid.map((row, id) =>
+                <div className='line' key={`line-${id}`}>
                     {row.map(value =>
                         <button
                             name={value}
