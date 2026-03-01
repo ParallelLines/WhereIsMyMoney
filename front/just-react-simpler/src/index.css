@@ -72,6 +72,7 @@ body {
     align-items: center;
     padding-top: 1rem;
     position: relative;
+    min-height: 16rem;
 }
 
 .bar-chart-screen {
@@ -95,13 +96,20 @@ body {
 .next-month-info-list {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 0.5rem;
-    height: 4rem;
-    min-height: 4rem;
+    height: 5rem;
+    min-height: 5rem;
+    width: 5rem;
+    min-width: 5rem;
     overflow-y: scroll;
     padding: 1.5rem;
     background-color: var(--graphic-button-color);
     border-radius: 50%;
+}
+
+.next-month-info-record {
+    text-align: center;
 }
 
 .regular-expenses-list {
