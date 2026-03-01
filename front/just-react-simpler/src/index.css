@@ -98,10 +98,10 @@ body {
     flex-direction: column;
     justify-content: center;
     gap: 0.5rem;
-    height: 5rem;
-    min-height: 5rem;
-    width: 5rem;
-    min-width: 5rem;
+    height: 6rem;
+    min-height: 6rem;
+    width: 6rem;
+    min-width: 6rem;
     overflow-y: scroll;
     padding: 1.5rem;
     background-color: var(--graphic-button-color);
