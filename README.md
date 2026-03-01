@@ -37,7 +37,7 @@ run
 ```
 npm install --legacy-peer-deps
 ```
-(--legacy-peer-deps is because react version is to new for visx, but visx works with it just fine)
+(--legacy-peer-deps is because react version is to new for visx, but visx works with it just fine)  
 and then run
 ```
 npm run build
