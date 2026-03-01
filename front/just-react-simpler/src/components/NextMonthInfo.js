@@ -29,8 +29,10 @@ export default function NextMonthInfo() {
                 <>
                     next month will be debited:
                     <div className='next-month-info-list'>
-                        {preparedData.map(record => (
-                            <div className='next-month-info-record'>{record.sum} {record.symbol}</div>
+                        {preparedData.map((record, id) => (
+                            <div className='next-month-info-record' key={id}>
+                                {record.sum} {record.symbol}
+                            </div>
                         ))}
                     </div>
                 </>
