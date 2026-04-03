@@ -1,7 +1,7 @@
 import cron from 'node-cron'
 import { correctUSD } from '../controllers/expenses.js'
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 */3 * * *', async () => {
     try {
         let timeNow = new Date()
         console.log(`[${timeNow.toISOString()}][Scheduler - USD Corrector]: started`)
