@@ -137,6 +137,31 @@ export async function createExpense(expenseData) {
     return result.rows
 }
 
+export async function correctUSD() {
+    const result = await db.query(db.expenses.getAllWithoutUSD)
+    const expenses = result.rows
+    for (let expense of expenses) {
+        console.log(`[correctUSD] trying to calculate USD for the expense id ${expense.id}`)
+        const date = expense.date.toISOString()
+        const inUSD = await calculateUSD(expense.sum, date, expense.currency)
+        if (inUSD > -1) {
+            console.log(`[correctUSD] SUCCESSFULLY recalculated USD for the expense id ${expense.id}`)
+            await db.query(db.expenses.updateOne, [
+                expense.user_id,
+                expense.id,
+                expense.category_id,
+                expense.name,
+                expense.sum,
+                inUSD,
+                expense.currency,
+                expense.date
+            ])
+        } else {
+            console.log(`[correctUSD] FAILED to recalculate USD for the expense id ${expense.id}`)
+        }
+    }
+}
+
 /**
  * 
  * @param {String} sum  '13.45', '45.00'.
@@ -152,7 +177,7 @@ async function calculateUSD(sum, date, currency) {
             const freshRates = await getRatesFromOutside(day)
             await insertRatesInDB(freshRates)
         }
-        const rate = await getRateFromDB(day, currency)
+        const rate = await getRatesFromDB(day, currency)
         return num / rate
     } catch (e) {
         console.error(e)
@@ -183,7 +208,7 @@ async function checkIfRatesExist(date) {
  * @param {String} currency 'USD', 'EUR', etc.
  * @returns {Number}   returns the float number for rate
  */
-async function getRateFromDB(date, currency) {
+async function getRatesFromDB(date, currency) {
     try {
         const rates = await db.query(db.rates.getByDateAndCurrency, [date, currency])
         return parseFloat(rates.rows[0].rate)

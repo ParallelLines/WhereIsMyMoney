@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 import './scheduler/regularExpensesScheduler.js'
 import './scheduler/suggestionsUpdateScheduler.js'
+import './scheduler/inusdErrorCorrector.js'
 import express from 'express'
 import cors from 'cors'
 // import usersRoutes from './routes/users.js'
