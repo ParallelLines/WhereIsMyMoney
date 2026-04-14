@@ -27,6 +27,9 @@ export async function getRegularsSumForNextMonth(req, res) {
             nextDate = calculateNextDate(nextDate, regular)
         }
     }
+    sums.forEach((sum, curr) => {
+        sums.set(curr, sum.toFixed(2))
+    })
     res.json(Object.fromEntries(sums))
 }
 
