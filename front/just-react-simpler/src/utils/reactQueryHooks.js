@@ -173,7 +173,10 @@ export const useCreateRegular = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: createRegular,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] })
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['nextMonthRegularSums'] })
+        }
     })
 }
 
@@ -181,7 +184,10 @@ export const useEditRegular = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: editRegular,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] })
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['nextMonthRegularSums'] })
+        }
     })
 }
 
@@ -189,7 +195,10 @@ export const useDeleteRegular = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: deleteRegular,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] })
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['nextMonthRegularSums'] })
+        }
     })
 }
 
@@ -197,7 +206,10 @@ export const useDeleteRegulars = () => {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: deleteRegulars,
-        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] })
+        onSettled: () => queryClient.invalidateQueries({ queryKey: ['regulars'] }),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['nextMonthRegularSums'] })
+        }
     })
 }
 

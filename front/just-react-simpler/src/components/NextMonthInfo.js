@@ -15,7 +15,7 @@ export default function NextMonthInfo() {
                 sum: query.data[currency]
             })
         }
-        data.sort((a, b) => b.sum - a.sum)
+        data.sort((a, b) => Number.parseFloat(b.sum) - Number.parseFloat(a.sum))
         return data
     }
 
