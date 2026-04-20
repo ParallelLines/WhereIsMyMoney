@@ -27,7 +27,7 @@ export default function NextMonthInfo() {
             {query.isError && <div>Error: {query.error.message}</div>}
             {preparedData.length > 0 &&
                 <>
-                    next month will be debited:
+                    next month payments:
                     <div className='next-month-info-list'>
                         {preparedData.map((record, id) => (
                             <div className='next-month-info-record' key={id}>
