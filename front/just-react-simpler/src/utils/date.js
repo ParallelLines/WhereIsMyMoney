@@ -6,9 +6,6 @@
 export function isItToday(dateStr) {
     const now = new Date()
     const date = new Date(dateStr)
-    console.log('now: ', now)
-    console.log('date: ', date)
-    console.log('dateStr: ', dateStr)
     return now.getFullYear() === date.getFullYear() &&
         now.getMonth() === date.getMonth() &&
         now.getDate() === date.getDate()

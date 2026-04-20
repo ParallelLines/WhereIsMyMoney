@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { Cookies } from 'react-cookie'
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
-const COOKIE_AUTH_NAME = process.env.REACT_APP_COOKIE_AUTH_NAME
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const COOKIE_AUTH_NAME = import.meta.env.VITE_COOKIE_AUTH_NAME
 const cookies = new Cookies()
 
 const axiosInstance = axios.create({

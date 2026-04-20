@@ -29,8 +29,9 @@ to start the app
 ⚙️ requires node.js installed  
 
 ⚙️ the app will need all the env params from front/just-react-simpler/**.env**  
-⚙️ **REACT_APP_BACKEND_URL** to know where backend is  
-⚙️ **REACT_APP_COOKIE_AUTH_NAME** how the auth cookie should be called  
+⚙️ **VITE_BACKEND_URL** to know where backend is  
+⚙️ **VITE_COOKIE_AUTH_NAME** how the auth cookie should be called  
+⚙️ **VITE_ALLOW_SIGNUP** false to prevent users from creating new accounts  
 
 go to front/**just-react-simpler**
 run 
@@ -42,7 +43,7 @@ and then run
 ```
 npm run build
 ```
-the 'build' folder will appear with the current build
+the 'dist' folder will appear with the current build
 
 ## DOCKER SETUP 
 
