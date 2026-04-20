@@ -336,6 +336,10 @@ body {
     font-size: 0.7rem;
 }
 
+.expense-date.todays-expence {
+    color: var(--text-main);
+}
+
 .regular-expense-date {
     min-width: 4.2rem;
     width: 4.5rem;

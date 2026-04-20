@@ -1,6 +1,22 @@
 /**
  * 
  * @param {String} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
+ * @returns {Boolean} true if yes, false if no
+ */
+export function isItToday(dateStr) {
+    const now = new Date()
+    const date = new Date(dateStr)
+    console.log('now: ', now)
+    console.log('date: ', date)
+    console.log('dateStr: ', dateStr)
+    return now.getFullYear() === date.getFullYear() &&
+        now.getMonth() === date.getMonth() &&
+        now.getDate() === date.getDate()
+}
+
+/**
+ * 
+ * @param {String} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
  * @returns {String} a string in a dd/MM/YYYY format
  */
 export function dateString(dateStr) {
