@@ -88,7 +88,7 @@ export default function PieChart({ width = 300, height = 300, data = [] }) {
                     </div>
                     {hoveredSegment.sums?.map((currency, id) => (
                         chooseSumToShow(hoveredSegment.id, currency) > 0 &&
-                        <div key={`tooltip-${id}`}>{chooseSumToShow(hoveredSegment.id, currency)} {currency.symbol}</div>
+                        <div key={`tooltip-${id}`}>{chooseSumToShow(hoveredSegment.id, currency).toFixed(2)} {currency.symbol}</div>
                     ))}
                 </div>
             )}
