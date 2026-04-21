@@ -5,7 +5,7 @@ import { getMonthYearByOffset } from '../utils/date'
 import PieChart from './PieChart'
 
 export default function PieChartScreen({ width = 300, height = 300 }) {
-    const { selectedCategory, monthOffset, setMonthOffset } = useFilterContext()
+    const { selectedCategory, setSelectedCategory, monthOffset, setMonthOffset } = useFilterContext()
     const query = useFetchPieStats()
 
     const prevMonthYear = getMonthYearByOffset(monthOffset + 1)
@@ -158,6 +158,15 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
 
                     </span>
                     <span className='title'>, {getSelectedCategoryName()}</span>
+                    {selectedCategory !== null &&
+                        <button
+                            className='pie-chart-btn'
+                            onClick={() => setSelectedCategory(null)}
+                            title='reset category'
+                        >
+                            X
+                        </button>
+                    }
                 </div>
                 <button
                     className='pie-chart-btn'
