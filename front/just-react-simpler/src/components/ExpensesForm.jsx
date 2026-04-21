@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 import { formatDateForInput } from '../utils/date'
 import { useCreateExpense, useEditExpense, useFetchCurrencies, useMonitorErrors } from '../utils/reactQueryHooks'

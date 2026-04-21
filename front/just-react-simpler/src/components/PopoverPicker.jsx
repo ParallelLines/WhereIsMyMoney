@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 import ColorMarker from './ColorMarker'
 import { HexColorPicker } from 'react-colorful'

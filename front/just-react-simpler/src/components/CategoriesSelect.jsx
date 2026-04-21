@@ -1,4 +1,3 @@
-import React from 'react'
 import { useFetchCategories, useMonitorErrors } from '../utils/reactQueryHooks'
 
 export default function CategoriesSelect({ selectedCategoryId, onChange }) {

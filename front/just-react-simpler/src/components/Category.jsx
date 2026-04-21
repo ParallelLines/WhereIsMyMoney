@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useFilterContext } from '../utils/AppContext'
 import ColorMarker from './ColorMarker'
 import IconAdd from './icons/IconAdd'

@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function IconLogOut() {
 	return (
 		<svg viewBox='0 0 512.025 512.025'>

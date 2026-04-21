@@ -1,4 +1,3 @@
-import React from 'react'
 import { useFetchCurrencies, useFetchNextMonthRegularStats } from '../utils/reactQueryHooks'
 
 export default function NextMonthInfo() {

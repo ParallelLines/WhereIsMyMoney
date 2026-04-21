@@ -1,4 +1,3 @@
-import React from 'react'
 import { useCookies } from 'react-cookie'
 import IconLogOut from './icons/IconLogOut'
 

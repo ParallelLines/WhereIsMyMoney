@@ -1,4 +1,3 @@
-import React from 'react'
 import { useErrorQueue } from '../utils/AppContext'
 import ErrorMessage from './ErrorMessage'
 

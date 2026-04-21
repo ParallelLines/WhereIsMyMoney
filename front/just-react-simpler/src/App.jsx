@@ -1,4 +1,3 @@
-import React from 'react'
 import ErrorQueue from './components/ErrorQueue'
 import Login from './components/Login'
 import MainScreen from './components/MainScreen'

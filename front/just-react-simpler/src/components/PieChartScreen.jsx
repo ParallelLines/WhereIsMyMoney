@@ -1,5 +1,5 @@
 import { useFilterContext } from '../utils/AppContext'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useFetchPieStats } from '../utils/reactQueryHooks'
 import { getMonthYearByOffset } from '../utils/date'
 import PieChart from './PieChart'

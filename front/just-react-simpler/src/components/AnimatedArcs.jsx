@@ -1,4 +1,3 @@
-import React from 'react'
 import { animated, to, useTransition } from '@react-spring/web'
 
 export default function AnimatedArcs({ pie, hoveredSegment, handleClick, handleMouseMove, setHoveredSegment }) {

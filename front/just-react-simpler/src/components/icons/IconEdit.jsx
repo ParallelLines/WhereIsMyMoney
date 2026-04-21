@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function IconEdit() {
     return (
         <svg className="svg-icon" viewBox="0 0 24 24">

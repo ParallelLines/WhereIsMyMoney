@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import VanishingBlock from './VanishingBlock'
 
 export default function ConfirmationPopup({ message, onConfirm, onCancel }) {

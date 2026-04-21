@@ -1,4 +1,3 @@
-import React from 'react'
 import BarChart from './BarChart'
 
 export default function BarChartScreen({ width = 500, height = 300 }) {

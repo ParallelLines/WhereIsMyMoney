@@ -1,4 +1,3 @@
-import React from 'react'
 import { useFetchCategoriesSuggestion } from '../utils/reactQueryHooks'
 import SuggestionButton from './SuggestionButton'
 

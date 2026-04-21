@@ -2,7 +2,7 @@ import { useFilterContext } from '../utils/AppContext'
 import { Pie } from '@visx/shape'
 import { Group } from '@visx/group'
 import { localPoint } from '@visx/event'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import AnimatedArcs from './AnimatedArcs'
 import { useFetchPieStats } from '../utils/reactQueryHooks'
 

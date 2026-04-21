@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useCreateCategory, useEditCategory } from '../utils/reactQueryHooks'
 import { useErrorQueue } from '../utils/AppContext'
 import VanishingBlock from './VanishingBlock'

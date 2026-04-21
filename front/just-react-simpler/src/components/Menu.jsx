@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import IconMenu from './icons/IconMenu'
 import { useCookies } from 'react-cookie'
 import VanishingBlock from './VanishingBlock'

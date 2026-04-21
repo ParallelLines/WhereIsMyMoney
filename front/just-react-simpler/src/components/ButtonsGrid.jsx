@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export default function ButtonsGrid({ width, values, defaultSelected, onSelect, disabled }) {
     const [selectedButtons, setSelectedButtons] = useState(prepareDefaultSet(defaultSelected))

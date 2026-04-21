@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function IconCancel() {
     return (
         <svg className="svg-icon" viewBox="0 0 50 50">

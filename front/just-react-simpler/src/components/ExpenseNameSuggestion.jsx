@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useFetchExpenseNamesSuggestion } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
 

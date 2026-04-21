@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function ColorMarker({ name = '', color, ref, onClick }) {
     const style = {}
     if (color) {

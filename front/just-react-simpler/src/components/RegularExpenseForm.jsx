@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useCreateRegular, useEditRegular, useFetchCurrencies, useFetchNextDate, useMonitorErrors } from '../utils/reactQueryHooks'
 import VanishingBlock from './VanishingBlock'
 import { convertDateToDatetime, formatDateForDateInput } from '../utils/date'

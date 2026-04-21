@@ -1,6 +1,6 @@
 import Category from './Category'
 import { useFetchCategories } from '../utils/reactQueryHooks'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import CategoryForm from './CategoryForm'
 
 export default function CategoriesList() {

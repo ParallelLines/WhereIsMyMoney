@@ -1,5 +1,5 @@
 import RegularExpense from './RegularExpense'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useFetchRegulars } from '../utils/reactQueryHooks'
 import RegularExpenseForm from './RegularExpenseForm'
 

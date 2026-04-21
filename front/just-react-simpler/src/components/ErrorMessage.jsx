@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useErrorQueue } from '../utils/AppContext'
 
 export default function ErrorMessage({ id, message, timeout = 3000 }) {

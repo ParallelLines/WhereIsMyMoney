@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { dateString } from '../utils/date'
 import { useFilterContext } from '../utils/AppContext'
 import { useDeleteRegular } from '../utils/reactQueryHooks'

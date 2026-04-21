@@ -1,5 +1,5 @@
 import Expense from './Expense'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import ExpensesForm from './ExpensesForm'
 import ConfirmationPopup from './ConfirmationPopup'
 import { useInfiniteScroll } from '../utils/hooks'

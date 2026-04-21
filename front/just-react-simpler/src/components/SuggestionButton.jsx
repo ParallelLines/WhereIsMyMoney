@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function SuggestionButton({ value, color, onClick }) {
     const style = {}
     if (color) {
