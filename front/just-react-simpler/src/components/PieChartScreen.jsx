@@ -82,7 +82,7 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
     }
 
     const displayTotal = (data) => {
-        if (!data) return ''
+        if (!data) return []
         const totals = caclulateTotal(data)
         const totalsSorted = totals.sort((a, b) => {
             if (data.id === selectedCategory) {
@@ -98,7 +98,7 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                 return sum.sum_with_children > 0
             }
         })
-        return totalsFiltered?.map(t => `${data.id === selectedCategory ? t.sum.toFixed(2) : t.sum_with_children.toFixed(2)} ${t.symbol}`).join(', ')
+        return totalsFiltered?.map(t => `${data.id === selectedCategory ? t.sum.toFixed(2) : t.sum_with_children.toFixed(2)} ${t.symbol}`)
     }
 
     const getSelectedCategoryName = () => {
@@ -151,33 +151,36 @@ export default function PieChartScreen({ width = 300, height = 300 }) {
                 height={height}
                 data={displayData}
             />
-            <div className='top-left'>
+            <div className='middle'>
                 <div className='pie-chart-info'>
-                    <span className='title highlighted'>
+                    <span className='title'>
                         {monthOffset === null ? 'All time' : `${currMonthYear.name} ${currMonthYear.year}`}
-
                     </span>
-                    <span className='title'>, {getSelectedCategoryName()}</span>
-                    {selectedCategory !== null &&
-                        <button
-                            className='pie-chart-btn'
-                            onClick={() => setSelectedCategory(null)}
-                            title='reset category'
-                        >
-                            X
-                        </button>
-                    }
-                </div>
-                <button
-                    className='pie-chart-btn'
-                    onClick={() => setMonthOffset(monthOffset === null ? 0 : null)}
-                >
-                    {monthOffset === null ? 'Current Month' : 'All Time Total'}
-                </button>
-            </div>
-            <div className='bottom-left'>
-                <div className='pie-chart-info'>
-                    <span className='bold'>{displayTotal(displayData)}</span>
+                    <button
+                        className='pie-chart-btn'
+                        onClick={() => setMonthOffset(monthOffset === null ? 0 : null)}
+                    >
+                        {monthOffset === null ? 'Current Month' : 'All Time Total'}
+                    </button>
+                    <span className='title'>
+                        {getSelectedCategoryName()}
+                        {selectedCategory !== null &&
+                            <button
+                                className='pie-chart-btn'
+                                onClick={() => setSelectedCategory(null)}
+                                title='reset category'
+                            >
+                                X
+                            </button>
+
+                        }
+                    </span>
+                    <div className='sum-list'>
+                        {!displayData?.length && <span>No data for this period</span>}
+                        {displayData?.length > 0 && displayTotal(displayData).map((sum, i) => (
+                            <span className='' key={i}>{sum}</span>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div >

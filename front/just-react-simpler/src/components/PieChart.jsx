@@ -15,6 +15,7 @@ export default function PieChart({ width = 300, height = 300, data = [] }) {
     const centerX = width / 2
     const centerY = height / 2
     const radius = Math.min(width, height) / 2 - 20
+    const thickness = 30
 
     const handleMouseMove = (e, segmentData) => {
         const coords = localPoint(e)
@@ -48,7 +49,6 @@ export default function PieChart({ width = 300, height = 300, data = [] }) {
 
     return (
         <div className='pie-chart'>
-            {!data.length && <div>No data for this period</div>}
             {data.length > 0 && (
                 <svg width={width} height={height}>
                     <Group left={centerX} top={centerY}>
@@ -57,7 +57,7 @@ export default function PieChart({ width = 300, height = 300, data = [] }) {
                             pieValue={data => data.sumUSD}
                             startAngle={0}
                             endAngle={2 * Math.PI}
-                            innerRadius={0}
+                            innerRadius={radius - thickness}
                             outerRadius={radius}
                             cornerRadius={3}
                         >

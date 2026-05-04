@@ -28,7 +28,7 @@ export default function AnimatedArcs({ pie, hoveredSegment, handleClick, handleM
         const [centroidX, centroidY] = pie.path.centroid(arc)
         const isHovered = hoveredSegment?.id === arc.data.id
         const dimOthers = hoveredSegment && !isHovered
-        const scale = isHovered ? 1.1 : 1
+        const scale = isHovered ? 1.05 : 1
         const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.55
         return (
             <g
@@ -51,7 +51,7 @@ export default function AnimatedArcs({ pie, hoveredSegment, handleClick, handleM
                         transition: 'all 0.2s ease'
                     }}
                 />
-                {hasSpaceForLabel &&
+                {/* {hasSpaceForLabel &&
                     <text
                         x={centroidX}
                         y={centroidY}
@@ -64,7 +64,7 @@ export default function AnimatedArcs({ pie, hoveredSegment, handleClick, handleM
                         style={{ textShadow: '0 1px 3px rgba(0,0,0,0.7)' }}
                     >
                         {arc.data.name}
-                    </text>}
+                    </text>} */}
             </g>
         )
     })
