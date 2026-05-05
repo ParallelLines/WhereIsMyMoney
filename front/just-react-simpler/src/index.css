@@ -4,19 +4,16 @@
     --text-main: #424242;
     --text-muted: #a1a1a1;
     --text-highlight: #dadada;
-    --button-color: rgb(234, 155, 19);
-    --button-color-hover: rgb(243, 195, 113);
-    --graphic-button-color: rgb(143, 206, 255);
-    --graphic-button-color-hover: rgb(167, 217, 255);
-    --graphic-button-color-active: rgb(167, 217, 255);
-    --graphic-button-dull-color: rgb(190, 188, 183);
+    --button-color: rgb(143, 206, 255);
+    --button-color-hover: rgb(167, 217, 255);
+    --button-color-active: rgb(167, 217, 255);
+    --button-dull-color: rgb(190, 188, 183);
+    --button-dull-color-hover: rgb(210, 208, 202);
+    --button-dull-color-active: rgb(221, 219, 214);
     --button-positive-color: rgb(19, 234, 205);
     --button-positive-color-hover: rgb(130, 245, 230);
     --button-negative-color: rgb(221, 107, 124);
     --button-negative-color-hover: rgb(228, 161, 171);
-    --button-dull-color: rgb(164, 149, 124);
-    --button-dull-color-hover: rgb(204, 190, 165);
-    --button-dull-color-active: rgb(224, 210, 186);
     --button-calender-color: rgb(170, 170, 170);
     --button-calender-color-hover: rgb(221, 221, 221);
     --button-calender-color-selected: var(--button-positive-color);
@@ -104,7 +101,7 @@ body {
     min-width: 6rem;
     overflow-y: scroll;
     padding: 1.5rem;
-    background-color: var(--graphic-button-color);
+    background-color: var(--button-color);
     border-radius: 50%;
 }
 
@@ -169,26 +166,26 @@ body {
 }
 
 .pie-chart-btn {
-    background-color: var(--graphic-button-color);
+    background-color: var(--button-color);
     height: 1rem;
     font-size: 15px;
     line-height: 1rem;
 }
 
 .pie-chart-btn:hover {
-    background-color: var(--graphic-button-color-hover);
+    background-color: var(--button-color-hover);
 }
 
 .pie-chart-btn:active {
-    background-color: var(--graphic-button-color-active);
+    background-color: var(--button-color-active);
 }
 
 .pie-chart-btn.dull:disabled {
-    background-color: var(--graphic-button-dull-color);
+    background-color: var(--button-dull-color);
 }
 
 .pie-chart-btn.dull:disabled:hover {
-    background-color: var(--graphic-button-dull-color);
+    background-color: var(--button-dull-color);
 }
 
 .pie-chart-tooltip {
