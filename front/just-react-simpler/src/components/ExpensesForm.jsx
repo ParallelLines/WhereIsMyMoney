@@ -46,6 +46,8 @@ export default function ExpensesForm({ expenseData, onCancel, onSubmit }) {
         e.preventDefault()
         expense.currency = expense.currency ? expense.currency : currenciesQuery.data?.[0].name
         expense.sum = prepareSum(expense.sum)
+        const localDate = new Date(expense.date)
+        expense.date = localDate.toISOString()
         try {
             if (!expenseData) {
                 await create.mutateAsync(expense)
