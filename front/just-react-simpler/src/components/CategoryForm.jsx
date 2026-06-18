@@ -3,12 +3,12 @@ import { useCreateCategory, useEditCategory } from '../utils/reactQueryHooks'
 import { useErrorQueue } from '../utils/AppContext'
 import VanishingBlock from './VanishingBlock'
 import PopoverPicker from './PopoverPicker'
-import { useMediaQuery } from 'react-responsive'
 import IconSave from './icons/IconSave'
 import IconCancel from './icons/IconCancel'
+import { useScreenSize } from '../utils/hooks'
 
 export default function CategoryForm({ categoryData, parentId, level, onCancel, onSubmit }) {
-    const isSmallScreen = useMediaQuery({ query: '(max-width: 565px)' })
+    const screenSize = useScreenSize()
     const create = useCreateCategory()
     const edit = useEditCategory()
     const { addError } = useErrorQueue()
@@ -75,7 +75,7 @@ export default function CategoryForm({ categoryData, parentId, level, onCancel, 
                     />
                     <PopoverPicker color={category.color} onChange={handleColorChange} />
                     <div className='btns'>
-                        {isSmallScreen && <>
+                        {screenSize === 'small' && <>
                             <button
                                 className='icon-btn'
                                 title={categoryData ? 'save changes' : 'create category'}
@@ -93,7 +93,7 @@ export default function CategoryForm({ categoryData, parentId, level, onCancel, 
                                 <IconCancel />
                             </button>
                         </>}
-                        {!isSmallScreen && <>
+                        {screenSize !== 'small' && <>
                             <button className='positive' type='submit' disabled={create.isPending || edit.isPending}>
                                 {categoryData ? 'Save' : 'Create'}
                             </button>

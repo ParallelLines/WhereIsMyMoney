@@ -1,4 +1,25 @@
 import { useCallback, useEffect, useState } from 'react'
+import { SCREEN_BREAKPOINTS as BREAKPOINTS } from './config'
+
+function getScreenSize(width) {
+    if (width <= BREAKPOINTS.smallMax) {
+        return 'small'
+    }
+    if (width <= BREAKPOINTS.mediumMax) {
+        return 'medium'
+    }
+    return 'big'
+}
+
+export function useScreenSize() {
+    const [screenSize, setScreenSize] = useState(window ? getScreenSize(window.innerWidth) : 'big')
+    useEffect(() => {
+        const onResize = () => setScreenSize(getScreenSize(window.innerWidth))
+        window.addEventListener('resize', onResize)
+        return () => window.removeEventListener('resize', onResize)
+    }, [])
+    return screenSize
+}
 
 // Improved version of https://usehooks.com/useOnClickOutside/
 // This code is from https://codesandbox.io/p/sandbox/react-colorful-popover-opmco?file=%2Fsrc%2FuseClickOutside.js%3A1%2C1-33%2C2

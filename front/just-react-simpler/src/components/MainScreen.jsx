@@ -3,15 +3,17 @@ import CategoriesList from './CategoriesList'
 import ExpensesList from './ExpensesList'
 import LogOut from './LogOut'
 import RegularExpensesList from './RegularExpensesList'
-import { useMediaQuery } from 'react-responsive'
 import Menu from './Menu'
 import PieChartScreen from './PieChartScreen'
 import BarChartScreen from './BarChartScreen'
 import NextMonthInfo from './NextMonthInfo'
+import { useScreenSize } from '../utils/hooks'
+import Tabs from './Tabs'
 
 export default function MainScreen() {
-    const isFullScreen = useMediaQuery({ query: '(min-width: 1400px)' })
-    const isSmallScreen = useMediaQuery({ query: '(max-width: 565px)' })
+    const screenSize = useScreenSize()
+    const isSmallScreen = screenSize === 'small'
+    const isBigScreen = screenSize === 'big'
     const [screenName, setScreenName] = useState('expenses')
     const pieChartWidth = isSmallScreen ? 260 : 350
     const pieChartHeight = isSmallScreen ? 260 : 350
@@ -31,21 +33,17 @@ export default function MainScreen() {
     ]
     return (
         <div className='grid-container'>
-            {(isFullScreen || screenName === 'regulars') && <NextMonthInfo />}
-            {(isFullScreen || screenName === 'regulars') && <RegularExpensesList />}
+            {(isBigScreen || screenName === 'regulars') && <NextMonthInfo />}
+            {(isBigScreen || screenName === 'regulars') && <RegularExpensesList />}
 
-            {(isFullScreen || screenName === 'expenses') && <BarChartScreen />}
-            {(isFullScreen || screenName === 'expenses') && <ExpensesList />}
+            {(isBigScreen || screenName === 'expenses') && <BarChartScreen />}
+            {(isBigScreen || screenName === 'expenses') && <ExpensesList />}
 
-            {(isFullScreen || screenName === 'categories') && <PieChartScreen width={pieChartWidth} height={pieChartHeight} />}
-            {(isFullScreen || screenName === 'categories') && <CategoriesList />}
+            {(isBigScreen || screenName === 'categories') && <PieChartScreen width={pieChartWidth} height={pieChartHeight} />}
+            {(isBigScreen || screenName === 'categories') && <CategoriesList />}
 
-            {isFullScreen && <LogOut />}
-            {!isFullScreen && <Menu
-                menuItems={menuItems}
-                onSelect={(name) => setScreenName(name)}
-                selectedItem={screenName}
-            />}
+            <LogOut />
+            {isSmallScreen && <Tabs activeTab={screenName} onTabChange={setScreenName} />}
         </div>
     )
 }
