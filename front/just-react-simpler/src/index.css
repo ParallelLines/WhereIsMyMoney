@@ -450,7 +450,6 @@ body {
     margin: 0;
     width: 2rem;
     height: 2rem;
-
 }
 
 .calendar button:hover {
@@ -529,6 +528,9 @@ body {
 
 .auth-options {
     margin-top: 10%;
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
 }
 
 .auth-form {
@@ -616,7 +618,6 @@ button {
     background-color: var(--button-color);
     border-radius: var(--radius-button);
     padding: 0 0.3rem;
-    margin-right: 0.4rem;
     height: 1.5rem;
 }
 
@@ -828,6 +829,11 @@ button.tab-btn.dull {
             "graph-2"
             "column-2"
             "footer";
+    }
+
+    .auth-form-input {
+        height: 2rem;
+        width: 12rem;
     }
 
     .tabs {
