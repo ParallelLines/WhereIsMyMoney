@@ -17,19 +17,21 @@ export function isItToday(dateStr) {
  * @returns {String} a string in a dd/MM/YYYY format
  */
 export function dateString(dateStr) {
+    if (!dateStr) return ''
     const date = new Date(dateStr)
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
-    return `${day}/${month}/${year}`
+    return `${day}.${month}.${year}`
 }
 
 /**
  * 
- * @param {String} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
+ * @param {String|Date|null} dateStr a string like 2024-06-05T05:33:00.000Z or whatever is suitable for Date()
  * @returns {String} a string in a yyyy-mm-dd format
  */
 export function formatDateForDateInput(dateStr) {
+    if (!dateStr) return ''
     const date = new Date(dateStr)
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -43,6 +45,7 @@ export function formatDateForDateInput(dateStr) {
  * @returns {String} a string in a "dd.MM.YYYY hh:mm" format
  */
 export function dateTimeString(dateStr) {
+    if (!dateStr) return ''
     const date = new Date(dateStr)
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -73,7 +76,7 @@ export function formatDateForInput(date) {
 
 /**
  * 
- * @param {String} dateStr a string in the 'yyyy-mm-dd' format
+ * @param {any} dateStr might be a string in the 'yyyy-mm-dd' format, or a Date object
  * @returns {Date} a Date object with current time, but with the Day, Month and Year from the dateStr
  */
 export function convertDateToDatetime(dateStr) {

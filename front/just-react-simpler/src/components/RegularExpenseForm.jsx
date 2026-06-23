@@ -9,39 +9,37 @@ import { useQueryClient } from '@tanstack/react-query'
 import { dateString } from '../utils/date'
 import CategoriesSelect from './CategoriesSelect'
 import ColorMarker from './ColorMarker'
+import * as helper from '../utils/regularsHelper'
 
+/**
+ * @typedef {import('../types/regularExpenseType').RegularExpenseData} RegularExpenseData
+ */
+
+/**
+ * @param {{regularData: RegularExpenseData, onCancel: Function, onSubmit: Function}} props
+ */
 export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) {
     const queryClient = useQueryClient()
     const currenciesQuery = useFetchCurrencies()
     const create = useCreateRegular()
     const edit = useEditRegular()
 
-    const repeatInterval = ['daily', 'weekly', 'monthly', 'yearly']
-    const repeatIntervalText = ['day', 'week', 'month', 'year']
-    const daysOfMonth = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
-    const dayNums = ['first', 'second', 'third', 'forth', 'fifth', 'last']
-    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const weekdaysExtended = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'day', 'weekday', 'weekend day']
     const triggerDateChangeFields = new Set(['start_date', 'end_date', 'repeat_interval', 'repeat_every'])
-    const prepareRepeatEveryText = (intervalStr, repeatEveryNum) => {
-        const idx = repeatInterval.indexOf(intervalStr)
-        const text = repeatIntervalText[idx]
-        return Number.parseInt(repeatEveryNum) === 1 ? text : text + 's'
-    }
+
 
     const [infinite, setInfinite] = useState(regularData?.end_date ? false : true)
-    const [interval, setInterval] = useState(regularData ? regularData.repeat_interval : repeatInterval[2])
-    const [repeatEveryText, setRepeatEveryText] = useState(regularData ? prepareRepeatEveryText(regularData.repeat_interval, regularData.repeat_every) : repeatIntervalText[2])
+    const [interval, setInterval] = useState(regularData ? regularData.repeat_interval : helper.getRepeatInterval(2))
+    const [repeatEveryText, setRepeatEveryText] = useState(regularData ? helper.prepareRepeatEveryText(regularData.repeat_interval, regularData.repeat_every) : helper.getRepeatIntervalText(2))
     const [repeatEach, setRepeatEach] = useState(regularData ? !regularData.repeat_on_day_num : true)
     const [repeatOn, setRepeatOn] = useState(regularData ? regularData.repeat_on_day_num : false)
     const { addError } = useErrorQueue()
 
     const now = new Date()
-    const yearLater = new Date().setFullYear(now.getFullYear() + 1)
-    const weekdayToday = weekdays[now.getDay()]
+    const yearLater = new Date()
+    yearLater.setFullYear(now.getFullYear() + 1)
+    const weekdayToday = helper.getWeekday(now.getDay())
     const dateToday = now.getDate().toString()
-    const monthToday = months[now.getMonth()]
+    const monthToday = helper.getMonth(now.getMonth())
 
     if (regularData && !regularData.end_date) regularData.end_date = yearLater
 
@@ -50,13 +48,13 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
         sum: '',
         start_date: now,
         end_date: yearLater,
-        repeat_interval: repeatInterval[2],
+        repeat_interval: helper.getRepeatInterval(2),
         repeat_every: 1,
         repeat_each_weekday: [weekdayToday],
         repeat_each_day_of_month: [dateToday],
         repeat_each_month: [monthToday],
-        repeat_on_day_num: dayNums[0],
-        repeat_on_weekday: weekdays[0]
+        repeat_on_day_num: helper.getDayNum(0),
+        repeat_on_weekday: helper.getWeekday(0)
     })
     const startDate = formatDateForDateInput(regularData ? new Date(regularData.start_date) : new Date(regular.start_date))
     const endDate = formatDateForDateInput(regularData ? new Date(regularData.end_date) : new Date(regular.end_date))
@@ -141,8 +139,8 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 setRegular(currRegular => {
                     return {
                         ...currRegular,
-                        repeat_on_day_num: dayNums[0],
-                        repeat_on_weekday: weekdays[0]
+                        repeat_on_day_num: helper.getDayNum(0),
+                        repeat_on_weekday: helper.getWeekday(0)
                     }
                 })
             }
@@ -264,12 +262,12 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                         aria-label='repeat interval of the regular expense'
                         onChange={(e) => {
                             setInterval(e.target.value)
-                            setRepeatEveryText(prepareRepeatEveryText(e.target.value, regular.repeat_every))
+                            setRepeatEveryText(helper.prepareRepeatEveryText(e.target.value, regular.repeat_every))
                         }}
                         defaultValue={regular.repeat_interval}
                         required
                     >
-                        {repeatInterval.map(str =>
+                        {helper.getRepeatIntervals().map(str =>
                             <option key={str} value={str}>
                                 {str}
                             </option>)}
@@ -290,7 +288,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                 {interval === 'weekly' &&
                     <div className='line'>
                         <span>on: </span>
-                        <ButtonsGrid width={7} values={weekdays} defaultSelected={regular.repeat_each_weekday} onSelect={setWeekdays} />
+                        <ButtonsGrid width={7} values={helper.getWeekdays()} defaultSelected={regular.repeat_each_weekday} onSelect={setWeekdays} />
                     </div>
                 }
 
@@ -307,7 +305,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                             <label htmlFor='repeatGroupEach'>each</label>
                         </div>
                         <div className='line'>
-                            <ButtonsGrid width={7} values={daysOfMonth} defaultSelected={regular.repeat_each_day_of_month} onSelect={setDaysOfMonth} disabled={!repeatEach} />
+                            <ButtonsGrid width={7} values={helper.getDaysOfMonth()} defaultSelected={regular.repeat_each_day_of_month} onSelect={setDaysOfMonth} disabled={!repeatEach} />
                         </div>
 
                         <div className='line'>
@@ -326,7 +324,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 disabled={repeatEach}
                                 required
                             >
-                                {dayNums.map(dayNum =>
+                                {helper.getDayNums().map(dayNum =>
                                     <option key={dayNum} value={dayNum}>
                                         {dayNum}
                                     </option>)}
@@ -338,7 +336,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 disabled={repeatEach}
                                 required
                             >
-                                {weekdaysExtended.map(weekday =>
+                                {helper.getWeekdaysExtended().map(weekday =>
                                     <option key={weekday} value={weekday}>
                                         {weekday}
                                     </option>)}
@@ -351,7 +349,9 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                     <>
                         <div className='line'>
                             <span>in: </span>
-                            <ButtonsGrid width={4} values={months} defaultSelected={regular.repeat_each_month} onSelect={setMonths} />
+                        </div>
+                        <div className='line'>
+                            <ButtonsGrid width={4} values={helper.getMonths()} defaultSelected={regular.repeat_each_month} onSelect={setMonths} />
                         </div>
                         <div className='line'>
                             <input type='checkbox'
@@ -367,7 +367,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 disabled={!repeatOn}
                                 required
                             >
-                                {dayNums.map(dayNum =>
+                                {helper.getDayNums().map(dayNum =>
                                     <option key={dayNum} value={dayNum}>
                                         {dayNum}
                                     </option>)}
@@ -379,7 +379,7 @@ export default function RegularExpenseForm({ regularData, onCancel, onSubmit }) 
                                 disabled={!repeatOn}
                                 required
                             >
-                                {weekdaysExtended.map(weekday =>
+                                {helper.getWeekdaysExtended().map(weekday =>
                                     <option key={weekday} value={weekday}>
                                         {weekday}
                                     </option>)}
